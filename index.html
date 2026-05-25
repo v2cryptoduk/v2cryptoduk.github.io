@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>V2 Dickbutts — NFT Builder</title>
+  <title>V2 Dickbutts — NFT Builder (SVG + IPFS + GitHub)</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -12,54 +12,25 @@
       --neon: #7c3aed;
       --neon2: #a855f7;
       --neon3: #ec4899;
-      --neon-glow: rgba(124,58,237,0.45);
-      --neon2-glow: rgba(168,85,247,0.3);
-      --pink-glow: rgba(236,72,153,0.3);
       --bg0: #05050f;
       --bg1: #0a0a1a;
       --bg2: #0f0f24;
-      --bg3: #141428;
-      --surface: #12122a;
-      --surface2: #1a1a38;
-      --border: rgba(124,58,237,0.18);
-      --border2: rgba(124,58,237,0.35);
       --text: #e2e0ff;
       --muted: #7070a0;
       --highlight: #c4b5fd;
+      --border: rgba(124,58,237,0.18);
+      --border2: rgba(124,58,237,0.35);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; }
     body {
       font-family: 'Inter', sans-serif;
       background: var(--bg0);
       color: var(--text);
       overflow-x: hidden;
     }
-    .font-orb { font-family: 'Orbitron', monospace; }
     .font-raj { font-family: 'Rajdhani', sans-serif; }
+    .font-orb { font-family: 'Orbitron', monospace; }
 
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(124,58,237,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(124,58,237,0.04) 1px, transparent 1px);
-      background-size: 48px 48px;
-      pointer-events: none;
-      z-index: 0;
-    }
-    body::after {
-      content: '';
-      position: fixed;
-      top: -30%;
-      left: -20%;
-      width: 80vw;
-      height: 80vw;
-      background: radial-gradient(circle, rgba(124,58,237,0.07) 0%, transparent 65%);
-      pointer-events: none;
-      z-index: 0;
-    }
     #app { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; }
 
     header {
@@ -82,8 +53,6 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      letter-spacing: 2px;
-      filter: drop-shadow(0 0 18px rgba(168,85,247,0.5));
     }
     .logo-pulse {
       display: inline-block;
@@ -99,17 +68,6 @@
       70%  { box-shadow: 0 0 0 8px rgba(168,85,247,0); }
       100% { box-shadow: 0 0 0 0 rgba(168,85,247,0); }
     }
-    .edition-badge {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 3px;
-      color: var(--muted);
-      text-transform: uppercase;
-      border: 1px solid rgba(124,58,237,0.25);
-      padding: 4px 10px;
-      border-radius: 4px;
-    }
 
     .tabs-bar {
       display: flex;
@@ -117,54 +75,24 @@
       gap: 8px;
       background: rgba(5,5,15,0.7);
       border-bottom: 1px solid var(--border);
-      overflow-x: auto;
-      scrollbar-width: none;
     }
-    .tabs-bar::-webkit-scrollbar { display: none; }
     .tab-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
       padding: 9px 18px;
       border-radius: 6px;
       font-family: 'Rajdhani', sans-serif;
       font-size: 14px;
       font-weight: 600;
-      letter-spacing: 1px;
       cursor: pointer;
       border: 1px solid transparent;
-      white-space: nowrap;
-      transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
-      text-transform: uppercase;
       background: transparent;
       color: var(--muted);
-      position: relative;
-    }
-    .tab-btn::after {
-      content: '';
-      position: absolute;
-      bottom: -13px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 2px;
-      background: var(--neon2);
-      transition: width 0.3s ease;
-      border-radius: 2px;
+      transition: all 0.25s;
     }
     .tab-btn.active {
       color: #fff;
       border-color: var(--border2);
       background: rgba(124,58,237,0.15);
-      box-shadow: 0 0 20px rgba(124,58,237,0.2), inset 0 0 20px rgba(124,58,237,0.05);
     }
-    .tab-btn.active::after { width: 60%; }
-    .tab-btn:hover:not(.active) {
-      color: var(--highlight);
-      background: rgba(124,58,237,0.08);
-    }
-    .tab-icon-img { width: 16px; height: 16px; object-fit: contain; filter: brightness(0) invert(0.5); transition: filter 0.2s; }
-    .tab-btn.active .tab-icon-img { filter: brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(220deg); }
 
     .panel { flex: 1; padding: 20px 16px; overflow: auto; }
     @media(min-width:640px){ .panel { padding: 24px 24px; } }
@@ -174,19 +102,16 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       backdrop-filter: blur(12px);
-      transition: border-color 0.3s, box-shadow 0.3s;
+      padding: 20px;
     }
-    .glass-card:hover { border-color: var(--border2); }
 
     .section-card {
       background: rgba(15,15,35,0.8);
       border: 1px solid var(--border);
       border-radius: 10px;
       overflow: hidden;
-      transition: all 0.25s ease;
+      margin-bottom: 12px;
     }
-    .section-card:hover { border-color: rgba(124,58,237,0.3); }
-    .section-card.bg-badge { border-left: 2px solid #10b981; }
 
     .section-header {
       display: flex;
@@ -199,18 +124,20 @@
     }
     .section-header:hover { background: rgba(124,58,237,0.08); }
 
+    .section-content {
+      padding: 0 16px 16px;
+      border-top: 1px solid var(--border);
+    }
+
     .section-badge {
       font-family: 'Rajdhani', monospace;
       font-size: 10px;
       font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
       padding: 2px 8px;
       border-radius: 4px;
+      background: rgba(124,58,237,0.2);
+      color: #a78bfa;
     }
-    .badge-acc { background: rgba(124,58,237,0.2); color: #a78bfa; border: 1px solid rgba(124,58,237,0.3); }
-    .badge-base { background: rgba(234,179,8,0.15); color: #fbbf24; border: 1px solid rgba(234,179,8,0.3); }
-    .badge-bg { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
 
     .layer-item {
       border-radius: 8px;
@@ -218,33 +145,44 @@
       cursor: pointer;
       padding: 8px;
       position: relative;
-      overflow: hidden;
+      background: rgba(37,99,235,0.08);
+      transition: all 0.2s;
     }
-    .male-bg { background: rgba(37,99,235,0.08); }
-    .female-bg { background: rgba(236,72,153,0.08); }
-    .gender-icon {
-      position: absolute; top: 6px; right: 6px;
-      width: 18px; height: 18px;
-      border-radius: 50%;
-      border: 1px solid rgba(124,58,237,0.3);
-      background: rgba(5,5,15,0.8);
-      padding: 2px;
+    .layer-item:hover { border-color: var(--border2); transform: translateY(-2px); }
+    .layer-item.selected { border-color: #a855f7; background: rgba(168,85,247,0.15); }
+    
+    .svg-badge {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: rgba(234,179,8,0.8);
+      color: #000;
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-weight: bold;
+      z-index: 3;
     }
+    
     .order-number {
-      position: absolute; top: -6px; left: -6px;
+      position: absolute;
+      top: -6px;
+      left: -6px;
       background: linear-gradient(135deg, #7c3aed, #a855f7);
       color: white;
       border-radius: 50%;
-      width: 20px; height: 20px;
-      font-size: 10px;
-      display: flex; align-items: center; justify-content: center;
+      width: 22px;
+      height: 22px;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-weight: 700;
-      font-family: 'Orbitron', monospace;
-      box-shadow: 0 0 12px rgba(124,58,237,0.5);
       z-index: 2;
     }
 
-    .nft-input {
+    .nft-input, .svg-input {
       width: 100%;
       background: rgba(5,5,15,0.8);
       border: 1px solid var(--border);
@@ -252,153 +190,67 @@
       padding: 12px 16px;
       font-size: 14px;
       color: var(--text);
-      font-family: 'Inter', sans-serif;
-      transition: border-color 0.2s, box-shadow 0.2s;
       outline: none;
     }
-    .nft-input::placeholder { color: rgba(112,112,160,0.6); }
-    .nft-input:focus { border-color: var(--neon2); box-shadow: 0 0 0 3px rgba(168,85,247,0.1); }
-    select.nft-input option { background: #0a0a1a; color: var(--text); }
+    .svg-input {
+      font-family: 'Monaco', monospace;
+      font-size: 12px;
+      resize: vertical;
+    }
+    .nft-input:focus, .svg-input:focus { border-color: var(--neon2); }
 
     .btn-primary {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       padding: 12px 24px;
       border-radius: 8px;
       font-family: 'Rajdhani', sans-serif;
-      font-size: 15px;
       font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
       cursor: pointer;
       border: 1px solid rgba(168,85,247,0.4);
       background: linear-gradient(135deg, rgba(124,58,237,0.8), rgba(168,85,247,0.6));
       color: #fff;
-      transition: all 0.2s ease;
-      position: relative;
-      overflow: hidden;
+      transition: all 0.2s;
     }
-    .btn-primary::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
-      transition: left 0.4s ease;
-    }
-    .btn-primary:hover { box-shadow: 0 0 30px rgba(168,85,247,0.5), 0 0 60px rgba(124,58,237,0.2); transform: translateY(-1px); }
-    .btn-primary:hover::before { left: 100%; }
-    .btn-primary:active { transform: scale(0.97) translateY(0); }
+    .btn-primary:hover { box-shadow: 0 0 30px rgba(168,85,247,0.5); }
 
     .btn-generate {
-      display: flex; align-items: center; justify-content: center; gap: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
       width: 100%;
       padding: 15px 24px;
       border-radius: 8px;
       font-family: 'Rajdhani', sans-serif;
-      font-size: 16px;
       font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
       cursor: pointer;
-      border: 1px solid rgba(168,85,247,0.5);
-      background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #ec4899 100%);
+      background: linear-gradient(135deg, #7c3aed, #a855f7, #ec4899);
       color: #fff;
-      transition: all 0.25s ease;
-      position: relative;
-      overflow: hidden;
     }
-    .btn-generate::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, #9333ea 0%, #c026d3 50%, #f472b6 100%);
-      opacity: 0;
-      transition: opacity 0.25s;
-    }
-    .btn-generate:hover { box-shadow: 0 0 40px rgba(168,85,247,0.6), 0 0 80px rgba(124,58,237,0.3); transform: translateY(-2px); }
-    .btn-generate:hover::before { opacity: 1; }
-    .btn-generate > * { position: relative; z-index: 1; }
-    .btn-generate:active { transform: scale(0.98); }
+    .btn-generate:hover { box-shadow: 0 0 40px rgba(168,85,247,0.6); }
 
     .btn-sm {
-      display: flex; align-items: center; justify-content: center; gap: 6px;
-      flex: 1;
-      padding: 8px 4px;
+      padding: 6px 12px;
       border-radius: 6px;
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
+      font-size: 11px;
+      font-weight: 600;
       cursor: pointer;
       border: 1px solid var(--border);
       background: rgba(20,20,40,0.8);
       color: var(--muted);
-      transition: all 0.2s;
     }
-    .btn-sm:hover { border-color: var(--border2); color: var(--text); background: rgba(124,58,237,0.15); }
-    .btn-sm:active { transform: scale(0.96); }
-    .btn-danger { background: rgba(127,29,29,0.2); border-color: rgba(239,68,68,0.2); color: rgba(248,113,113,0.7); }
-    .btn-danger:hover { background: rgba(127,29,29,0.5); border-color: rgba(239,68,68,0.5); color: #fca5a5; }
-    .btn-delete { padding: 8px 10px; }
-
-    .nft-card {
-      background: rgba(15,15,35,0.9);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-      cursor: pointer;
-      position: relative;
-    }
-    .nft-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(236,72,153,0.06));
-      opacity: 0;
-      transition: opacity 0.3s;
-      pointer-events: none;
-    }
-    .nft-card:hover { border-color: rgba(168,85,247,0.4); transform: translateY(-4px); box-shadow: 0 16px 40px rgba(124,58,237,0.25), 0 0 0 1px rgba(168,85,247,0.1); }
-    .nft-card:hover::before { opacity: 1; }
-
-    .modal-backdrop {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.88);
-      backdrop-filter: blur(12px);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 1000;
-      animation: fadeIn 0.2s ease;
-    }
-    .modal-content {
-      max-width: 90vw; width: 520px;
-      background: rgba(10,10,26,0.98);
-      border: 1px solid var(--border2);
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 0 80px rgba(124,58,237,0.25), 0 40px 80px rgba(0,0,0,0.7);
-      max-height: 88vh;
-      overflow: auto;
-    }
-    .attribute-badge {
-      background: rgba(20,20,50,0.9);
-      border: 1px solid rgba(124,58,237,0.2);
-      border-left: 2px solid #7c3aed;
-      padding: 8px 14px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
+    .btn-sm:hover { border-color: var(--border2); color: var(--text); }
+    .btn-danger:hover { background: rgba(239,68,68,0.3); border-color: #ef4444; color: #fca5a5; }
 
     .preview-canvas {
       border: 1px solid var(--border2);
       border-radius: 10px;
       background: var(--bg0);
-      box-shadow: 0 0 40px rgba(124,58,237,0.15);
+      display: block;
+      margin: 0 auto;
     }
 
     .info-strip {
@@ -407,7 +259,6 @@
       border-radius: 8px;
       padding: 12px 16px;
       font-size: 12px;
-      color: var(--muted);
     }
     .info-strip span { color: var(--highlight); }
 
@@ -420,80 +271,69 @@
       border-radius: 5px;
       padding: 4px 10px;
       font-size: 11px;
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 600;
-      letter-spacing: 0.5px;
     }
 
-    .section-name { font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
-    .section-count { font-family: 'Inter', sans-serif; font-size: 11px; color: var(--muted); }
+    .mode-switch {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .mode-btn {
+      padding: 6px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .mode-btn.active {
+      background: rgba(124,58,237,0.2);
+      border-color: var(--neon2);
+      color: var(--highlight);
+    }
 
-    .accordion-icon { transition: transform 0.25s ease; color: var(--muted); }
-    .rotate-180 { transform: rotate(180deg); }
+    .gender-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+    .gender-label:has(input:checked) {
+      border-color: var(--neon2);
+      background: rgba(124,58,237,0.12);
+    }
+    .gender-label input { display: none; }
+
+    .empty-state { text-align: center; padding: 64px 0; color: var(--muted); }
+    .hidden { display: none; }
+    .fade-in { animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .animate-spin { animation: spin 1s linear infinite; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
     #toast {
-      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
       background: rgba(10,10,26,0.95);
       border: 1px solid var(--border2);
       color: var(--highlight);
       padding: 12px 24px;
       border-radius: 8px;
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 14px;
       font-weight: 600;
-      letter-spacing: 0.8px;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 0 40px rgba(124,58,237,0.3);
       z-index: 9999;
       white-space: nowrap;
     }
     #toast.hidden { display: none; }
-
-    .gender-row {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: nowrap;
-    }
-    .gender-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      padding: 8px 14px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      transition: all 0.2s;
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.8px;
-      color: var(--muted);
-      background: rgba(5,5,15,0.6);
-    }
-    .gender-label:has(input:checked) { border-color: var(--neon2); background: rgba(124,58,237,0.12); color: var(--text); }
-    .gender-label input { width: 0; height: 0; opacity: 0; position: absolute; }
-
-    .empty-state { text-align: center; padding: 64px 0; color: var(--muted); font-family: 'Rajdhani', sans-serif; font-size: 15px; letter-spacing: 1px; }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    .fade-in { animation: fadeIn 0.3s ease both; }
-    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    .animate-spin { animation: spin 1s linear infinite; }
-
-    .count-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(124,58,237,0.1);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 6px 14px;
-      font-family: 'Orbitron', monospace;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--highlight);
-      margin-bottom: 16px;
-    }
-    .count-dot { width: 6px; height: 6px; border-radius: 50%; background: #a855f7; animation: pulse-ring 2s ease infinite; }
   </style>
 </head>
 <body>
@@ -503,113 +343,92 @@
       <span class="logo-pulse"></span>
       <h1 class="logo-text">V2 DICKBUTTS</h1>
     </div>
-    <span class="edition-badge">crypto Dickbutts V2 · art community</span>
+    <span class="font-raj text-xs uppercase tracking-widest text-muted">SVG · IPFS · GitHub</span>
   </header>
 
   <div class="tabs-bar">
-    <button onclick="App.switchTab('layers')" id="tab-layers" class="tab-btn active">
-      <img src="https://github.com/airdropfdi/airdropfdi.github.io/blob/main/Icon/layers.png?raw=true" class="tab-icon-img" alt="">
-      Layers
-    </button>
-    <button onclick="App.switchTab('create')" id="tab-create" class="tab-btn">
-      <img src="https://github.com/airdropfdi/airdropfdi.github.io/blob/main/Icon/Create.png?raw=true" class="tab-icon-img" alt="">
-      Create NFT
-    </button>
-    <button onclick="App.switchTab('collection')" id="tab-collection" class="tab-btn">
-      <img src="https://github.com/airdropfdi/airdropfdi.github.io/blob/main/Icon/collection.png?raw=true" class="tab-icon-img" alt="">
-      Collection
-    </button>
+    <button onclick="App.switchTab('layers')" id="tab-layers" class="tab-btn active">🎨 Layers</button>
+    <button onclick="App.switchTab('create')" id="tab-create" class="tab-btn">✨ Create NFT</button>
+    <button onclick="App.switchTab('collection')" id="tab-collection" class="tab-btn">📦 Collection</button>
   </div>
 
   <div style="flex:1;overflow:auto">
-    <div id="panel-layers" class="panel space-y-4">
-      <div class="glass-card" style="padding:20px">
-        <h3 class="font-raj" style="font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--highlight);margin-bottom:16px">
-          Add New Layer from GitHub URL (V2 traits)
-        </h3>
-        <div style="display:flex;flex-direction:column;gap:12px">
-          <input type="text" id="github-url" placeholder="GitHub Raw Image URL" class="nft-input">
-          <div style="display:flex;flex-wrap:wrap;gap:12px">
-            <input type="text" id="layer-value" placeholder="Value (e.g., Red Hair, Blue Skin)" class="nft-input" style="flex:1;min-width:180px">
-            <select id="layer-section" class="nft-input" style="flex:1;min-width:160px">
-              <option value="Background">Background</option>
-              <option value="Body">Body</option>
-              <option value="Butt">Butt</option>
-              <option value="Dick">Dick</option>
-              <option value="Eyes">Eyes</option>
-              <option value="Hand">Hand</option>
-              <option value="Hat">Hat</option>
-              <option value="Mouth">Mouth</option>
-              <option value="Nose">Nose</option>
-              <option value="Shoes">Shoes</option>
-              <option value="Skin">Skin</option>
-              <option value="Special">Special</option>
-            </select>
+    <div id="panel-layers" class="panel">
+      <div class="glass-card">
+        <div class="mode-switch">
+          <div id="mode-url" class="mode-btn active" onclick="App.setMode('url')">🌐 Image URL</div>
+          <div id="mode-svg" class="mode-btn" onclick="App.setMode('svg')">🎨 SVG Code</div>
+        </div>
+        
+        <div id="url-mode">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <input type="text" id="image-url" placeholder="GitHub RAW / IPFS URL / Any image URL" class="nft-input">
+            <div style="display:flex;gap:12px">
+              <input type="text" id="url-value" placeholder="Value (e.g., Red Hair)" class="nft-input" style="flex:1">
+              <select id="url-section" class="nft-input" style="flex:1">
+                <option value="Background">Background</option><option value="Body">Body</option><option value="Butt">Butt</option>
+                <option value="Dick">Dick</option><option value="Eyes">Eyes</option><option value="Hand">Hand</option>
+                <option value="Hat">Hat</option><option value="Mouth">Mouth</option><option value="Nose">Nose</option>
+                <option value="Shoes">Shoes</option><option value="Skin">Skin</option><option value="Special">Special</option>
+              </select>
+            </div>
+            <button onclick="App.addLayerFromUrl()" class="btn-primary">➕ Add URL Layer</button>
           </div>
-          <div class="gender-row">
-            <span class="font-raj" style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)">Gender (UI only):</span>
-            <label class="gender-label">
-              <input type="radio" name="layer-gender" value="male" checked>
-              <img src="https://github.com/nextpunks/nextpunks.github.io/blob/main/Icon/male.png?raw=true" style="width:16px;height:16px" onerror="this.style.display='none'">
-              <span style="color:#60a5fa"> Male</span>
-            </label>
-            <label class="gender-label">
-              <input type="radio" name="layer-gender" value="female">
-              <img src="https://github.com/nextpunks/nextpunks.github.io/blob/main/Icon/femenine.png?raw=true" style="width:16px;height:16px" onerror="this.style.display='none'">
-              <span style="color:#f472b6"> Female</span>
-            </label>
+        </div>
+
+        <div id="svg-mode" style="display:none">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <textarea id="svg-code" rows="5" class="svg-input" placeholder='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <circle cx="256" cy="256" r="200" fill="#7c3aed"/>
+</svg>'></textarea>
+            <div style="display:flex;gap:12px">
+              <input type="text" id="svg-value" placeholder="Value" class="nft-input" style="flex:1">
+              <select id="svg-section" class="nft-input" style="flex:1">
+                <option value="Background">Background</option><option value="Body">Body</option><option value="Butt">Butt</option>
+                <option value="Dick">Dick</option><option value="Eyes">Eyes</option><option value="Hand">Hand</option>
+                <option value="Hat">Hat</option><option value="Mouth">Mouth</option><option value="Nose">Nose</option>
+                <option value="Shoes">Shoes</option><option value="Skin">Skin</option><option value="Special">Special</option>
+              </select>
+            </div>
+            <div style="display:flex;gap:16px">
+              <label class="gender-label"><input type="radio" name="svg-gender" value="male" checked> ♂ Male</label>
+              <label class="gender-label"><input type="radio" name="svg-gender" value="female"> ♀ Female</label>
+            </div>
+            <button onclick="App.addLayerFromSvg()" class="btn-primary">➕ Add SVG Layer</button>
           </div>
-          <button onclick="App.addLayer()" class="btn-primary">
-            <i data-lucide="plus" style="width:16px;height:16px"></i> Add Layer
-          </button>
         </div>
       </div>
 
-      <div class="info-strip" style="display:flex;align-items:center;gap:10px">
-        <img src="https://github.com/airdropfdi/airdropfdi.github.io/blob/main/Icon/drag-and-drop.png?raw=true" style="width:14px;height:14px;" onerror="this.style.display='none'">
-        <span>V2 trait folders: Background · Body · Butt · Dick · Eyes · Hand · Hat · Mouth · Nose · Shoes · Skin · Special</span>
+      <div class="info-strip mt-4">
+        💡 <span>SVG Tip:</span> Use viewBox="0 0 512 512" for best results. SVG automatically converts to PNG.
       </div>
 
-      <div id="sections-container" class="space-y-3"></div>
-      <p id="layers-empty" class="empty-state">No layers yet.<br>Add GitHub image URLs above.</p>
+      <div id="sections-container" class="space-y-3 mt-4"></div>
+      <p id="layers-empty" class="empty-state">No layers yet.<br>Add URL or SVG layers above.</p>
     </div>
 
-    <div id="panel-create" class="panel space-y-4 hidden">
-      <div class="info-strip">
-        <div style="display:grid;gap:4px">
-          <span>📌 Click layers to select them · <span>First = Bottom layer</span> · Last = Top layer</span>
-          <span>🏷️ <span>Folder name = trait_type in JSON</span> (Background, Body, Butt, Dick, Eyes, Hand, Hat, Mouth, Nose, Shoes, Skin, Special)</span>
-          <span>🌄 <span>Background</span> is UI only — will NOT appear in JSON attributes (optional)</span>
-        </div>
+    <div id="panel-create" class="panel hidden">
+      <div class="glass-card">
+        <canvas id="live-preview-canvas" width="512" height="512" class="preview-canvas" style="width:256px;height:256px"></canvas>
+        <p class="font-raj text-center text-xs text-muted mt-3">⬆️ Live Preview (512x512)</p>
       </div>
 
-      <div class="glass-card" style="padding:20px">
-        <h3 class="font-raj" style="font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--highlight);margin-bottom:14px;display:flex;align-items:center;gap:8px">
-          <i data-lucide="eye" style="width:14px;height:14px"></i> Live Preview
-        </h3>
-        <div style="display:flex;justify-content:center">
-          <canvas id="live-preview-canvas" width="200" height="200" class="preview-canvas" style="width:200px;height:200px"></canvas>
-        </div>
-        <p style="font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:1px;color:var(--muted);text-align:center;margin-top:10px;text-transform:uppercase">Preview updates as you select layers</p>
-      </div>
+      <div id="create-sections-container" class="space-y-3 mt-4"></div>
 
-      <div id="create-sections-container" class="space-y-3" style="max-height:40vh;overflow:auto"></div>
-
-      <div class="glass-card" style="padding:14px">
-        <p style="font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Selected layers order (bottom → top)</p>
+      <div class="glass-card mt-4">
+        <p class="font-raj text-xs uppercase text-muted mb-2">Selected layers (bottom → top)</p>
         <div id="order-preview-list" style="display:flex;flex-wrap:wrap;gap:6px"></div>
       </div>
 
-      <input type="text" id="nft-name" value="V2 Dickbutts" class="nft-input">
-      <textarea id="nft-description" rows="3" class="nft-input" style="resize:vertical">crypto Dickbutts V2 — art community driven. Each V2 Dickbutt is a unique, glitch-infused character built from rare trait layers. Own a piece of the evolving Dickbutts universe.</textarea>
+      <input type="text" id="nft-name" value="V2 Dickbutts" class="nft-input mt-4" placeholder="NFT Name">
+      <textarea id="nft-description" rows="3" class="nft-input mt-4" placeholder="Description">crypto Dickbutts V2 — art community driven.</textarea>
 
-      <button onclick="App.createNFT()" id="btn-create-nft" class="btn-generate">
-        <i data-lucide="sparkles" style="width:18px;height:18px"></i> Generate NFT
+      <button onclick="App.createNFT()" id="btn-create-nft" class="btn-generate mt-4">
+        ✨ Generate NFT
       </button>
     </div>
 
-    <div id="panel-collection" class="panel space-y-4 hidden">
-      <div id="nft-count"></div>
+    <div id="panel-collection" class="panel hidden">
       <div id="nft-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px"></div>
       <p id="nft-empty" class="empty-state">No NFTs created yet.</p>
     </div>
@@ -619,29 +438,45 @@
 </div>
 
 <script>
-// V2 Dickbutts - Trait folders: Background, Body, Butt, Dick, Eyes, Hand, Hat, Mouth, Nose, Shoes, Skin, Special
-let layersBySection = { "Background":[],"Body":[],"Butt":[],"Dick":[],"Eyes":[],"Hand":[],"Hat":[],"Mouth":[],"Nose":[],"Shoes":[],"Skin":[],"Special":[] };
+let layersBySection = {
+  "Background":[], "Body":[], "Butt":[], "Dick":[], "Eyes":[], "Hand":[],
+  "Hat":[], "Mouth":[], "Nose":[], "Shoes":[], "Skin":[], "Special":[]
+};
 let selectedOrder = [];
 let nfts = [];
-let nextId = 1;
+let currentMode = 'url';
 let previewCanvas = null, previewCtx = null;
-let openSectionLayers = null, openSectionCreate = null;
+let openSectionLayers = {};
+let openSectionCreate = {};
+
 const SECTIONS = ["Background","Body","Butt","Dick","Eyes","Hand","Hat","Mouth","Nose","Shoes","Skin","Special"];
 
-function loadFromStorage() {
-  try {
-    const s = localStorage.getItem('v2_dickbutts_layers');
-    const n = localStorage.getItem('v2_dickbutts_nfts');
-    if(s) layersBySection = JSON.parse(s);
-    if(n) nfts = JSON.parse(n);
-    for(let sec of SECTIONS) if(!layersBySection[sec]) layersBySection[sec]=[];
-  } catch(e){ console.warn(e); }
-  renderSections(); renderCreateSections(); renderCollection();
+function escapeHtml(str) {
+  if(!str) return '';
+  return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
 }
 
-function saveToStorage() {
-  localStorage.setItem('v2_dickbutts_layers', JSON.stringify(layersBySection));
-  localStorage.setItem('v2_dickbutts_nfts', JSON.stringify(nfts));
+function normalizeImageUrl(raw) {
+  let url = raw.trim();
+  if(!url) return '';
+  if(url.includes('github.com') && url.includes('/blob/')) {
+    url = url.replace('github.com','raw.githubusercontent.com').replace('/blob/','/');
+  }
+  if(url.includes('ipfs/') && !url.startsWith('http')) {
+    url = 'https://ipfs.io/ipfs/' + url.split('ipfs/')[1];
+  }
+  if(url.startsWith('ipfs://')) {
+    url = 'https://ipfs.io/ipfs/' + url.substring(7);
+  }
+  if(/^Qm[a-zA-Z0-9]{44,}\//.test(url)) {
+    url = 'https://ipfs.io/ipfs/' + url;
+  }
+  return url;
+}
+
+function svgToDataUrl(svgString) {
+  const blob = new Blob([svgString], { type: 'image/svg+xml' });
+  return URL.createObjectURL(blob);
 }
 
 function showToast(msg) {
@@ -649,193 +484,251 @@ function showToast(msg) {
   toast.textContent = msg;
   toast.classList.remove('hidden');
   clearTimeout(window._toastTimer);
-  window._toastTimer = setTimeout(()=>toast.classList.add('hidden'), 2800);
+  window._toastTimer = setTimeout(() => toast.classList.add('hidden'), 2500);
 }
 
-function escapeHtml(str) {
-  if(!str) return '';
-  return str.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]||m));
+function saveToStorage() {
+  localStorage.setItem('v2_layers', JSON.stringify(layersBySection));
+  localStorage.setItem('v2_nfts', JSON.stringify(nfts));
 }
 
-function getSectionBadgeClass(section) {
-  if(section==="Background") return "badge-bg";
-  return "badge-acc";
+function loadFromStorage() {
+  try {
+    const layers = localStorage.getItem('v2_layers');
+    const nftsData = localStorage.getItem('v2_nfts');
+    if(layers) layersBySection = JSON.parse(layers);
+    if(nftsData) nfts = JSON.parse(nftsData);
+    for(let sec of SECTIONS) if(!layersBySection[sec]) layersBySection[sec] = [];
+  } catch(e) { console.warn(e); }
 }
 
-function getSectionBadgeLabel(section) {
-  if(section==="Background") return "UI Only";
-  return "Trait: "+section;
-}
-
-function initPreviewCanvas() {
-  previewCanvas = document.getElementById('live-preview-canvas');
-  if(previewCanvas) previewCtx = previewCanvas.getContext('2d');
+function renderImageToCanvas(ctx, img, w, h) {
+  const imgW = img.width, imgH = img.height;
+  const canvasAspect = w / h;
+  const imgAspect = imgW / imgH;
+  let dw, dh, dx = 0, dy = 0;
+  if(imgAspect > canvasAspect) {
+    dh = h;
+    dw = imgW * (h / imgH);
+    dx = (w - dw) / 2;
+  } else {
+    dw = w;
+    dh = imgH * (w / imgW);
+    dy = (h - dh) / 2;
+  }
+  ctx.drawImage(img, dx, dy, dw, dh);
 }
 
 async function updateLivePreview() {
   if(!previewCtx) return;
-  previewCtx.clearRect(0,0,200,200);
+  previewCtx.clearRect(0, 0, 512, 512);
   previewCtx.fillStyle = '#05050f';
-  previewCtx.fillRect(0,0,200,200);
-  if(selectedOrder.length===0) return;
+  previewCtx.fillRect(0, 0, 512, 512);
   for(let item of selectedOrder) {
     await new Promise(resolve => {
-      const img = new Image(); img.crossOrigin="Anonymous";
-      img.onload = ()=>{ previewCtx.drawImage(img,0,0,200,200); resolve(); };
-      img.onerror = ()=>resolve();
+      const img = new Image();
+      img.crossOrigin = "Anonymous";
+      img.onload = () => { renderImageToCanvas(previewCtx, img, 512, 512); resolve(); };
+      img.onerror = () => resolve();
       img.src = item.imageUrl;
     });
   }
 }
 
-function addLayer() {
-  const urlInput = document.getElementById('github-url');
-  const valueInput = document.getElementById('layer-value');
-  const sectionSelect = document.getElementById('layer-section');
-  const genderRadios = document.getElementsByName('layer-gender');
-  let gender = 'male';
-  for(let r of genderRadios) if(r.checked){ gender=r.value; break; }
-  let imageUrl = urlInput.value.trim();
-  let value = valueInput.value.trim();
-  let section = sectionSelect.value;
-  if(!imageUrl){ showToast('Please enter GitHub image URL'); return; }
-  if(!value){ showToast('Please enter a Value'); return; }
-  if(imageUrl.includes('github.com') && !imageUrl.includes('raw.githubusercontent.com'))
-    imageUrl = imageUrl.replace('github.com','raw.githubusercontent.com').replace('/blob/','/')
-  const newLayer = { id: Date.now()+'_'+nextId++, value, imageUrl, gender };
+function addLayerFromUrl() {
+  const url = document.getElementById('image-url').value.trim();
+  const value = document.getElementById('url-value').value.trim();
+  const section = document.getElementById('url-section').value;
+  if(!url) { showToast('Enter image URL'); return; }
+  if(!value) { showToast('Enter value'); return; }
+  const finalUrl = normalizeImageUrl(url);
+  const newLayer = { id: Date.now() + '_' + Math.random(), value, imageUrl: finalUrl, gender: 'male', type: 'url' };
   const img = new Image();
-  img.onload = ()=>{
+  img.onload = () => {
     layersBySection[section].push(newLayer);
-    saveToStorage(); renderSections(); renderCreateSections();
-    showToast(`✅ Added "${value}" to ${section} (${gender})`);
+    saveToStorage();
+    renderSections();
+    renderCreateSections();
+    showToast(`✅ Added "${value}" to ${section}`);
+    document.getElementById('image-url').value = '';
+    document.getElementById('url-value').value = '';
   };
-  img.onerror = ()=>{ showToast('❌ Failed to load image. Check URL'); };
-  img.src = imageUrl;
-  urlInput.value=''; valueInput.value='';
+  img.onerror = () => showToast('❌ Failed to load image');
+  img.src = finalUrl;
+}
+
+function addLayerFromSvg() {
+  const svgCode = document.getElementById('svg-code').value.trim();
+  const value = document.getElementById('svg-value').value.trim();
+  const section = document.getElementById('svg-section').value;
+  const radios = document.getElementsByName('svg-gender');
+  let gender = 'male';
+  for(let r of radios) if(r.checked) gender = r.value;
+  
+  if(!svgCode) { showToast('Enter SVG code'); return; }
+  if(!value) { showToast('Enter value'); return; }
+  
+  let finalSvg = svgCode;
+  if(!svgCode.includes('viewBox')) {
+    finalSvg = svgCode.replace('<svg', '<svg viewBox="0 0 512 512"');
+  }
+  if(!finalSvg.includes('width="512"')) {
+    finalSvg = finalSvg.replace('<svg', '<svg width="512" height="512"');
+  }
+  
+  const svgDataUrl = svgToDataUrl(finalSvg);
+  const newLayer = { id: Date.now() + '_' + Math.random(), value, imageUrl: svgDataUrl, gender, type: 'svg', svgRaw: finalSvg };
+  const img = new Image();
+  img.onload = () => {
+    layersBySection[section].push(newLayer);
+    saveToStorage();
+    renderSections();
+    renderCreateSections();
+    showToast(`✅ Added SVG "${value}" to ${section}`);
+    document.getElementById('svg-code').value = '';
+    document.getElementById('svg-value').value = '';
+  };
+  img.onerror = () => { showToast('❌ Invalid SVG code'); URL.revokeObjectURL(svgDataUrl); };
+  img.src = svgDataUrl;
 }
 
 function deleteLayer(section, layerId) {
-  if(confirm('⚠️ Delete this layer?')){
-    const idToDelete = String(layerId);
-    layersBySection[section] = layersBySection[section].filter(l => String(l.id) !== idToDelete);
-    selectedOrder = selectedOrder.filter(item => String(item.layerId) !== idToDelete);
-    selectedOrder.forEach((item, idx) => { item.order = idx + 1; });
-    saveToStorage(); 
-    renderSections(); 
-    renderCreateSections(); 
-    updateOrderPreview(); 
+  if(confirm('Delete this layer?')) {
+    const layer = layersBySection[section].find(l => String(l.id) === String(layerId));
+    if(layer && layer.type === 'svg' && layer.imageUrl && layer.imageUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(layer.imageUrl);
+    }
+    layersBySection[section] = layersBySection[section].filter(l => String(l.id) !== String(layerId));
+    selectedOrder = selectedOrder.filter(item => String(item.layerId) !== String(layerId));
+    selectedOrder.forEach((item, idx) => item.order = idx + 1);
+    saveToStorage();
+    renderSections();
+    renderCreateSections();
+    updateOrderPreview();
     updateLivePreview();
-    showToast('✓ Layer deleted');
+    showToast('Layer deleted');
   }
 }
 
-function toggleSectionLayers(section) { openSectionLayers = openSectionLayers===section ? null : section; renderSections(); }
-function toggleSectionCreate(section) { openSectionCreate = openSectionCreate===section ? null : section; renderCreateSections(); }
+function toggleSectionLayers(section) {
+  openSectionLayers[section] = !openSectionLayers[section];
+  renderSections();
+}
+
+function toggleSectionCreate(section) {
+  openSectionCreate[section] = !openSectionCreate[section];
+  renderCreateSections();
+}
 
 function renderSections() {
   const container = document.getElementById('sections-container');
   const empty = document.getElementById('layers-empty');
-  let hasAny = false, html = '';
-  for(let section of SECTIONS){
-    const layers = layersBySection[section]||[];
-    if(layers.length>0) hasAny=true;
-    const isOpen = openSectionLayers===section;
-    const isBackground = section==="Background";
+  let hasAny = false;
+  let html = '';
+  
+  for(let section of SECTIONS) {
+    const layers = layersBySection[section] || [];
+    if(layers.length > 0) hasAny = true;
+    const isOpen = openSectionLayers[section] === true;
+    
     html += `
-      <div class="section-card ${isBackground?'bg-badge':''} fade-in">
+      <div class="section-card fade-in">
         <div onclick="App.toggleSectionLayers('${section}')" class="section-header">
           <div style="display:flex;align-items:center;gap:10px">
-            <img src="https://github.com/nextpunks/nextpunks.github.io/blob/main/Icon/folder.png?raw=true" style="width:18px;height:18px;object-fit:contain" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2218%22 height=%2218%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23a78bfa%22 stroke-width=%222%22%3E%3Cpath d=%22M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7l-2-2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z%22/%3E%3C/svg%3E'">
-            <span class="section-name" style="color:${isBackground?'#34d399':'#c4b5fd'}">${section}</span>
-            <span class="section-count">${layers.length} layers</span>
-            <span class="section-badge ${getSectionBadgeClass(section)}">${getSectionBadgeLabel(section)}</span>
+            <span class="font-raj font-bold" style="color:#c4b5fd">${section}</span>
+            <span class="text-xs text-muted">${layers.length} layers</span>
+            <span class="section-badge">${section === 'Background' ? 'UI Only' : 'Trait'}</span>
           </div>
-          <i data-lucide="chevron-down" style="width:16px;height:16px" class="accordion-icon ${isOpen?'rotate-180':''}"></i>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transform:${isOpen ? 'rotate(180deg)' : 'rotate(0deg)'}; transition:transform 0.25s">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
         </div>
-        ${isOpen ? `
-        <div class="section-content" style="padding:0 16px 16px;border-top:1px solid var(--border)">
+        ${isOpen ? `<div class="section-content">
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-top:14px">
-            ${layers.map(layer=>`
-              <div class="layer-item ${layer.gender==='male'?'male-bg':'female-bg'}">
-                <img src="${layer.gender==='male'?'https://github.com/nextpunks/nextpunks.github.io/blob/main/Icon/male.png?raw=true':'https://github.com/nextpunks/nextpunks.github.io/blob/main/Icon/femenine.png?raw=true'}" class="gender-icon" onerror="this.style.display='none'">
+            ${layers.map(layer => `
+              <div class="layer-item ${layer.gender === 'male' ? 'male-bg' : 'female-bg'}">
+                ${layer.type === 'svg' ? '<div class="svg-badge">SVG</div>' : ''}
                 <div style="aspect-ratio:1;border-radius:6px;overflow:hidden;background:var(--bg0);margin-bottom:8px">
-                  <img src="${layer.imageUrl}" alt="${escapeHtml(layer.value)}" style="width:100%;height:100%;object-fit:contain" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22%3E%3Crect fill=%22%23111%22 width=%2260%22 height=%2260%22/%3E%3C/svg%3E'">
+                  <img src="${layer.imageUrl}" style="width:100%;height:100%;object-fit:cover" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22%3E%3Crect fill=%22%23111%22 width=%2260%22 height=%2260%22/%3E%3C/svg%3E'">
                 </div>
-                <p style="font-size:11px;font-family:'Rajdhani',sans-serif;font-weight:600;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)">${escapeHtml(layer.value)}</p>
-                <p style="font-size:9px;text-align:center;color:${layer.gender==='male'?'#60a5fa':'#f472b6'};margin-top:2px">${layer.gender==='male'?'♂ Male':'♀ Female'}</p>
-                <button onclick="App.deleteLayer('${section}', '${layer.id}')" class="btn-sm btn-danger" style="width:100%;margin-top:8px;font-size:11px">Delete</button>
+                <p style="font-size:11px;font-weight:600;text-align:center;color:var(--text)">${escapeHtml(layer.value)}</p>
+                <button onclick="event.stopPropagation(); App.deleteLayer('${section}', '${layer.id}')" class="btn-sm btn-danger" style="width:100%;margin-top:8px">Delete</button>
               </div>
             `).join('')}
           </div>
         </div>` : ''}
-      </div>`;
+      </div>
+    `;
   }
+  
   empty.classList.toggle('hidden', hasAny);
   container.innerHTML = html;
-  lucide.createIcons();
 }
 
 function renderCreateSections() {
   const container = document.getElementById('create-sections-container');
   if(!container) return;
-  let html = '', hasAnyLayer = false;
-  for(let section of SECTIONS){
-    const layers = layersBySection[section]||[];
-    if(layers.length===0) continue;
-    hasAnyLayer = true;
-    const isOpen = openSectionCreate===section;
-    const selectedItem = selectedOrder.find(item=>item.section===section);
+  let html = '';
+  let hasAny = false;
+  
+  for(let section of SECTIONS) {
+    const layers = layersBySection[section] || [];
+    if(layers.length === 0) continue;
+    hasAny = true;
+    const isOpen = openSectionCreate[section] === true;
+    const selectedItem = selectedOrder.find(item => item.section === section);
     const selectedId = selectedItem ? selectedItem.layerId : null;
-    const isBackground = section==="Background";
+    
     html += `
-      <div class="section-card ${isBackground?'bg-badge':''} fade-in">
+      <div class="section-card fade-in">
         <div onclick="App.toggleSectionCreate('${section}')" class="section-header">
-          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-            <img src="https://github.com/nextpunks/nextpunks.github.io/blob/main/Icon/folder.png?raw=true" style="width:18px;height:18px;object-fit:contain" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2218%22 height=%2218%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23a78bfa%22 stroke-width=%222%22%3E%3Cpath d=%22M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7l-2-2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z%22/%3E%3C/svg%3E'">
-            <span class="section-name" style="color:${isBackground?'#34d399':'#c4b5fd'}">${section}</span>
-            <span class="section-count">${layers.length} layers</span>
-            <span class="section-badge ${getSectionBadgeClass(section)}">${getSectionBadgeLabel(section)}</span>
-            ${selectedItem?`<span style="font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;color:#34d399">✓ ORDER ${selectedItem.order}</span>`:''}
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="font-raj font-bold" style="color:#c4b5fd">${section}</span>
+            <span class="text-xs text-muted">${layers.length} layers</span>
+            ${selectedItem ? `<span class="text-xs" style="color:#34d399">✓ ORDER ${selectedItem.order}</span>` : ''}
           </div>
-          <i data-lucide="chevron-down" style="width:16px;height:16px" class="accordion-icon ${isOpen?'rotate-180':''}"></i>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transform:${isOpen ? 'rotate(180deg)' : 'rotate(0deg)'}; transition:transform 0.25s">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
         </div>
-        ${isOpen ? `
-        <div class="section-content" style="padding:0 16px 16px;border-top:1px solid var(--border)">
+        ${isOpen ? `<div class="section-content">
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:14px">
-            ${layers.map(layer=>{
-              const isSel = selectedId===layer.id;
-              const orderNum = isSel ? selectedOrder.find(item=>item.layerId===layer.id)?.order : null;
+            ${layers.map(layer => {
+              const isSel = String(selectedId) === String(layer.id);
+              const orderNum = isSel ? selectedOrder.find(item => String(item.layerId) === String(layer.id))?.order : null;
               return `
                 <div onclick="App.selectLayer('${section}','${layer.id}','${escapeHtml(layer.value).replace(/'/g, "\\'")}','${layer.imageUrl.replace(/'/g, "\\'")}','${layer.gender}')"
-                     class="layer-item ${isSel?'selected':''} ${layer.gender==='male'?'male-bg':'female-bg'}">
-                  ${isSel&&orderNum?`<div class="order-number">${orderNum}</div>`:''}
-                  <img src="${layer.gender==='male'?'https://github.com/nextpunks/nextpunks.github.io/blob/main/Icon/male.png?raw=true':'https://github.com/nextpunks/nextpunks.github.io/blob/main/Icon/femenine.png?raw=true'}" class="gender-icon" onerror="this.style.display='none'">
+                     class="layer-item ${isSel ? 'selected' : ''}" style="cursor:pointer">
+                  ${isSel && orderNum ? `<div class="order-number">${orderNum}</div>` : ''}
+                  ${layer.type === 'svg' ? '<div class="svg-badge">SVG</div>' : ''}
                   <div style="aspect-ratio:1;border-radius:6px;overflow:hidden;background:var(--bg0);margin-bottom:6px">
-                    <img src="${layer.imageUrl}" alt="${escapeHtml(layer.value)}" style="width:100%;height:100%;object-fit:contain" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22%3E%3Crect fill=%22%23111%22 width=%2260%22 height=%2260%22/%3E%3C/svg%3E'">
+                    <img src="${layer.imageUrl}" style="width:100%;height:100%;object-fit:cover">
                   </div>
-                  <p style="font-size:10px;font-family:'Rajdhani',sans-serif;font-weight:600;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)">${escapeHtml(layer.value)}</p>
-                </div>`;
+                  <p style="font-size:10px;font-weight:600;text-align:center;color:var(--text)">${escapeHtml(layer.value)}</p>
+                </div>
+              `;
             }).join('')}
           </div>
         </div>` : ''}
-      </div>`;
+      </div>
+    `;
   }
-  if(!hasAnyLayer) {
-    container.innerHTML = '<div class="empty-state">No layers added yet.<br>Go to Layers tab and add GitHub images.</div>';
+  
+  if(!hasAny) {
+    container.innerHTML = '<div class="empty-state">No layers added yet.<br>Go to Layers tab and add layers.</div>';
   } else {
     container.innerHTML = html;
   }
-  lucide.createIcons();
   updateOrderPreview();
 }
 
 function selectLayer(section, layerId, value, imageUrl, gender) {
-  const existingIndex = selectedOrder.findIndex(item=>item.section===section);
-  if(existingIndex!==-1){
-    selectedOrder.splice(existingIndex,1);
-    selectedOrder.forEach((item,idx)=>{ item.order=idx+1; });
+  const existingIndex = selectedOrder.findIndex(item => item.section === section);
+  if(existingIndex !== -1) {
+    selectedOrder.splice(existingIndex, 1);
+    selectedOrder.forEach((item, idx) => item.order = idx + 1);
   } else {
-    selectedOrder.push({ section, layerId, value, imageUrl, gender, order: selectedOrder.length+1 });
+    selectedOrder.push({ section, layerId, value, imageUrl, gender, order: selectedOrder.length + 1 });
   }
   renderCreateSections();
   updateLivePreview();
@@ -844,195 +737,158 @@ function selectLayer(section, layerId, value, imageUrl, gender) {
 function updateOrderPreview() {
   const div = document.getElementById('order-preview-list');
   if(!div) return;
-  if(selectedOrder.length===0){
-    div.innerHTML='<span style="font-size:12px;color:var(--muted);font-family:Rajdhani,sans-serif;letter-spacing:1px">No layers selected</span>';
+  if(selectedOrder.length === 0) {
+    div.innerHTML = '<span class="text-muted text-xs">No layers selected</span>';
     return;
   }
-  div.innerHTML = selectedOrder.map(item=>{
-    const isBg = item.section==="Background";
-    const traitLabel = isBg?"BG":item.section;
-    const genderIcon = item.gender==='male'?'♂':'♀';
-    return `<span class="order-tag">
-      <span style="color:var(--neon2);font-weight:800">${item.order}</span>
-      <span style="color:${item.gender==='male'?'#60a5fa':'#f472b6'}">${genderIcon}</span>
-      <span style="color:${isBg?'#34d399':'#fbbf24'}">${traitLabel}</span>
-      <span style="color:var(--muted)">:</span>
-      <span>${escapeHtml(item.value)}</span>
-    </span>`;
-  }).join('');
+  div.innerHTML = selectedOrder.map(item => `
+    <span class="order-tag">
+      <span style="color:#a855f7;font-weight:800">${item.order}</span>
+      ${item.section === 'Background' ? 'BG' : item.section}: ${escapeHtml(item.value)}
+    </span>
+  `).join('');
 }
 
 async function compositeFromSelected() {
   const canvas = document.createElement('canvas');
-  canvas.width=512; canvas.height=512;
+  canvas.width = 512;
+  canvas.height = 512;
   const ctx = canvas.getContext('2d');
-  ctx.clearRect(0,0,512,512);
-  for(let item of selectedOrder){
-    await new Promise((resolve,reject)=>{
-      const img = new Image(); img.crossOrigin="Anonymous";
-      img.onload=()=>{ ctx.drawImage(img,0,0,512,512); resolve(); };
-      img.onerror=()=>reject(new Error(`Failed to load ${item.section}`));
-      img.src=item.imageUrl;
+  ctx.fillStyle = '#05050f';
+  ctx.fillRect(0, 0, 512, 512);
+  for(let item of selectedOrder) {
+    await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "Anonymous";
+      img.onload = () => { renderImageToCanvas(ctx, img, 512, 512); resolve(); };
+      img.onerror = () => reject(new Error(`Failed to load ${item.section}`));
+      img.src = item.imageUrl;
     });
   }
   return canvas.toDataURL('image/png');
 }
 
 async function createNFT() {
-  if(selectedOrder.length===0){ showToast('Please select at least one layer'); return; }
-  const nftName = document.getElementById('nft-name').value.trim()||"V2 Dickbutts";
-  const description = document.getElementById('nft-description').value.trim()||"crypto Dickbutts V2 — art community driven.";
+  if(selectedOrder.length === 0) { showToast('Select at least one layer'); return; }
+  const name = document.getElementById('nft-name').value.trim() || "V2 Dickbutts";
+  const description = document.getElementById('nft-description').value.trim();
   const btn = document.getElementById('btn-create-nft');
-  btn.disabled=true;
-  btn.innerHTML='<div class="animate-spin" style="width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%"></div> Generating...';
+  btn.disabled = true;
+  btn.innerHTML = '<div class="animate-spin" style="width:18px;height:18px;border:2px solid white;border-top-color:transparent;border-radius:50%"></div> Generating...';
   try {
     const imageData = await compositeFromSelected();
-    const attributes = selectedOrder
-      .filter(item=>item.section!=="Background")
-      .map(item=>{ 
-        return { 
-          trait_type: item.section,
-          value: item.value 
-        };
-      });
-    attributes.push({ trait_type:"Attribute Count", value: attributes.length.toString() });
-    const newNFT = {
-      id: Date.now()+Math.random().toString(36).substr(2,6),
-      name: nftName, description,
-      selectedLayers: selectedOrder.map(item=>({ section:item.section, value:item.value, gender:item.gender })),
-      image: imageData, attributes,
-      cidPlaceholder: "ipfs://QmPlaceholder_V2Dickbutts"
-    };
-    nfts.push(newNFT); saveToStorage();
-    selectedOrder=[]; renderCreateSections(); renderCollection();
-    if(previewCtx){ previewCtx.clearRect(0,0,200,200); previewCtx.fillStyle='#05050f'; previewCtx.fillRect(0,0,200,200); }
-    showToast(`✅ "${nftName}" created!`);
+    const attributes = selectedOrder.filter(item => item.section !== "Background")
+      .map(item => ({ trait_type: item.section, value: item.value }));
+    attributes.push({ trait_type: "Attribute Count", value: attributes.length.toString() });
+    nfts.push({ id: Date.now() + '_' + Math.random().toString(36).substr(2, 6), name, description, image: imageData, attributes });
+    saveToStorage();
+    selectedOrder = [];
+    renderCreateSections();
+    renderCollection();
+    updateLivePreview();
+    showToast(`✅ "${name}" created!`);
     switchTab('collection');
-  } catch(err){
-    showToast(`Error: ${err.message}`);
-  } finally {
-    btn.disabled=false;
-    btn.innerHTML='<i data-lucide="sparkles" style="width:18px;height:18px"></i> Generate NFT';
-    lucide.createIcons();
-  }
+  } catch(err) { showToast(`Error: ${err.message}`); }
+  finally { btn.disabled = false; btn.innerHTML = '✨ Generate NFT'; }
 }
 
 function renderCollection() {
   const container = document.getElementById('nft-list');
   const empty = document.getElementById('nft-empty');
-  const countDiv = document.getElementById('nft-count');
   if(!container) return;
-  empty.classList.toggle('hidden', nfts.length>0);
-  countDiv.innerHTML = nfts.length ? `<div class="count-badge"><span class="count-dot"></span>${nfts.length} NFT${nfts.length!==1?'s':''} Minted</div>` : '';
-  if(!nfts.length){ container.innerHTML=''; return; }
-  container.innerHTML = nfts.map(nft=>`
-    <div class="nft-card fade-in" onclick="App.viewMetadata('${nft.id}')">
-      <div style="aspect-ratio:1;background:var(--bg0);overflow:hidden;border-bottom:1px solid var(--border)">
-        <img src="${nft.image}" alt="${escapeHtml(nft.name)}" style="width:100%;height:100%;object-fit:contain">
+  empty.classList.toggle('hidden', nfts.length > 0);
+  if(nfts.length === 0) { container.innerHTML = ''; return; }
+  container.innerHTML = nfts.map(nft => `
+    <div class="section-card fade-in" onclick="App.viewMetadata('${nft.id}')" style="cursor:pointer">
+      <div style="aspect-ratio:1;background:var(--bg0);overflow:hidden">
+        <img src="${nft.image}" style="width:100%;height:100%;object-fit:contain">
       </div>
       <div style="padding:14px">
-        <h3 class="font-raj" style="font-size:16px;font-weight:700;letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px">${escapeHtml(nft.name)}</h3>
-        <p style="font-family:'Orbitron',monospace;font-size:10px;color:var(--muted);margin-bottom:12px">${nft.attributes.length-1} ATTRIBUTES</p>
-        <div style="display:flex;gap:8px" onclick="event.stopPropagation()">
+        <h3 class="font-raj font-bold">${escapeHtml(nft.name)}</h3>
+        <p class="text-muted text-xs mt-1">${nft.attributes.length - 1} traits</p>
+        <div style="display:flex;gap:8px;margin-top:12px" onclick="event.stopPropagation()">
           <button onclick="App.downloadImage('${nft.id}')" class="btn-sm">📷 Image</button>
           <button onclick="App.downloadJSON('${nft.id}')" class="btn-sm">📄 JSON</button>
-          <button onclick="App.deleteNFT('${nft.id}')" class="btn-sm btn-danger btn-delete">🗑️</button>
+          <button onclick="App.deleteNFT('${nft.id}')" class="btn-sm btn-danger">🗑️</button>
         </div>
       </div>
     </div>
   `).join('');
-  lucide.createIcons();
 }
 
 function viewMetadata(id) {
-  const nft = nfts.find(n=>n.id==id);
+  const nft = nfts.find(n => n.id == id);
   if(!nft) return;
-  const modal = document.createElement('div');
-  modal.className='modal-backdrop';
-  const attrsHtml = (nft.attributes||[]).map(attr=>`
-    <div class="attribute-badge">
-      <span style="font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#a78bfa">${escapeHtml(attr.trait_type)}</span>
-      <span style="font-family:'Orbitron',monospace;font-size:12px;color:var(--text)">${escapeHtml(attr.value)}</span>
-    </div>`).join('');
-  modal.innerHTML=`
-    <div class="modal-content">
-      <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:20px">
-        <h2 class="font-raj" style="font-size:20px;font-weight:700;letter-spacing:2px;background:linear-gradient(135deg,#a78bfa,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">${escapeHtml(nft.name)}</h2>
-        <button onclick="this.closest('.modal-backdrop').remove()" style="color:var(--muted);font-size:20px;background:none;border:none;cursor:pointer;">✕</button>
-      </div>
-      <div style="aspect-ratio:1;background:var(--bg0);border-radius:10px;overflow:hidden;margin-bottom:16px;border:1px solid var(--border)">
-        <img src="${nft.image}" style="width:100%;height:100%;object-fit:contain">
-      </div>
-      <div class="info-strip" style="margin-bottom:14px">${escapeHtml(nft.description)}</div>
-      <div><p class="font-raj" style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Attributes (V2 trait types)</p>
-      <div style="display:flex;flex-direction:column;gap:6px">${attrsHtml}</div></div>
-      <div style="display:flex;gap:10px;margin-top:20px">
-        <button onclick="App.downloadJSON('${nft.id}'); this.closest('.modal-backdrop').remove();" class="btn-primary" style="flex:1">Export JSON</button>
-        <button onclick="App.downloadImage('${nft.id}');" class="btn-primary" style="flex:1">Download Image</button>
-      </div>
-    </div>`;
-  document.body.appendChild(modal);
-  modal.addEventListener('click',e=>{ if(e.target===modal) modal.remove(); });
+  alert(`Name: ${nft.name}\nDescription: ${nft.description}\nTraits: ${nft.attributes.map(a => `${a.trait_type}: ${a.value}`).join('\n')}`);
 }
 
 function downloadJSON(id) {
-  const nft = nfts.find(n=>n.id==id); if(!nft) return;
-  const metadata = { name:nft.name, description:nft.description, image:nft.cidPlaceholder, attributes:nft.attributes };
-  const blob = new Blob([JSON.stringify(metadata,null,2)],{type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href=url; a.download=`${nft.name.replace(/[^a-z0-9]/gi,'_')}_metadata.json`; a.click();
-  URL.revokeObjectURL(url); showToast('JSON downloaded (trait_type = V2 folder names)');
+  const nft = nfts.find(n => n.id == id);
+  const metadata = { name: nft.name, description: nft.description, image: "ipfs://placeholder", attributes: nft.attributes };
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(metadata, null, 2)], { type: 'application/json' }));
+  a.download = `${nft.name.replace(/[^a-z0-9]/gi, '_')}.json`;
+  a.click();
+  showToast('JSON downloaded');
 }
 
 function downloadImage(id) {
-  const nft = nfts.find(n=>n.id==id); if(!nft) return;
-  const a = document.createElement('a'); a.href=nft.image; a.download=`${nft.name.replace(/[^a-z0-9]/gi,'_')}_v2.png`; a.click();
+  const nft = nfts.find(n => n.id == id);
+  const a = document.createElement('a');
+  a.href = nft.image;
+  a.download = `${nft.name.replace(/[^a-z0-9]/gi, '_')}.png`;
+  a.click();
   showToast('Image downloaded');
 }
 
 function deleteNFT(id) {
-  if(confirm('Delete this NFT?')){
-    nfts = nfts.filter(n=>n.id!=id);
-    saveToStorage(); renderCollection(); showToast('NFT deleted');
+  if(confirm('Delete this NFT?')) {
+    nfts = nfts.filter(n => n.id != id);
+    saveToStorage();
+    renderCollection();
+    showToast('NFT deleted');
   }
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('mode-url').classList.toggle('active', mode === 'url');
+  document.getElementById('mode-svg').classList.toggle('active', mode === 'svg');
+  document.getElementById('url-mode').style.display = mode === 'url' ? 'block' : 'none';
+  document.getElementById('svg-mode').style.display = mode === 'svg' ? 'block' : 'none';
 }
 
 function switchTab(tab) {
   document.getElementById('panel-layers').classList.toggle('hidden', tab !== 'layers');
   document.getElementById('panel-create').classList.toggle('hidden', tab !== 'create');
   document.getElementById('panel-collection').classList.toggle('hidden', tab !== 'collection');
-  
-  const layerBtn = document.getElementById('tab-layers');
-  const createBtn = document.getElementById('tab-create');
-  const collectionBtn = document.getElementById('tab-collection');
-  
-  layerBtn.classList.toggle('active', tab === 'layers');
-  createBtn.classList.toggle('active', tab === 'create');
-  collectionBtn.classList.toggle('active', tab === 'collection');
-  
-  if(tab==='create'){ renderCreateSections(); initPreviewCanvas(); updateLivePreview(); }
-  if(tab==='collection') renderCollection();
-  lucide.createIcons();
+  document.getElementById('tab-layers').classList.toggle('active', tab === 'layers');
+  document.getElementById('tab-create').classList.toggle('active', tab === 'create');
+  document.getElementById('tab-collection').classList.toggle('active', tab === 'collection');
+  if(tab === 'create') {
+    if(!previewCanvas) {
+      previewCanvas = document.getElementById('live-preview-canvas');
+      previewCtx = previewCanvas.getContext('2d');
+    }
+    updateLivePreview();
+  }
+  if(tab === 'collection') renderCollection();
 }
 
 function init() {
   loadFromStorage();
-  initPreviewCanvas();
-  lucide.createIcons();
+  previewCanvas = document.getElementById('live-preview-canvas');
+  if(previewCanvas) previewCtx = previewCanvas.getContext('2d');
+  renderSections();
+  renderCreateSections();
+  renderCollection();
+  setMode('url');
 }
 
 window.App = {
-  switchTab,
-  toggleSectionLayers,
-  toggleSectionCreate,
-  addLayer,
-  deleteLayer,
-  selectLayer,
-  createNFT,
-  viewMetadata,
-  downloadJSON,
-  downloadImage,
-  deleteNFT
+  switchTab, setMode, addLayerFromUrl, addLayerFromSvg, deleteLayer,
+  toggleSectionLayers, toggleSectionCreate, selectLayer, createNFT,
+  viewMetadata, downloadJSON, downloadImage, deleteNFT
 };
 
 init();
