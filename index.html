@@ -14,7 +14,6 @@
       --neon3: #ec4899;
       --bg0: #05050f;
       --bg1: #0a0a1a;
-      --bg2: #0f0f24;
       --text: #e2e0ff;
       --muted: #7070a0;
       --highlight: #c4b5fd;
@@ -155,7 +154,7 @@
       position: absolute;
       top: 6px;
       left: 6px;
-      background: rgba(234,179,8,0.8);
+      background: rgba(234,179,8,0.9);
       color: #000;
       font-size: 9px;
       padding: 2px 6px;
@@ -193,7 +192,7 @@
       outline: none;
     }
     .svg-input {
-      font-family: 'Monaco', monospace;
+      font-family: 'Monaco', 'Menlo', monospace;
       font-size: 12px;
       resize: vertical;
     }
@@ -334,6 +333,9 @@
       white-space: nowrap;
     }
     #toast.hidden { display: none; }
+    
+    .male-bg { background: rgba(37,99,235,0.08); }
+    .female-bg { background: rgba(236,72,153,0.08); }
   </style>
 </head>
 <body>
@@ -378,11 +380,13 @@
 
         <div id="svg-mode" style="display:none">
           <div style="display:flex;flex-direction:column;gap:12px">
-            <textarea id="svg-code" rows="5" class="svg-input" placeholder='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <textarea id="svg-code" rows="6" class="svg-input" placeholder='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <circle cx="256" cy="256" r="200" fill="#7c3aed"/>
+  <circle cx="256" cy="256" r="150" fill="#a855f7"/>
+  <circle cx="256" cy="256" r="80" fill="#ec4899"/>
 </svg>'></textarea>
             <div style="display:flex;gap:12px">
-              <input type="text" id="svg-value" placeholder="Value" class="nft-input" style="flex:1">
+              <input type="text" id="svg-value" placeholder="Value (e.g., Purple Circles)" class="nft-input" style="flex:1">
               <select id="svg-section" class="nft-input" style="flex:1">
                 <option value="Background">Background</option><option value="Body">Body</option><option value="Butt">Butt</option>
                 <option value="Dick">Dick</option><option value="Eyes">Eyes</option><option value="Hand">Hand</option>
@@ -475,8 +479,34 @@ function normalizeImageUrl(raw) {
 }
 
 function svgToDataUrl(svgString) {
-  const blob = new Blob([svgString], { type: 'image/svg+xml' });
-  return URL.createObjectURL(blob);
+  // Fix common SVG issues
+  let fixedSvg = svgString;
+  
+  // Add XML declaration if missing
+  if (!fixedSvg.includes('<?xml')) {
+    fixedSvg = '<?xml version="1.0" encoding="UTF-8"?>\n' + fixedSvg;
+  }
+  
+  // Ensure xmlns
+  if (!fixedSvg.includes('xmlns="http://www.w3.org/2000/svg"')) {
+    fixedSvg = fixedSvg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+  
+  // Ensure viewBox
+  if (!fixedSvg.includes('viewBox')) {
+    fixedSvg = fixedSvg.replace('<svg', '<svg viewBox="0 0 512 512"');
+  }
+  
+  // Ensure width and height
+  if (!fixedSvg.includes('width="512"')) {
+    fixedSvg = fixedSvg.replace('<svg', '<svg width="512" height="512"');
+  }
+  
+  // Encode special characters for data URL
+  const encodedSvg = encodeURIComponent(fixedSvg);
+  const dataUrl = 'data:image/svg+xml,' + encodedSvg;
+  
+  return dataUrl;
 }
 
 function showToast(msg) {
@@ -488,6 +518,17 @@ function showToast(msg) {
 }
 
 function saveToStorage() {
+  // Clean up blob URLs before saving
+  for(let section in layersBySection) {
+    for(let layer of layersBySection[section]) {
+      if(layer.type === 'svg' && layer.imageUrl && layer.imageUrl.startsWith('blob:')) {
+        // Don't save blob URLs, save the SVG raw instead
+        if(layer.svgRaw) {
+          layer.imageUrl = 'data:image/svg+xml,' + encodeURIComponent(layer.svgRaw);
+        }
+      }
+    }
+  }
   localStorage.setItem('v2_layers', JSON.stringify(layersBySection));
   localStorage.setItem('v2_nfts', JSON.stringify(nfts));
 }
@@ -496,7 +537,17 @@ function loadFromStorage() {
   try {
     const layers = localStorage.getItem('v2_layers');
     const nftsData = localStorage.getItem('v2_nfts');
-    if(layers) layersBySection = JSON.parse(layers);
+    if(layers) {
+      layersBySection = JSON.parse(layers);
+      // Restore data URLs for SVG layers
+      for(let section in layersBySection) {
+        for(let layer of layersBySection[section]) {
+          if(layer.type === 'svg' && layer.svgRaw && (!layer.imageUrl || layer.imageUrl.startsWith('blob:'))) {
+            layer.imageUrl = 'data:image/svg+xml,' + encodeURIComponent(layer.svgRaw);
+          }
+        }
+      }
+    }
     if(nftsData) nfts = JSON.parse(nftsData);
     for(let sec of SECTIONS) if(!layersBySection[sec]) layersBySection[sec] = [];
   } catch(e) { console.warn(e); }
@@ -528,8 +579,14 @@ async function updateLivePreview() {
     await new Promise(resolve => {
       const img = new Image();
       img.crossOrigin = "Anonymous";
-      img.onload = () => { renderImageToCanvas(previewCtx, img, 512, 512); resolve(); };
-      img.onerror = () => resolve();
+      img.onload = () => { 
+        renderImageToCanvas(previewCtx, img, 512, 512); 
+        resolve(); 
+      };
+      img.onerror = () => {
+        console.error('Failed to load:', item.imageUrl);
+        resolve();
+      };
       img.src = item.imageUrl;
     });
   }
@@ -542,7 +599,13 @@ function addLayerFromUrl() {
   if(!url) { showToast('Enter image URL'); return; }
   if(!value) { showToast('Enter value'); return; }
   const finalUrl = normalizeImageUrl(url);
-  const newLayer = { id: Date.now() + '_' + Math.random(), value, imageUrl: finalUrl, gender: 'male', type: 'url' };
+  const newLayer = { 
+    id: Date.now() + '_' + Math.random(), 
+    value, 
+    imageUrl: finalUrl, 
+    gender: 'male', 
+    type: 'url' 
+  };
   const img = new Image();
   img.onload = () => {
     layersBySection[section].push(newLayer);
@@ -558,7 +621,7 @@ function addLayerFromUrl() {
 }
 
 function addLayerFromSvg() {
-  const svgCode = document.getElementById('svg-code').value.trim();
+  let svgCode = document.getElementById('svg-code').value.trim();
   const value = document.getElementById('svg-value').value.trim();
   const section = document.getElementById('svg-section').value;
   const radios = document.getElementsByName('svg-gender');
@@ -568,16 +631,43 @@ function addLayerFromSvg() {
   if(!svgCode) { showToast('Enter SVG code'); return; }
   if(!value) { showToast('Enter value'); return; }
   
-  let finalSvg = svgCode;
-  if(!svgCode.includes('viewBox')) {
-    finalSvg = svgCode.replace('<svg', '<svg viewBox="0 0 512 512"');
-  }
-  if(!finalSvg.includes('width="512"')) {
-    finalSvg = finalSvg.replace('<svg', '<svg width="512" height="512"');
+  // Clean up SVG code
+  svgCode = svgCode.replace(/&/g, '&amp;');
+  
+  // Ensure proper SVG structure
+  if (!svgCode.includes('<svg')) {
+    showToast('❌ Invalid SVG: No <svg> tag found');
+    return;
   }
   
-  const svgDataUrl = svgToDataUrl(finalSvg);
-  const newLayer = { id: Date.now() + '_' + Math.random(), value, imageUrl: svgDataUrl, gender, type: 'svg', svgRaw: finalSvg };
+  if (!svgCode.includes('xmlns')) {
+    svgCode = svgCode.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+  
+  if (!svgCode.includes('viewBox')) {
+    svgCode = svgCode.replace('<svg', '<svg viewBox="0 0 512 512"');
+  }
+  
+  if (!svgCode.includes('width="512"')) {
+    svgCode = svgCode.replace('<svg', '<svg width="512" height="512"');
+  }
+  
+  // Make sure SVG ends properly
+  if (!svgCode.includes('</svg>')) {
+    svgCode += '</svg>';
+  }
+  
+  const svgDataUrl = 'data:image/svg+xml,' + encodeURIComponent(svgCode);
+  
+  const newLayer = { 
+    id: Date.now() + '_' + Math.random(), 
+    value, 
+    imageUrl: svgDataUrl, 
+    gender, 
+    type: 'svg', 
+    svgRaw: svgCode 
+  };
+  
   const img = new Image();
   img.onload = () => {
     layersBySection[section].push(newLayer);
@@ -588,16 +678,15 @@ function addLayerFromSvg() {
     document.getElementById('svg-code').value = '';
     document.getElementById('svg-value').value = '';
   };
-  img.onerror = () => { showToast('❌ Invalid SVG code'); URL.revokeObjectURL(svgDataUrl); };
+  img.onerror = (err) => { 
+    console.error('SVG load error:', err);
+    showToast('❌ Invalid SVG code. Check syntax and try again.'); 
+  };
   img.src = svgDataUrl;
 }
 
 function deleteLayer(section, layerId) {
   if(confirm('Delete this layer?')) {
-    const layer = layersBySection[section].find(l => String(l.id) === String(layerId));
-    if(layer && layer.type === 'svg' && layer.imageUrl && layer.imageUrl.startsWith('blob:')) {
-      URL.revokeObjectURL(layer.imageUrl);
-    }
     layersBySection[section] = layersBySection[section].filter(l => String(l.id) !== String(layerId));
     selectedOrder = selectedOrder.filter(item => String(item.layerId) !== String(layerId));
     selectedOrder.forEach((item, idx) => item.order = idx + 1);
@@ -649,7 +738,7 @@ function renderSections() {
               <div class="layer-item ${layer.gender === 'male' ? 'male-bg' : 'female-bg'}">
                 ${layer.type === 'svg' ? '<div class="svg-badge">SVG</div>' : ''}
                 <div style="aspect-ratio:1;border-radius:6px;overflow:hidden;background:var(--bg0);margin-bottom:8px">
-                  <img src="${layer.imageUrl}" style="width:100%;height:100%;object-fit:cover" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22%3E%3Crect fill=%22%23111%22 width=%2260%22 height=%2260%22/%3E%3C/svg%3E'">
+                  <img src="${layer.imageUrl}" style="width:100%;height:100%;object-fit:cover" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23333%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23fff%22%3EError%3C/text%3E%3C/svg%3E'">
                 </div>
                 <p style="font-size:11px;font-weight:600;text-align:center;color:var(--text)">${escapeHtml(layer.value)}</p>
                 <button onclick="event.stopPropagation(); App.deleteLayer('${section}', '${layer.id}')" class="btn-sm btn-danger" style="width:100%;margin-top:8px">Delete</button>
@@ -702,7 +791,7 @@ function renderCreateSections() {
                   ${isSel && orderNum ? `<div class="order-number">${orderNum}</div>` : ''}
                   ${layer.type === 'svg' ? '<div class="svg-badge">SVG</div>' : ''}
                   <div style="aspect-ratio:1;border-radius:6px;overflow:hidden;background:var(--bg0);margin-bottom:6px">
-                    <img src="${layer.imageUrl}" style="width:100%;height:100%;object-fit:cover">
+                    <img src="${layer.imageUrl}" style="width:100%;height:100%;object-fit:cover" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23333%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23fff%22%3ELoad Error%3C/text%3E%3C/svg%3E'">
                   </div>
                   <p style="font-size:10px;font-weight:600;text-align:center;color:var(--text)">${escapeHtml(layer.value)}</p>
                 </div>
@@ -761,7 +850,7 @@ async function compositeFromSelected() {
       const img = new Image();
       img.crossOrigin = "Anonymous";
       img.onload = () => { renderImageToCanvas(ctx, img, 512, 512); resolve(); };
-      img.onerror = () => reject(new Error(`Failed to load ${item.section}`));
+      img.onerror = () => reject(new Error(`Failed to load ${item.section}: ${item.value}`));
       img.src = item.imageUrl;
     });
   }
