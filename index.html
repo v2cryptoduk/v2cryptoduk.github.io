@@ -24,14 +24,19 @@
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
  <body class="h-full bg-[#008080] overflow-auto">
-  <div class="h-full w-full p-4"><!-- Title Bar Window -->
+  <div class="h-full w-full p-4">
+   <!-- Title Bar Window -->
    <div class="win95-border bg-[#c0c0c0] max-w-6xl mx-auto">
-    <div class="title-bar flex items-center justify-between"><span id="site-title" class="text-lg">⚙️ Robo Symbol NFT Generator</span>
-     <div class="flex gap-1"><button class="win95-btn w-5 h-4 text-xs leading-none">_</button> <button class="win95-btn w-5 h-4 text-xs leading-none">□</button> <button class="win95-btn w-5 h-4 text-xs leading-none">✕</button>
+    <div class="title-bar flex items-center justify-between">
+     <span id="site-title" class="text-lg">⚙️ Robo Symbol NFT Generator</span>
+     <div class="flex gap-1">
+      <button class="win95-btn w-5 h-4 text-xs leading-none">_</button> <button class="win95-btn w-5 h-4 text-xs leading-none">□</button> <button class="win95-btn w-5 h-4 text-xs leading-none">✕</button>
      </div>
     </div>
-    <div class="p-3"><!-- Controls -->
-     <div class="flex flex-wrap gap-2 mb-4 items-center"><button id="generate-btn" class="win95-btn px-4 py-1 text-lg">🤖 Generate NFT</button> <button id="generate-10-btn" class="win95-btn px-4 py-1 text-lg">⚡ Generate 10</button> <button id="download-all-btn" class="win95-btn px-4 py-1 text-lg">💾 Download All</button> <span class="text-sm ml-2" id="count-label">Collection: 0 NFTs</span>
+    <div class="p-3">
+     <!-- Controls -->
+     <div class="flex flex-wrap gap-2 mb-4 items-center">
+      <button id="generate-btn" class="win95-btn px-4 py-1 text-lg">🤖 Generate NFT</button> <button id="generate-10-btn" class="win95-btn px-4 py-1 text-lg">⚡ Generate 10</button> <button id="download-all-btn" class="win95-btn px-4 py-1 text-lg">💾 Download All</button> <span class="text-sm ml-2" id="count-label">Collection: 0 NFTs</span>
      </div><!-- NFT Grid -->
      <div class="win95-border-inset bg-white p-3 min-h-[300px]">
       <div id="nft-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3"></div>
@@ -41,11 +46,12 @@
    </div><!-- Modal -->
    <div id="modal" class="modal-overlay hidden">
     <div class="win95-border bg-[#c0c0c0] w-[90%] max-w-md">
-     <div class="title-bar flex items-center justify-between"><span>📋 NFT Metadata</span> <button id="modal-close" class="win95-btn w-5 h-4 text-xs leading-none">✕</button>
+     <div class="title-bar flex items-center justify-between">
+      <span>📋 NFT Metadata</span> <button id="modal-close" class="win95-btn w-5 h-4 text-xs leading-none">✕</button>
      </div>
      <div class="p-4">
       <div id="modal-robot" class="win95-border-inset bg-black p-2 mb-3 flex items-center justify-center"></div>
-      <div id="modal-meta" class="win95-border-inset bg-white p-2 text-sm mb-3 overflow-auto max-h-[200px]"></div><button id="download-btn" class="win95-btn px-4 py-1 text-lg w-full">💾 Download JSON</button>
+      <div id="modal-meta" class="win95-border-inset bg-white p-2 text-sm mb-3 overflow-auto max-h-[200px]"></div><button id="download-btn" class="win95-btn px-4 py-1 text-lg w-full mb-2">💾 Download JSON</button><button id="download-png-btn" class="win95-btn px-4 py-1 text-lg w-full">🖼️ Download PNG</button>
      </div>
     </div>
    </div>
@@ -187,6 +193,57 @@
       URL.revokeObjectURL(url);
     }
 
+    function downloadPNG() {
+      if (!selectedNft) return;
+      const nftIndex = nfts.findIndex(n => n.id === selectedNft.id) + 1;
+      const canvas = document.createElement('canvas');
+      canvas.width = 300;
+      canvas.height = 400;
+      const ctx = canvas.getContext('2d');
+      const [c1,c2,c3] = selectedNft.symbolColors;
+      const bg = selectedNft.bgPalette;
+      
+      const gradient = ctx.createLinearGradient(0, 0, 300, 400);
+      gradient.addColorStop(0, bg[0]);
+      gradient.addColorStop(0.5, bg[1]);
+      gradient.addColorStop(1, bg[2]);
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 300, 400);
+      
+      ctx.font = '28px VT323, monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      
+      ctx.fillStyle = c1;
+      ctx.fillText(selectedNft.antenna, 150, 50);
+      ctx.fillStyle = c2;
+      ctx.fillText(selectedNft.head, 150, 100);
+      ctx.fillStyle = c3;
+      ctx.fillText(selectedNft.arms, 150, 140);
+      ctx.fillStyle = c1;
+      ctx.fillText(selectedNft.body.slice(0,3), 150, 170);
+      ctx.fillStyle = c2;
+      ctx.fillText(selectedNft.body.slice(3,6), 150, 200);
+      ctx.fillStyle = c3;
+      ctx.fillText(selectedNft.body.slice(6), 150, 230);
+      ctx.fillStyle = c1;
+      ctx.fillText(selectedNft.legs, 150, 270);
+      
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '16px VT323, monospace';
+      ctx.fillText(selectedNft.name, 150, 320);
+      ctx.fillText(selectedNft.trait + ' • ' + selectedNft.rarity, 150, 350);
+      
+      canvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${nftIndex}.png`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }, 'image/png');
+    }
+
     function downloadNFT(id) {
       const nft = nfts.find(n => n.id === id);
       if (!nft) return;
@@ -248,6 +305,7 @@
     document.getElementById('modal-close').onclick = () => document.getElementById('modal').classList.add('hidden');
     document.getElementById('modal').onclick = (e) => { if(e.target.id==='modal') document.getElementById('modal').classList.add('hidden'); };
     document.getElementById('download-btn').onclick = downloadJSON;
+    document.getElementById('download-png-btn').onclick = downloadPNG;
 
     // Element SDK
     window.elementSdk.init({
@@ -275,5 +333,5 @@
 
     lucide.createIcons();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0261d57de2a25c9',t:'MTc3OTg5NjM5MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a02626e17e113fe4',t:'MTc3OTg5Njc4MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
