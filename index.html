@@ -1,926 +1,545 @@
-<!doctype html>
-<html lang="bn" class="h-full">
- <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Watercolor Dot Art Studio</title>
-  <script src="/_sdk/element_sdk.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,700;9..144,800&display=swap');
-
-    html, body {
-      height: 100%;
-      width: 100%;
-      margin: 0;
-    }
-
-    body {
-      font-family: "Anek Bangla", Georgia, serif;
-    }
-
-    .art-app {
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      position: relative;
-      background:
-        radial-gradient(circle at 12% 18%, rgba(255, 177, 104, 0.32), transparent 26%),
-        radial-gradient(circle at 84% 12%, rgba(82, 158, 173, 0.26), transparent 28%),
-        radial-gradient(circle at 50% 88%, rgba(168, 110, 83, 0.24), transparent 30%),
-        #f6ead7;
-      color: #33251b;
-    }
-
-    .paper-grain {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0.28;
-      background-image:
-        radial-gradient(rgba(51, 37, 27, 0.18) 0.8px, transparent 0.8px),
-        radial-gradient(rgba(255,255,255,0.65) 0.8px, transparent 0.8px);
-      background-size: 18px 18px, 23px 23px;
-      background-position: 0 0, 7px 9px;
-      mix-blend-mode: multiply;
-    }
-
-    .shell {
-      position: relative;
-      width: 100%;
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 34px 22px 28px;
-    }
-
-    .hero-card {
-      background: rgba(255, 250, 239, 0.78);
-      border: 1px solid rgba(117, 79, 45, 0.22);
-      box-shadow: 0 28px 80px rgba(89, 55, 28, 0.18);
-      backdrop-filter: blur(18px);
-      border-radius: 34px;
-      overflow: hidden;
-    }
-
-    .ornament {
-      position: absolute;
-      width: 170px;
-      height: 170px;
-      border-radius: 999px;
-      filter: blur(1px);
-      opacity: 0.62;
-      pointer-events: none;
-    }
-
-    .ornament.one {
-      top: -56px;
-      right: 42px;
-      background: radial-gradient(circle, rgba(202, 87, 62, .4), transparent 66%);
-    }
-
-    .ornament.two {
-      bottom: -40px;
-      left: 22px;
-      background: radial-gradient(circle, rgba(49, 126, 142, .34), transparent 68%);
-    }
-
-    .title-font {
-      font-family: "Fraunces", "Anek Bangla", Georgia, serif;
-    }
-
-    .upload-zone {
-      border: 2px dashed rgba(150, 94, 55, 0.42);
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.58), rgba(255, 244, 221, 0.42)),
-        repeating-linear-gradient(-8deg, rgba(116, 73, 41, .035) 0px, rgba(116, 73, 41, .035) 1px, transparent 1px, transparent 8px);
-      transition: transform .25s ease, border-color .25s ease, background .25s ease;
-    }
-
-    .upload-zone.dragging {
-      transform: scale(1.015);
-      border-color: #c85b46;
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.75), rgba(255, 225, 197, 0.72)),
-        repeating-linear-gradient(-8deg, rgba(116, 73, 41, .045) 0px, rgba(116, 73, 41, .045) 1px, transparent 1px, transparent 8px);
-    }
-
-    .effect-button {
-      border: 1px solid rgba(117, 79, 45, 0.2);
-      background: rgba(255, 250, 239, 0.72);
-      color: #33251b;
-      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
-    }
-
-    .effect-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 26px rgba(89, 55, 28, 0.15);
-    }
-
-    .effect-button.active {
-      background: #c85b46;
-      color: #fffaf0;
-      border-color: #c85b46;
-      box-shadow: 0 14px 28px rgba(200, 91, 70, 0.3);
-    }
-
-    .range-input {
-      accent-color: #c85b46;
-    }
-
-    canvas {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 26px;
-      background: #fffaf0;
-      box-shadow: inset 0 0 0 1px rgba(117, 79, 45, 0.12);
-    }
-
-    .preview-frame {
-      background:
-        linear-gradient(145deg, rgba(255, 250, 240, 0.88), rgba(240, 220, 190, 0.48)),
-        #fffaf0;
-      border: 1px solid rgba(117, 79, 45, 0.18);
-      box-shadow: 0 22px 60px rgba(89, 55, 28, 0.16);
-    }
-
-    .soft-button {
-      transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
-    }
-
-    .soft-button:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 16px 30px rgba(200, 91, 70, 0.24);
-    }
-
-    .soft-button:disabled {
-      opacity: .48;
-      cursor: not-allowed;
-    }
-
-    .fade-in {
-      animation: fadeRise .7s ease both;
-    }
-
-    @keyframes fadeRise {
-      from { opacity: 0; transform: translateY(18px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .spinner {
-      width: 18px;
-      height: 18px;
-      border: 3px solid rgba(255,255,255,.45);
-      border-top-color: white;
-      border-radius: 999px;
-      animation: spin .8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .focusable:focus-visible {
-      outline: 3px solid rgba(200, 91, 70, .55);
-      outline-offset: 4px;
-    }
-
-    @media (max-width: 860px) {
-      .shell {
-        padding: 20px 14px;
-      }
-      .hero-card {
-        border-radius: 24px;
-      }
-    }
-  </style>
-  <style>body { box-sizing: border-box; }</style>
-  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
- </head>
- <body class="h-full">
-  <div id="app" class="art-app h-full w-full">
-   <div class="paper-grain"></div>
-   <div class="shell">
-    <div class="hero-card relative fade-in">
-     <div class="ornament one"></div>
-     <div class="ornament two"></div>
-     <header class="relative px-6 sm:px-9 pt-8 sm:pt-10 pb-6">
-      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
-       <div>
-        <div class="inline-flex items-center gap-2 rounded-full px-4 py-2 mb-5 text-sm font-semibold" id="badge">
-         <span class="w-2.5 h-2.5 rounded-full" id="badgeDot"></span> ৮টি ডট স্টাইল • রেইনবো মোড • সেপিয়া &amp; Risograph
-        </div>
-        <h1 id="appTitle" class="title-font leading-tight tracking-tight max-w-3xl">Watercolor Dot Art Studio</h1>
-        <p id="appSubtitle" class="mt-4 max-w-2xl leading-relaxed">Upload a photo and turn it into soft dotted watercolor art.</p>
-       </div>
-       <div class="rounded-3xl px-5 py-4 border bg-white/40 max-w-sm">
-        <p class="font-bold flex items-center gap-2"><i data-lucide="sparkles" class="w-5 h-5"></i> প্রো ফিচারস</p>
-        <p class="mt-1 opacity-80 text-sm">গন ডট, বর্গ, ডিম, রত্ন - সব স্টাইলে HD আর্ট তৈরি করুন।</p>
-       </div>
-      </div>
-     </header>
-     <main class="relative grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-6 px-6 sm:px-9 pb-8 sm:pb-10">
-      <section aria-labelledby="uploadHeading" class="space-y-5 max-h-[90vh] overflow-y-auto">
-       <div class="upload-zone rounded-[28px] p-6 text-center" id="uploadZone">
-        <div class="mx-auto w-16 h-16 rounded-2xl flex items-center justify-center mb-4" id="uploadIconBox">
-         <i data-lucide="image-plus" class="w-8 h-8"></i>
-        </div>
-        <h2 id="uploadHeading" class="font-extrabold">Drop your picture here</h2>
-        <p id="uploadHint" class="mt-1 opacity-75">PNG, JPG, or WEBP</p><label for="imageInput" class="focusable inline-flex items-center justify-center gap-2 mt-5 rounded-full px-5 py-3 font-bold cursor-pointer" id="chooseLabel" tabindex="0"><i data-lucide="upload" class="w-5 h-5"></i> ছবি আপলোড করুন</label> <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp" class="sr-only">
-       </div>
-       <div class="rounded-[28px] p-5 border bg-white/45">
-        <h2 class="font-extrabold mb-4 text-sm flex items-center gap-2"><i data-lucide="wand-2" class="w-5 h-5"></i>আর্ট ইফেক্ট (৮টি)</h2>
-        <div id="effectsList" class="grid grid-cols-1 gap-2" role="group" aria-label="Art effects"><button type="button" class="effect-button active focusable rounded-xl p-2 text-xs font-bold" data-effect="pointillism">Pointillism</button> <button type="button" class="effect-button focusable rounded-xl p-2 text-xs font-bold" data-effect="stippling">Fine Stippling</button> <button type="button" class="effect-button focusable rounded-xl p-2 text-xs font-bold" data-effect="dotted">Dotted Poster</button> <button type="button" class="effect-button focusable rounded-xl p-2 text-xs font-bold" data-effect="textured">Textured</button> <button type="button" class="effect-button focusable rounded-xl p-2 text-xs font-bold" data-effect="mist">Watercolor Mist</button> <button type="button" class="effect-button focusable rounded-xl p-2 text-xs font-bold" data-effect="mosaic">Mosaic</button> <button type="button" class="effect-button focusable rounded-xl p-2 text-xs font-bold" data-effect="inkwash">Ink Wash</button> <button type="button" class="effect-button focusable rounded-xl p-2 text-xs font-bold" data-effect="risograph">Risograph</button>
-        </div>
-       </div>
-       <div class="rounded-[28px] p-5 border bg-white/45">
-        <h3 class="font-extrabold mb-3 text-sm flex items-center gap-2"><i data-lucide="droplet" class="w-4 h-4"></i>ডট স্টাইল</h3>
-        <div id="dotStyleList" class="grid grid-cols-2 gap-2" role="group" aria-label="Dot shapes"><button type="button" class="effect-button active focusable rounded-lg p-2 text-xs font-bold" data-dot-style="circle">● গোল</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-dot-style="square">■ বর্গ</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-dot-style="oval">◐ ডিম</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-dot-style="diamond">◆ রত্ন</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-dot-style="hex">⬡ ষড়ভুজ</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-dot-style="triangle">▲ ত্রিভুজ</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-dot-style="star">★ তারা</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-dot-style="cross">✚ ক্রস</button>
-        </div>
-       </div>
-       <div class="rounded-[28px] p-5 border bg-white/45">
-        <h3 class="font-extrabold mb-3 text-sm flex items-center gap-2"><i data-lucide="palette" class="w-4 h-4"></i>কালার মোড</h3>
-        <div id="colorStyleList" class="grid grid-cols-2 gap-2" role="group" aria-label="Color styles"><button type="button" class="effect-button active focusable rounded-lg p-2 text-xs font-bold" data-color-style="original">Original</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-color-style="pop">🌈 Pop</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-color-style="sepia">🟫 Sepia</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-color-style="risograph">🎨 Riso</button>
-        </div>
-       </div>
-       <div class="rounded-[28px] p-5 border bg-white/45 space-y-4">
-        <div>
-         <div class="flex justify-between gap-4 mb-2">
-          <label for="dotDensity" class="font-bold text-xs">ডটের ঘনত্ব</label><span id="densityValue" class="font-bold text-xs">70%</span>
-         </div><input id="dotDensity" class="range-input w-full" type="range" min="40" max="100" value="70">
-        </div>
-        <div>
-         <div class="flex justify-between gap-4 mb-2">
-          <label for="dotSize" class="font-bold text-xs">ডটের সাইজ</label><span id="sizeValue" class="font-bold text-xs">7</span>
-         </div><input id="dotSize" class="range-input w-full" type="range" min="2" max="16" value="7">
-        </div><button type="button" id="downloadBtn" class="soft-button focusable w-full rounded-full px-5 py-3 font-extrabold inline-flex items-center justify-center gap-2 text-sm" disabled><i data-lucide="download" class="w-4 h-4"></i><span id="buttonText">Download artwork</span></button>
-        <p id="statusMessage" class="text-xs opacity-80 min-h-[20px]" aria-live="polite">প্রথমে একটি ছবি আপলোড করুন।</p>
-       </div>
-      </section>
-      <section aria-labelledby="previewHeading" class="preview-frame rounded-[32px] p-4 sm:p-5">
-       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-        <div>
-         <h2 id="previewHeading" class="font-extrabold flex items-center gap-2"><i data-lucide="palette" class="w-5 h-5"></i>Live Preview HD</h2>
-         <p class="text-sm opacity-75">আপনার ডট আর্ট এখানে প্রদর্শিত হবে।</p>
-        </div>
-        <div id="processingPill" class="hidden items-center gap-2 rounded-full px-4 py-2 text-sm font-bold">
-         <span class="spinner"></span>তৈরি হচ্ছে...
-        </div>
-       </div>
-       <div class="relative rounded-[28px] overflow-hidden bg-white">
-        <canvas id="artCanvas" width="1200" height="850" aria-label="Generated dotted watercolor artwork"></canvas>
-        <div id="emptyState" class="absolute inset-0 flex items-center justify-center p-8 text-center">
-         <div class="max-w-md">
-          <div class="mx-auto w-24 h-24 rounded-[32px] flex items-center justify-center mb-5" id="emptyIcon">
-           <i data-lucide="paintbrush" class="w-11 h-11"></i>
-          </div>
-          <p class="title-font text-3xl font-extrabold">আপনার ছবির জন্য অপেক্ষা করছি</p>
-          <p class="mt-3 opacity-75">ছবি দিলে সেটি ছোট ছোট জলরঙের ডট দিয়ে তৈরি হবে।</p>
-         </div>
-        </div>
-       </div>
-       <footer class="pt-5">
-        <p id="footerText" class="text-sm opacity-75">Tip: try portraits, flowers, pets, or landscapes.</p>
-       </footer>
-      </section>
-     </main>
-    </div>
-   </div>
-  </div>
-  <script>
-    const defaultConfig = {
-      background_color: "#f6ead7",
-      surface_color: "#fffaf0",
-      text_color: "#33251b",
-      primary_action_color: "#c85b46",
-      secondary_action_color: "#317e8e",
-      font_family: "Anek Bangla",
-      font_size: 17,
-      app_title: "Watercolor Dot Art Studio",
-      app_subtitle: "Upload a photo and turn it into soft dotted watercolor art.",
-      upload_title: "Drop your picture here",
-      upload_hint: "PNG, JPG, or WEBP",
-      button_text: "Download artwork",
-      footer_text: "Tip: try portraits, flowers, pets, or landscapes."
-    };
-
-    const state = {
-      image: null,
-      effect: "pointillism",
-      dotStyle: "circle",
-      colorStyle: "original",
-      density: 70,
-      dotSize: 7,
-      isProcessing: false,
-      lastFileName: "watercolor-dot-art"
-    };
-
-    const elements = {
-      app: document.getElementById("app"),
-      appTitle: document.getElementById("appTitle"),
-      appSubtitle: document.getElementById("appSubtitle"),
-      uploadHeading: document.getElementById("uploadHeading"),
-      uploadHint: document.getElementById("uploadHint"),
-      buttonText: document.getElementById("buttonText"),
-      footerText: document.getElementById("footerText"),
-      badge: document.getElementById("badge"),
-      badgeDot: document.getElementById("badgeDot"),
-      chooseLabel: document.getElementById("chooseLabel"),
-      uploadIconBox: document.getElementById("uploadIconBox"),
-      emptyIcon: document.getElementById("emptyIcon"),
-      canvas: document.getElementById("artCanvas"),
-      emptyState: document.getElementById("emptyState"),
-      imageInput: document.getElementById("imageInput"),
-      uploadZone: document.getElementById("uploadZone"),
-      effectsList: document.getElementById("effectsList"),
-      dotStyleList: document.getElementById("dotStyleList"),
-      colorStyleList: document.getElementById("colorStyleList"),
-      dotDensity: document.getElementById("dotDensity"),
-      dotSize: document.getElementById("dotSize"),
-      densityValue: document.getElementById("densityValue"),
-      sizeValue: document.getElementById("sizeValue"),
-      downloadBtn: document.getElementById("downloadBtn"),
-      statusMessage: document.getElementById("statusMessage"),
-      processingPill: document.getElementById("processingPill")
-    };
-
-    const ctx = elements.canvas.getContext("2d", { willReadFrequently: true });
-
-    function getConfigValue(config, key) {
-      return config[key] || defaultConfig[key];
-    }
-
-    async function onConfigChange(config) {
-      const bg = getConfigValue(config, "background_color");
-      const surface = getConfigValue(config, "surface_color");
-      const text = getConfigValue(config, "text_color");
-      const primary = getConfigValue(config, "primary_action_color");
-      const secondary = getConfigValue(config, "secondary_action_color");
-      const fontFamily = getConfigValue(config, "font_family");
-      const baseSize = Number(config.font_size || defaultConfig.font_size);
-
-      elements.app.style.background = `
-        radial-gradient(circle at 12% 18%, ${hexToRgba(primary, 0.24)}, transparent 26%),
-        radial-gradient(circle at 84% 12%, ${hexToRgba(secondary, 0.22)}, transparent 28%),
-        radial-gradient(circle at 50% 88%, rgba(168, 110, 83, 0.20), transparent 30%),
-        ${bg}
-      `;
-      elements.app.style.color = text;
-      elements.app.style.fontFamily = `${fontFamily}, Georgia, serif`;
-
-      elements.appTitle.textContent = getConfigValue(config, "app_title");
-      elements.appSubtitle.textContent = getConfigValue(config, "app_subtitle");
-      elements.uploadHeading.textContent = getConfigValue(config, "upload_title");
-      elements.uploadHint.textContent = getConfigValue(config, "upload_hint");
-      elements.buttonText.textContent = getConfigValue(config, "button_text");
-      elements.footerText.textContent = getConfigValue(config, "footer_text");
-
-      [elements.appTitle, elements.appSubtitle, elements.uploadHeading, elements.footerText].forEach(el => {
-        el.style.fontFamily = `${fontFamily}, Georgia, serif`;
-      });
-
-      elements.appTitle.style.fontSize = `${baseSize * 2.75}px`;
-      elements.appSubtitle.style.fontSize = `${baseSize * 1.08}px`;
-      elements.uploadHeading.style.fontSize = `${baseSize * 1.34}px`;
-      elements.uploadHint.style.fontSize = `${baseSize * 0.9}px`;
-      elements.statusMessage.style.fontSize = `${baseSize * 0.84}px`;
-      elements.footerText.style.fontSize = `${baseSize * 0.84}px`;
-
-      document.querySelector(".hero-card").style.background = hexToRgba(surface, 0.78);
-      document.querySelector(".preview-frame").style.background = `linear-gradient(145deg, ${hexToRgba(surface, 0.88)}, ${hexToRgba(bg, 0.5)})`;
-      elements.badge.style.backgroundColor = hexToRgba(surface, 0.7);
-      elements.badge.style.color = text;
-      elements.badgeDot.style.backgroundColor = primary;
-      elements.chooseLabel.style.backgroundColor = primary;
-      elements.chooseLabel.style.color = surface;
-      elements.downloadBtn.style.backgroundColor = primary;
-      elements.downloadBtn.style.color = surface;
-      elements.uploadIconBox.style.backgroundColor = hexToRgba(secondary, 0.15);
-      elements.uploadIconBox.style.color = secondary;
-      elements.emptyIcon.style.backgroundColor = hexToRgba(primary, 0.12);
-      elements.emptyIcon.style.color = primary;
-      elements.processingPill.style.backgroundColor = primary;
-      elements.processingPill.style.color = surface;
-
-      document.querySelectorAll(".effect-button").forEach(btn => {
-        if (btn.classList.contains("active")) {
-          btn.style.backgroundColor = primary;
-          btn.style.borderColor = primary;
-          btn.style.color = surface;
-        } else {
-          btn.style.backgroundColor = hexToRgba(surface, 0.72);
-          btn.style.borderColor = hexToRgba(text, 0.18);
-          btn.style.color = text;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>SYMBOTICA · Generative Symbol Art Studio</title>
+    <!-- Google Fonts + Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-      });
+
+        body {
+            background: radial-gradient(circle at 30% 10%, #0c0f1c, #020408);
+            font-family: 'Space Grotesk', sans-serif;
+            color: #eef5ff;
+            padding: 2rem 1.5rem;
+        }
+
+        .glass-panel {
+            background: rgba(12, 20, 30, 0.65);
+            backdrop-filter: blur(12px);
+            border-radius: 2.5rem;
+            border: 1px solid rgba(0, 255, 255, 0.25);
+            box-shadow: 0 20px 35px -10px rgba(0,0,0,0.6);
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #aaffdd, #88ccff, #ffb3e6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -1px;
+        }
+        .sub {
+            color: #9bb8ff;
+            margin-top: 6px;
+            font-weight: 400;
+        }
+
+        .btn-symbol {
+            background: linear-gradient(95deg, #1e2a3a, #0f1722);
+            border: 1.5px solid #2affb6;
+            color: #befff0;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 0 8px #2affb680;
+            backdrop-filter: blur(4px);
+        }
+        .btn-symbol:hover {
+            background: #2affb622;
+            border-color: #ffd966;
+            color: white;
+            transform: scale(0.98);
+            box-shadow: 0 0 18px #ffd966;
+        }
+
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 1rem 0 2rem;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .badge {
+            background: #0a0f1cbb;
+            border-radius: 60px;
+            padding: 6px 20px;
+            font-size: 0.9rem;
+            border-left: 3px solid cyan;
+        }
+
+        .art-showcase {
+            background: #03060cee;
+            border-radius: 2rem;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid #3effc070;
+            box-shadow: 0 15px 35px rgba(0,255,255,0.1);
+        }
+        .canvas-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+        .symbol-canvas {
+            background: #07121f;
+            border-radius: 32px;
+            box-shadow: 0 0 0 3px #0ff3, 0 20px 40px rgba(0,0,0,0.5);
+            transition: all 0.2s;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border-radius: 28px;
+            image-rendering: crisp-edges;
+            image-rendering: pixelated;
+            width: 512px;
+            height: 512px;
+        }
+
+        .meta-panel {
+            background: #0b111ecc;
+            border-radius: 2rem;
+            padding: 1.4rem 2rem;
+            margin-top: 1.2rem;
+            width: 100%;
+            backdrop-filter: blur(8px);
+        }
+        .traits-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 20px 0 15px;
+        }
+        .trait-chip {
+            background: #1e2a3d;
+            border-radius: 40px;
+            padding: 6px 18px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            font-family: monospace;
+            border-left: 3px solid cyan;
+        }
+        .btn-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+        .btn-icon {
+            background: #0e1727;
+            border: 1px solid #3ca0ff;
+            padding: 10px 22px;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #caf0ff;
+        }
+        .btn-icon:hover {
+            background: #2b5797;
+            border-color: cyan;
+            color: white;
+        }
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+            max-height: 480px;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+        .history-card {
+            background: #0e1625c9;
+            border-radius: 1.2rem;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.1s linear;
+            border: 1px solid #2affb630;
+        }
+        .history-card img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            border-radius: 16px;
+            background: #00000066;
+        }
+        .history-card p {
+            font-size: 0.7rem;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            opacity: 0.6;
+            font-size: 0.8rem;
+        }
+        @media (max-width: 650px) {
+            canvas { width: 100% !important; height: auto !important; }
+            .symbol-canvas { width: 100%; }
+            body { padding: 1rem; }
+        }
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <div>
+            <h1><i class="fas fa-robot"></i> SYMBOTICA <span style="font-size: 1rem;">|</span> <span style="font-size: 1rem;">error•symbol•art</span></h1>
+            <div class="sub">~ `√π÷×{} £$℅^°_=[]‌®©™\<> · generative robot kin · each unique traits</div>
+        </div>
+        <button id="randomArtBtn" class="btn-symbol"><i class="fas fa-dice-d6"></i> ✦ GENERATE NEW ROBOT ✦</button>
+    </header>
+
+    <div class="info-bar">
+        <div class="badge"><i class="fas fa-cubes"></i> LIVE TRAIT ENGINE | 12 trait slots | full metadata</div>
+        <div class="badge"><i class="fas fa-download"></i> Download PNG + JSON (per art)</div>
+    </div>
+
+    <!-- Main Showcase -->
+    <div class="art-showcase">
+        <div class="canvas-area">
+            <div class="symbol-canvas">
+                <canvas id="mainCanvas" width="512" height="512" style="width:512px; height:512px;"></canvas>
+            </div>
+            <div class="meta-panel">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap;">
+                    <h3 id="artName">SYMBIOT #000 — <span id="typeBadge">Pixel-Symbol</span></h3>
+                    <span style="font-family: monospace; background:#00000066; padding: 4px 12px; border-radius: 50px;">ID: <span id="artId">—</span></span>
+                </div>
+                <p id="artDescription" style="margin: 12px 0; color: #bbd4ff;">loading description...</p>
+                <div class="traits-grid" id="traitsContainer"></div>
+                <div class="btn-group">
+                    <button id="downloadPngBtn" class="btn-icon"><i class="fas fa-download"></i> PNG · 512x512</button>
+                    <button id="downloadJsonBtn" class="btn-icon"><i class="fas fa-code"></i> JSON metadata</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Gallery (previously generated arts) -->
+    <div class="section-title">
+        <i class="fas fa-layer-group"></i> <span>✦ ROBOT COLLECTION ✦  <span style="font-size:0.8rem;">(click to reload)</span></span>
+    </div>
+    <div id="historyGallery" class="history-grid glass-panel" style="padding: 1rem;">
+        <div style="text-align:center; padding:2rem;">✨ Generate your first symbol robot ✨</div>
+    </div>
+    <footer>
+        <i class="fas fa-sync-alt"></i> each robot is unique – traits: body, hat, cape, hair, glasses, eyes, mouth, hand pose, tail, horn, dress, bodycolor<br>
+        symbolic error-art generated via glyph mapping | dot • dash ~ √ π ÷ × { } £ $ ℅ ^ ° _ = [ ] ® © ™ \ < >
+    </footer>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // TRAITS POOL — every art different
+    const bodySymbols = ["◉", "⬤", "●", "◈", "▣", "◍", "◎", "★", "✪", "⬟"];
+    const hatStyles = ["⌂", "▲", "⛑️", "𝄞", "⍟", "ᗧ", "⎔", "ꕤ", "⌬", "⏣"];
+    const capeTypes = ["⌭", "ᨒ", "⛊", "≋", "𓆣", "༄", "۞", "⚘", "⌲", "𓋴"];
+    const hairStyles = ["ᚠ", "ᛉ", "꧁", "꧂", "〰️", "⤹", "✧", "❋", "✽", "⍟"];
+    const glassesStyles = ["◠◡◠", "⦿◡⦿", "⎊⦊⎊", "◉‿◉", "⍟‿⍟", "⎋◡⎋", "⍜⍜"];
+    const eyeExpressions = ["◉_◉", "◔_◔", "⊙▂⊙", "◕_◕", "✧_✧", "◖_◗", "◉⌣◉", "⍟‿⍟"];
+    const mouthExpressions = ["⌣", "⌢", "ω", "ꞈ", "͜ʖ", "ᴗ", "❥", "◡", "▽", "⏍"];
+    const handPoses = ["✋", "✌️", "🤟", "👆", "🖖", "⎛⎝", "⫸", "⫷", "ᕦ", "ᕤ"];
+    const tailTypes = ["⌭", "⧚", "⌒", "𓃥", "⤹", "〰️", "↯", "ᨒ", "ᛜ"];
+    const hornTypes = ["⩇", "⩈", "⌶", "⍣", "⌁", "⬿", "⫯", "⌾", "⫪"];
+    const dressStyles = ["⫸⫷", "⎔⎔", "⨀", "◈◈", "⫚", "⌬", "꘏", "⛊⛊", "⫯⫯"];
+    const bodyColors = ["#FF5E7C", "#6C5CE7", "#00CEC9", "#F9CA24", "#FDA7DF", "#95CDBA", "#FF9F43", "#A55CFF", "#20BF6B", "#FF7F50", "#4B6584", "#E84393"];
+
+    function randomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+    function generateUniqueTraits() {
+        return {
+            body: randomItem(bodySymbols),
+            hat: randomItem(hatStyles),
+            cape: randomItem(capeTypes),
+            hair: randomItem(hairStyles),
+            glasses: randomItem(glassesStyles),
+            eyes: randomItem(eyeExpressions),
+            mouth: randomItem(mouthExpressions),
+            hand: randomItem(handPoses),
+            tail: randomItem(tailTypes),
+            horn: randomItem(hornTypes),
+            dress: randomItem(dressStyles),
+            bodyColor: randomItem(bodyColors)
+        };
     }
 
-    function hexToRgba(hex, alpha) {
-      const clean = hex.replace("#", "");
-      const bigint = parseInt(clean.length === 3 ? clean.split("").map(c => c + c).join("") : clean, 16);
-      const r = (bigint >> 16) & 255;
-      const g = (bigint >> 8) & 255;
-      const b = bigint & 255;
-      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    // metadata constructor
+    function buildMetadata(traits, index) {
+        const name = `SYMBOT #${index} | ${traits.body} ${traits.hat}`;
+        const description = `generative error-art robot. traits: body=${traits.body}, hat=${traits.hat}, cape=${traits.cape}, hair=${traits.hair}, glasses=${traits.glasses}, eyes=${traits.eyes}, mouth=${traits.mouth}, hand=${traits.hand}, tail=${traits.tail}, horn=${traits.horn}, dress=${traits.dress}, color=${traits.bodyColor} – symbol chaos ~√π÷×{}£$℅^°_=[]®©™\<>`;
+        return { name, description };
     }
 
-    function initElementSdk() {
-      if (!window.elementSdk) return;
-
-      window.elementSdk.init({
-        defaultConfig,
-        onConfigChange,
-        mapToCapabilities: (config) => ({
-          recolorables: [
-            { get: () => config.background_color || defaultConfig.background_color, set: (value) => window.elementSdk.setConfig({ background_color: value }) },
-            { get: () => config.surface_color || defaultConfig.surface_color, set: (value) => window.elementSdk.setConfig({ surface_color: value }) },
-            { get: () => config.text_color || defaultConfig.text_color, set: (value) => window.elementSdk.setConfig({ text_color: value }) },
-            { get: () => config.primary_action_color || defaultConfig.primary_action_color, set: (value) => window.elementSdk.setConfig({ primary_action_color: value }) },
-            { get: () => config.secondary_action_color || defaultConfig.secondary_action_color, set: (value) => window.elementSdk.setConfig({ secondary_action_color: value }) }
-          ],
-          borderables: [],
-          fontEditable: { get: () => config.font_family || defaultConfig.font_family, set: (value) => window.elementSdk.setConfig({ font_family: value }) },
-          fontSizeable: { get: () => config.font_size || defaultConfig.font_size, set: (value) => window.elementSdk.setConfig({ font_size: value }) }
-        }),
-        mapToEditPanelValues: (config) => new Map([
-          ["app_title", config.app_title || defaultConfig.app_title],
-          ["app_subtitle", config.app_subtitle || defaultConfig.app_subtitle],
-          ["upload_title", config.upload_title || defaultConfig.upload_title],
-          ["upload_hint", config.upload_hint || defaultConfig.upload_hint],
-          ["button_text", config.button_text || defaultConfig.button_text],
-          ["footer_text", config.footer_text || defaultConfig.footer_text]
-        ])
-      });
+    // ========== SYMBOLIC PAINT ENGINE : error symbols & dot matrix ==========
+    function drawSymbolArt(ctx, size, traits) {
+        const w = size, h = size;
+        ctx.clearRect(0, 0, w, h);
+        // cosmic dark background but organic
+        ctx.fillStyle = "#0a0f1d";
+        ctx.fillRect(0, 0, w, h);
+        
+        // decorative circuit + error traces
+        for (let i=0; i<120; i++) {
+            ctx.fillStyle = `rgba(0, 255, 200, ${Math.random() * 0.2})`;
+            ctx.fillRect(Math.random()*w, Math.random()*h, 1.5, 1.5);
+        }
+        
+        // main body shape as large symbol
+        ctx.font = `bold ${size * 0.28}px "Segoe UI Emoji", "Courier New", monospace`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        // body glyph
+        ctx.fillStyle = traits.bodyColor;
+        ctx.fillText(traits.body, w/2, h/2 - 12);
+        
+        // hat on top
+        ctx.font = `${size * 0.24}px monospace`;
+        ctx.fillStyle = "#E5D0FF";
+        ctx.fillText(traits.hat, w/2, h*0.22);
+        
+        // cape (drawn as arc behind)
+        ctx.font = `${size * 0.16}px monospace`;
+        ctx.fillStyle = "#9ec8ff";
+        ctx.fillText(traits.cape, w/2 - 40, h/2 + 30);
+        ctx.fillText(traits.cape, w/2 + 40, h/2 + 30);
+        
+        // hair symbols (floating)
+        ctx.fillStyle = "#ffb86b";
+        ctx.fillText(traits.hair, w/2 - 35, h*0.32);
+        ctx.fillText(traits.hair, w/2 + 35, h*0.32);
+        
+        // glasses & eyes combined style
+        ctx.font = `${size * 0.08}px monospace`;
+        ctx.fillStyle = "#c0e0ff";
+        let glassesRaw = traits.glasses;
+        ctx.fillText(glassesRaw, w/2, h/2 - 16);
+        ctx.font = `${size * 0.12}px "Segoe UI Emoji"`;
+        ctx.fillStyle = "#ffffffcc";
+        ctx.fillText(traits.eyes, w/2, h/2 - 6);
+        
+        // mouth
+        ctx.font = `${size * 0.1}px monospace`;
+        ctx.fillStyle = "#FFB7B2";
+        ctx.fillText(traits.mouth, w/2, h/2 + 28);
+        
+        // hand poses
+        ctx.font = `${size * 0.15}px monospace`;
+        ctx.fillStyle = "#A6E3D9";
+        ctx.fillText(traits.hand, w/2 - 70, h/2 + 35);
+        ctx.fillText(traits.hand, w/2 + 70, h/2 + 35);
+        
+        // tail
+        ctx.font = `${size * 0.13}px monospace`;
+        ctx.fillStyle = "#f3b0c2";
+        ctx.fillText(traits.tail, w/2 + 88, h/2 + 60);
+        
+        // horn
+        ctx.fillStyle = "#e2bb8e";
+        ctx.fillText(traits.horn, w/2 - 18, h*0.22);
+        ctx.fillText(traits.horn, w/2 + 18, h*0.22);
+        
+        // dress pattern
+        ctx.font = `${size * 0.1}px monospace`;
+        ctx.fillStyle = "#b59fff";
+        ctx.fillText(traits.dress, w/2, h/2 + 75);
+        
+        // unique DOT-DOT & random matrix error symbols like `√π÷×{}£$℅^°_=[]®©™\<>`
+        const errorSymbols = ["√","π","÷","×","{","}","£","$","℅","^","°","_","=","[","]","®","©","™","\\","<",">","~","`"];
+        for (let s=0; s<85; s++) {
+            ctx.font = `${12 + Math.random() * 20}px monospace`;
+            ctx.fillStyle = `rgba(100, 255, 180, ${0.2+Math.random()*0.5})`;
+            const randSym = errorSymbols[Math.floor(Math.random() * errorSymbols.length)];
+            ctx.fillText(randSym, Math.random() * w, Math.random() * h);
+        }
+        
+        // extra pixel dots (hand drawn style)
+        for (let d=0; d<300; d++) {
+            ctx.fillStyle = `rgba(255, 200, 100, 0.4)`;
+            ctx.fillRect(Math.floor(Math.random()*w), Math.floor(Math.random()*h), 2, 2);
+        }
+        // specific highlight: ring of symbols
+        ctx.beginPath();
+        ctx.arc(w/2, h/2, 110, 0, Math.PI*2);
+        ctx.strokeStyle = "#2affb680";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        for(let ang=0; ang<12; ang++) {
+            let rad = ang * (Math.PI*2/12);
+            let x = w/2 + Math.cos(rad)*90;
+            let y = h/2 + Math.sin(rad)*90;
+            ctx.fillStyle = "#ffc857";
+            ctx.font = "20px monospace";
+            ctx.fillText("•", x-4, y+4);
+        }
     }
 
-    initElementSdk();
-    onConfigChange(window.elementSdk ? window.elementSdk.config : defaultConfig);
-
-    function setProcessing(isProcessing) {
-      state.isProcessing = isProcessing;
-      elements.processingPill.classList.toggle("hidden", !isProcessing);
-      elements.processingPill.classList.toggle("inline-flex", isProcessing);
-      elements.downloadBtn.disabled = isProcessing || !state.image;
-      elements.imageInput.disabled = isProcessing;
+    // --------------------- MAIN STATE ---------------------
+    let currentArt = null;     // { traits, meta, imageDataURL, id }
+    let artHistory = [];        // store previous arts (max 30)
+    let nextId = 1;
+    
+    const canvas = document.getElementById('mainCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    function renderArtToCanvas(traits) {
+        drawSymbolArt(ctx, 512, traits);
+        return canvas.toDataURL('image/png');
     }
-
-    function fitImageToCanvas(img) {
-      const maxW = 1200;
-      const maxH = 850;
-      const ratio = Math.min(maxW / img.width, maxH / img.height, 1.2);
-      elements.canvas.width = Math.max(600, Math.round(img.width * ratio));
-      elements.canvas.height = Math.max(400, Math.round(img.height * ratio));
+    
+    function generateNewArt() {
+        const traits = generateUniqueTraits();
+        const meta = buildMetadata(traits, nextId);
+        const imageUrl = renderArtToCanvas(traits);
+        const newArt = {
+            id: nextId,
+            traits: traits,
+            meta: meta,
+            imageDataURL: imageUrl,
+            timestamp: Date.now()
+        };
+        currentArt = newArt;
+        // push to history (limit last 25)
+        artHistory.unshift(newArt);
+        if(artHistory.length > 28) artHistory.pop();
+        nextId++;
+        updateUIWithCurrent();
+        renderHistoryGallery();
+        return newArt;
     }
-
-    function loadFile(file) {
-      if (!file || !file.type.startsWith("image/")) {
-        elements.statusMessage.textContent = "দয়া করে একটি ছবি ফাইল দিন।";
-        return;
-      }
-
-      const reader = new FileReader();
-      elements.statusMessage.textContent = "ছবি পড়া হচ্ছে...";
-      setProcessing(true);
-
-      reader.onload = () => {
+    
+    function updateUIWithCurrent() {
+        if(!currentArt) return;
+        document.getElementById('artName').innerHTML = `${currentArt.meta.name} <span style="font-size:0.8rem; background:#1f2a44; padding:2px 10px; border-radius:50px;">error·core</span>`;
+        document.getElementById('artDescription').innerText = currentArt.meta.description.substring(0, 180) + "...";
+        document.getElementById('artId').innerText = `#${currentArt.id}`;
+        const traitsCont = document.getElementById('traitsContainer');
+        traitsCont.innerHTML = '';
+        const t = currentArt.traits;
+        const traitList = [
+            `body ${t.body}`, `hat ${t.hat}`, `cape ${t.cape}`, `hair ${t.hair}`,
+            `glasses ${t.glasses}`, `eyes ${t.eyes}`, `mouth ${t.mouth}`, `hand ${t.hand}`,
+            `tail ${t.tail}`, `horn ${t.horn}`, `dress ${t.dress}`, `color ${t.bodyColor}`
+        ];
+        traitList.forEach(tr => {
+            const chip = document.createElement('span');
+            chip.className = 'trait-chip';
+            chip.innerHTML = `<i class="fas fa-paintbrush-fine" style="font-size:10px;"></i> ${tr}`;
+            traitsCont.appendChild(chip);
+        });
+        // also update canvas image source 
         const img = new Image();
         img.onload = () => {
-          state.image = img;
-          state.lastFileName = file.name.replace(/\.[^/.]+$/, "") || "watercolor-dot-art";
-          elements.emptyState.style.display = "none";
-          fitImageToCanvas(img);
-          renderArtwork();
+            ctx.clearRect(0,0,512,512);
+            ctx.drawImage(img,0,0,512,512);
         };
-        img.onerror = () => {
-          elements.statusMessage.textContent = "এই ছবিটি লোড করা যায়নি।";
-          setProcessing(false);
+        img.src = currentArt.imageDataURL;
+    }
+    
+    function renderHistoryGallery() {
+        const historyDiv = document.getElementById('historyGallery');
+        if(!artHistory.length) {
+            historyDiv.innerHTML = `<div style="text-align:center; padding:2rem;">✨ No robots yet. Click GENERATE ✨</div>`;
+            return;
+        }
+        historyDiv.innerHTML = '';
+        artHistory.forEach(art => {
+            const card = document.createElement('div');
+            card.className = 'history-card';
+            card.innerHTML = `
+                <img src="${art.imageDataURL}" alt="robot #${art.id}">
+                <p>#${art.id} · ${art.traits.body} ${art.traits.hat}</p>
+            `;
+            card.addEventListener('click', () => {
+                // load selected art to main viewer
+                currentArt = art;
+                updateUIWithCurrent();
+            });
+            historyDiv.appendChild(card);
+        });
+    }
+    
+    // download functions
+    function downloadCurrentPNG() {
+        if(!currentArt) return;
+        const link = document.createElement('a');
+        link.download = `symbot_${currentArt.id}_512.png`;
+        link.href = currentArt.imageDataURL;
+        link.click();
+    }
+    
+    function downloadCurrentJSON() {
+        if(!currentArt) return;
+        const exportData = {
+            name: currentArt.meta.name,
+            description: currentArt.meta.description,
+            tokenId: currentArt.id,
+            traits: currentArt.traits,
+            type: "error-symbol-art",
+            generative_style: "~√π÷×{}£$℅^°_=[]®©™\\<>",
+            created: new Date().toISOString()
         };
-        img.src = reader.result;
-      };
-
-      reader.onerror = () => {
-        elements.statusMessage.textContent = "ছবি পড়তে সমস্যা হয়েছে।";
-        setProcessing(false);
-      };
-
-      reader.readAsDataURL(file);
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `metadata_symbot_${currentArt.id}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
     }
-
-    function renderArtwork() {
-      if (!state.image) return;
-      setProcessing(true);
-      elements.statusMessage.textContent = "HD ডট আর্ট তৈরি হচ্ছে...";
-
-      requestAnimationFrame(() => {
-        const img = state.image;
-        const temp = document.createElement("canvas");
-        temp.width = elements.canvas.width;
-        temp.height = elements.canvas.height;
-        const tctx = temp.getContext("2d", { willReadFrequently: true });
-
-        tctx.fillStyle = "#fffaf0";
-        tctx.fillRect(0, 0, temp.width, temp.height);
-
-        const scale = Math.max(elements.canvas.width / img.width, elements.canvas.height / img.height);
-        const drawW = img.width * scale;
-        const drawH = img.height * scale;
-        const dx = (elements.canvas.width - drawW) / 2;
-        const dy = (elements.canvas.height - drawH) / 2;
-        tctx.drawImage(img, dx, dy, drawW, drawH);
-
-        const imageData = tctx.getImageData(0, 0, temp.width, temp.height);
-        const data = imageData.data;
-
-        ctx.clearRect(0, 0, elements.canvas.width, elements.canvas.height);
-        drawPaperBase();
-
-        const densityFactor = state.density / 100;
-        const base = Number(state.dotSize);
-        const effect = state.effect;
-        const settings = getEffectSettings(effect, base, densityFactor);
-        const step = Math.max(1, Math.round(settings.step));
-
-        ctx.globalCompositeOperation = "multiply";
-
-        for (let y = step / 2; y < elements.canvas.height; y += step) {
-          for (let x = step / 2; x < elements.canvas.width; x += step) {
-            if (Math.random() > settings.keepChance) continue;
-
-            const jitterX = (Math.random() - 0.5) * settings.jitter;
-            const jitterY = (Math.random() - 0.5) * settings.jitter;
-            const px = Math.max(0, Math.min(elements.canvas.width - 1, Math.round(x + jitterX)));
-            const py = Math.max(0, Math.min(elements.canvas.height - 1, Math.round(y + jitterY)));
-            const i = (py * elements.canvas.width + px) * 4;
-
-            const r = data[i];
-            const g = data[i + 1];
-            const b = data[i + 2];
-            const brightness = (r + g + b) / 3;
-            const darkness = 1 - brightness / 255;
-
-            if (brightness > 248 && Math.random() > 0.06) continue;
-
-            const radius = Math.max(0.8, settings.radiusBase * (0.5 + darkness * settings.darkBoost) * (0.65 + Math.random() * 0.85));
-
-            let rr = r, gg = g, bb = b;
-
-            if (state.colorStyle === "original") {
-              const colorShift = settings.colorShift;
-              rr = clamp(r + randomBetween(-colorShift, colorShift));
-              gg = clamp(g + randomBetween(-colorShift, colorShift));
-              bb = clamp(b + randomBetween(-colorShift, colorShift));
-            } else if (state.colorStyle === "pop") {
-              const hsl = rgbToHsl(r, g, b);
-              hsl.s = Math.min(100, hsl.s * 1.9);
-              hsl.l = Math.min(95, hsl.l * 1.15);
-              [rr, gg, bb] = hslToRgb(hsl.h, hsl.s, hsl.l);
-            } else if (state.colorStyle === "sepia") {
-              const gray = brightness * 0.92;
-              rr = clamp(gray * 1.28);
-              gg = clamp(gray * 1.08);
-              bb = clamp(gray * 0.72);
-            } else if (state.colorStyle === "risograph") {
-              const idx = Math.floor((brightness / 255) * 7);
-              const colors = [[229, 0, 0], [255, 149, 0], [255, 242, 0], [0, 176, 80], [0, 176, 240], [0, 0, 255], [176, 0, 240], [230, 0, 126]];
-              const col = colors[idx];
-              rr = col[0];
-              gg = col[1];
-              bb = col[2];
-            }
-
-            const alpha = Math.min(settings.alphaMax, settings.alphaMin + darkness * settings.alphaBoost);
-            drawDotShape(px, py, radius, rr, gg, bb, alpha, settings);
-          }
-        }
-
-        if (settings.speckles) drawSpeckles(data, settings);
-        addSoftTexture();
-
-        ctx.globalCompositeOperation = "source-over";
-        elements.statusMessage.textContent = "তৈরি! ডাউনলোড করুন বা আরও পরিবর্তন করুন।";
-        setProcessing(false);
-      });
+    
+    // initial random generation and event binding
+    function init() {
+        generateNewArt();  // first random
+        document.getElementById('randomArtBtn').addEventListener('click', () => {
+            generateNewArt();
+        });
+        document.getElementById('downloadPngBtn').addEventListener('click', downloadCurrentPNG);
+        document.getElementById('downloadJsonBtn').addEventListener('click', downloadCurrentJSON);
     }
-
-    function drawDotShape(x, y, radius, r, g, b, alpha, settings) {
-      const style = state.dotStyle;
-      const bloomRadius = radius * settings.bloom;
-
-      const grad = ctx.createRadialGradient(x, y, radius * 0.06, x, y, bloomRadius);
-      grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha})`);
-      grad.addColorStop(0.6, `rgba(${r}, ${g}, ${b}, ${alpha * 0.4})`);
-      grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
-
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-
-      if (style === "circle") {
-        irregularCircle(x, y, bloomRadius, settings.rough);
-      } else if (style === "square") {
-        const size = bloomRadius * 0.75;
-        ctx.rect(x - size, y - size, size * 2, size * 2);
-      } else if (style === "oval") {
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(Math.random() * Math.PI);
-        ctx.scale(1.6, 0.55);
-        irregularCircle(0, 0, bloomRadius * 0.65, settings.rough);
-        ctx.restore();
-      } else if (style === "diamond") {
-        const size = bloomRadius * 0.88;
-        ctx.moveTo(x, y - size);
-        ctx.lineTo(x + size, y);
-        ctx.lineTo(x, y + size);
-        ctx.lineTo(x - size, y);
-        ctx.closePath();
-      } else if (style === "hex") {
-        const size = bloomRadius * 0.82;
-        for (let i = 0; i < 6; i++) {
-          const angle = (i * Math.PI) / 3;
-          const px = x + size * Math.cos(angle);
-          const py = y + size * Math.sin(angle);
-          if (i === 0) ctx.moveTo(px, py);
-          else ctx.lineTo(px, py);
-        }
-        ctx.closePath();
-      } else if (style === "triangle") {
-        const size = bloomRadius;
-        ctx.moveTo(x, y - size);
-        ctx.lineTo(x + size, y + size * 0.52);
-        ctx.lineTo(x - size, y + size * 0.52);
-        ctx.closePath();
-      } else if (style === "star") {
-        drawStar(x, y, bloomRadius * 0.88);
-      } else if (style === "cross") {
-        const size = bloomRadius * 0.65;
-        ctx.moveTo(x - size, y);
-        ctx.lineTo(x + size, y);
-        ctx.moveTo(x, y - size);
-        ctx.lineTo(x, y + size);
-      }
-
-      ctx.fill();
-      if (style !== "cross") {
-        ctx.strokeStyle = `rgba(${clamp(r * 0.65)}, ${clamp(g * 0.65)}, ${clamp(b * 0.65)}, ${alpha * 0.25})`;
-        ctx.lineWidth = radius * 0.12;
-        ctx.stroke();
-      }
-
-      ctx.fillStyle = `rgba(${clamp(r + 35)}, ${clamp(g + 35)}, ${clamp(b + 35)}, ${alpha * 0.16})`;
-      ctx.beginPath();
-      ctx.arc(x - radius * 0.22, y - radius * 0.2, radius * 0.28, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    function drawStar(cx, cy, radius) {
-      const points = 5;
-      for (let i = 0; i < points * 2; i++) {
-        const angle = (i * Math.PI) / points;
-        const r = i % 2 === 0 ? radius : radius * 0.38;
-        const x = cx + r * Math.cos(angle - Math.PI / 2);
-        const y = cy + r * Math.sin(angle - Math.PI / 2);
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      ctx.closePath();
-    }
-
-    function irregularCircle(x, y, radius, roughness) {
-      const points = 14 + roughness * 4;
-      for (let p = 0; p <= points; p++) {
-        const angle = (p / points) * Math.PI * 2;
-        const wobble = 1 + (Math.random() - 0.5) * 0.16 * roughness;
-        const px = x + Math.cos(angle) * radius * wobble;
-        const py = y + Math.sin(angle) * radius * wobble;
-        if (p === 0) ctx.moveTo(px, py);
-        else ctx.lineTo(px, py);
-      }
-      ctx.closePath();
-    }
-
-    function rgbToHsl(r, g, b) {
-      r /= 255; g /= 255; b /= 255;
-      const max = Math.max(r, g, b);
-      const min = Math.min(r, g, b);
-      let h, s, l = (max + min) / 2;
-
-      if (max === min) {
-        h = s = 0;
-      } else {
-        const d = max - min;
-        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-        switch (max) {
-          case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
-          case g: h = ((b - r) / d + 2) / 6; break;
-          case b: h = ((r - g) / d + 4) / 6; break;
-        }
-      }
-      return { h: h * 360, s: s * 100, l: l * 100 };
-    }
-
-    function hslToRgb(h, s, l) {
-      h /= 360; s /= 100; l /= 100;
-      let r, g, b;
-
-      if (s === 0) {
-        r = g = b = l;
-      } else {
-        const hue2rgb = (p, q, t) => {
-          if (t < 0) t += 1;
-          if (t > 1) t -= 1;
-          if (t < 1/6) return p + (q - p) * 6 * t;
-          if (t < 1/2) return q;
-          if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-          return p;
-        };
-        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-        const p = 2 * l - q;
-        r = hue2rgb(p, q, h + 1/3);
-        g = hue2rgb(p, q, h);
-        b = hue2rgb(p, q, h - 1/3);
-      }
-      return [clamp(r * 255), clamp(g * 255), clamp(b * 255)];
-    }
-
-    function drawPaperBase() {
-      const grad = ctx.createLinearGradient(0, 0, elements.canvas.width, elements.canvas.height);
-      grad.addColorStop(0, "#fffaf0");
-      grad.addColorStop(0.48, "#f8ecd5");
-      grad.addColorStop(1, "#fff7e8");
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, elements.canvas.width, elements.canvas.height);
-
-      ctx.globalAlpha = 0.14;
-      for (let i = 0; i < 2400; i++) {
-        const x = Math.random() * elements.canvas.width;
-        const y = Math.random() * elements.canvas.height;
-        const shade = Math.random() > 0.5 ? 255 : 110;
-        ctx.fillStyle = `rgba(${shade}, ${shade * 0.9}, ${shade * 0.75}, 0.14)`;
-        ctx.fillRect(x, y, Math.random() * 1.8, Math.random() * 1.8);
-      }
-      ctx.globalAlpha = 1;
-    }
-
-    function getEffectSettings(effect, base, density) {
-      const common = {
-        step: Math.max(1, base * (1.15 - density * 0.48)),
-        keepChance: 0.58 + density * 0.38,
-        jitter: base * 1,
-        radiusBase: base * 0.5,
-        darkBoost: 1.4,
-        colorShift: 16,
-        alphaMin: 0.32,
-        alphaBoost: 0.44,
-        alphaMax: 0.88,
-        bloom: 1.35,
-        speckles: false,
-        rough: 2
-      };
-
-      const variants = {
-        pointillism: { step: base * (1.05 - density * 0.38), radiusBase: base * 0.58, colorShift: 20, bloom: 1.65, rough: 3 },
-        stippling: { step: base * (0.65 - density * 0.18), radiusBase: base * 0.22, colorShift: 6, alphaMin: 0.28, alphaBoost: 0.3, bloom: 0.8, rough: 1 },
-        dotted: { step: base * (1.4 - density * 0.5), radiusBase: base * 0.72, colorShift: 10, alphaMin: 0.5, alphaBoost: 0.32, bloom: 1.25, rough: 1 },
-        textured: { step: base * (0.98 - density * 0.32), radiusBase: base * 0.56, colorShift: 24, bloom: 1.8, rough: 4 },
-        mist: { step: base * (0.9 - density * 0.28), radiusBase: base * 0.78, colorShift: 18, alphaMin: 0.14, alphaBoost: 0.28, alphaMax: 0.6, bloom: 2.4, rough: 5 },
-        mosaic: { step: base * (1.32 - density * 0.4), radiusBase: base * 0.84, colorShift: 30, alphaMin: 0.42, alphaBoost: 0.38, bloom: 1.3, rough: 2 },
-        inkwash: { step: base * (0.95 - density * 0.26), radiusBase: base * 0.44, colorShift: 12, alphaMin: 0.22, alphaBoost: 0.5, alphaMax: 0.76, bloom: 1.5, speckles: true, rough: 3 },
-        risograph: { step: base * (1.12 - density * 0.35), radiusBase: base * 0.52, colorShift: 0, alphaMin: 0.58, alphaBoost: 0.18, alphaMax: 0.85, bloom: 0.98, rough: 1 }
-      };
-
-      return { ...common, ...(variants[effect] || variants.pointillism) };
-    }
-
-    function drawSpeckles(data, settings) {
-      ctx.globalCompositeOperation = "multiply";
-      for (let i = 0; i < 3200; i++) {
-        const x = Math.floor(Math.random() * elements.canvas.width);
-        const y = Math.floor(Math.random() * elements.canvas.height);
-        const idx = (y * elements.canvas.width + x) * 4;
-        const r = data[idx];
-        const g = data[idx + 1];
-        const b = data[idx + 2];
-        const brightness = (r + g + b) / 3;
-        if (brightness > 232 && Math.random() > 0.08) continue;
-        const size = Math.random() * settings.radiusBase * 0.38 + 0.25;
-        ctx.fillStyle = `rgba(${r * 0.78}, ${g * 0.78}, ${b * 0.78}, ${0.04 + Math.random() * 0.16})`;
-        ctx.beginPath();
-        ctx.arc(x, y, size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    function addSoftTexture() {
-      ctx.globalCompositeOperation = "overlay";
-      ctx.globalAlpha = 0.08;
-      for (let i = 0; i < 500; i++) {
-        ctx.strokeStyle = Math.random() > 0.5 ? "#ffffff" : "#6a4b35";
-        ctx.lineWidth = Math.random() * 1.8 + 0.1;
-        ctx.beginPath();
-        const x = Math.random() * elements.canvas.width;
-        const y = Math.random() * elements.canvas.height;
-        ctx.moveTo(x, y);
-        ctx.lineTo(x + randomBetween(-32, 32), y + randomBetween(-10, 10));
-        ctx.stroke();
-      }
-      ctx.globalAlpha = 1;
-      ctx.globalCompositeOperation = "source-over";
-    }
-
-    function randomBetween(min, max) {
-      return min + Math.random() * (max - min);
-    }
-
-    function clamp(value) {
-      return Math.max(0, Math.min(255, Math.round(value)));
-    }
-
-    elements.imageInput.addEventListener("change", (e) => {
-      const file = e.target.files?.[0];
-      loadFile(file);
-    });
-
-    elements.uploadZone.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      elements.uploadZone.classList.add("dragging");
-    });
-
-    elements.uploadZone.addEventListener("dragleave", () => {
-      elements.uploadZone.classList.remove("dragging");
-    });
-
-    elements.uploadZone.addEventListener("drop", (e) => {
-      e.preventDefault();
-      elements.uploadZone.classList.remove("dragging");
-      const file = e.dataTransfer.files?.[0];
-      loadFile(file);
-    });
-
-    elements.chooseLabel.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        elements.imageInput.click();
-      }
-    });
-
-    elements.effectsList.addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-effect]");
-      if (!btn) return;
-      state.effect = btn.dataset.effect;
-      document.querySelectorAll("#effectsList button").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      if (state.image) renderArtwork();
-    });
-
-    elements.dotStyleList.addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-dot-style]");
-      if (!btn) return;
-      state.dotStyle = btn.dataset.dotStyle;
-      document.querySelectorAll("#dotStyleList button").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      if (state.image) renderArtwork();
-    });
-
-    elements.colorStyleList.addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-color-style]");
-      if (!btn) return;
-      state.colorStyle = btn.dataset.colorStyle;
-      document.querySelectorAll("#colorStyleList button").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      if (state.image) renderArtwork();
-    });
-
-    elements.dotDensity.addEventListener("input", () => {
-      state.density = Number(elements.dotDensity.value);
-      elements.densityValue.textContent = `${state.density}%`;
-      if (state.image) {
-        clearTimeout(elements.dotDensity.renderTimer);
-        elements.dotDensity.renderTimer = setTimeout(renderArtwork, 100);
-      }
-    });
-
-    elements.dotSize.addEventListener("input", () => {
-      state.dotSize = Number(elements.dotSize.value);
-      elements.sizeValue.textContent = state.dotSize;
-      if (state.image) {
-        clearTimeout(elements.dotSize.renderTimer);
-        elements.dotSize.renderTimer = setTimeout(renderArtwork, 100);
-      }
-    });
-
-    elements.downloadBtn.addEventListener("click", () => {
-      if (!state.image || state.isProcessing) return;
-      const link = document.createElement("a");
-      link.download = `${state.lastFileName}-${state.effect}-${state.dotStyle}-${state.colorStyle}.png`;
-      link.href = elements.canvas.toDataURL("image/png");
-      link.click();
-      elements.statusMessage.textContent = "ডাউনলোড শুরু হয়েছে! 🎨";
-    });
-
-    drawPaperBase();
-    if (window.lucide) lucide.createIcons();
-  </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a022fa1d29553505',t:'MTc3OTg2MzQ5MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+    
+    init();
+</script>
+</body>
 </html>
