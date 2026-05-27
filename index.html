@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
 <title>OMEGA ROBO FORGE v3 — PURIFIED EDITION</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
@@ -25,22 +25,22 @@ body{background:#02020e;min-height:100vh;font-family:'Share Tech Mono',monospace
 .card:hover{border-color:#00ccff55;box-shadow:0 0 18px #00ccff22;transform:translateY(-2px);}
 .cstripe{position:absolute;top:0;left:0;right:0;height:2px;border-radius:6px 6px 0 0;}
 .cw{width:100%;aspect-ratio:1;overflow:hidden;border-radius:4px;border:1px solid #0e0e2a;}
-.cw canvas{width:100%;height:100%;display:block;}
+.cw canvas{width:100%;height:100%;display:block;background:#000;object-fit:contain;}
 .clabel{font-size:9px;color:#7777bb;text-align:center;margin-top:5px;letter-spacing:.5px;font-weight:bold;}
 .rbadge{font-size:8px;text-align:center;padding:2px 4px;border-radius:2px;letter-spacing:1px;margin-top:3px;border:1px solid transparent;}
 .dlrow{display:flex;gap:3px;margin-top:5px;}
 .dlrow button{flex:1;font-family:'Share Tech Mono',monospace;background:transparent;border:1px solid #1a1a3a;border-radius:2px;font-size:8px;color:#6666aa;cursor:pointer;padding:3px 0;transition:all .1s;}
 .dlrow button:hover{border-color:#00ccff66;color:#00ccff;background:#00ccff08;}
 .empty{text-align:center;color:#1a1a44;font-size:13px;padding:60px 0;letter-spacing:3px;line-height:2.2;}
-.mbg{position:fixed;inset:0;background:rgba(0,0,4,.93);display:flex;align-items:center;justify-content:center;z-index:999;backdrop-filter:blur(4px);}
-.modal{background:linear-gradient(135deg,#050510,#090916);border:1px solid #00ccff44;border-radius:8px;padding:22px;max-width:380px;width:92%;max-height:92vh;overflow-y:auto;position:relative;box-shadow:0 0 40px #00ccff22;}
+.mbg{position:fixed;inset:0;background:rgba(0,0,4,.96);display:flex;align-items:center;justify-content:center;z-index:999;backdrop-filter:blur(4px);}
+.modal{background:linear-gradient(135deg,#050510,#090916);border:1px solid #00ccff66;border-radius:8px;padding:22px;max-width:380px;width:92%;max-height:92vh;overflow-y:auto;position:relative;box-shadow:0 0 40px #00ccff22;}
 .mtitle{font-family:'Orbitron',monospace;font-size:14px;color:#00ccff;margin-bottom:12px;letter-spacing:2px;}
-.mcw{width:100%;aspect-ratio:1;margin-bottom:12px;border-radius:5px;overflow:hidden;border:1px solid #1a1a3a;}
+.mcw{width:100%;aspect-ratio:1;margin-bottom:12px;border-radius:5px;overflow:hidden;border:1px solid #1a1a3a;background:#010108;}
 .mcw canvas{width:100%;height:100%;display:block;}
 .meta{width:100%;font-size:11px;border-collapse:collapse;margin-bottom:12px;}
 .meta td{padding:4px 8px;border-bottom:1px solid #0e0e22;}
 .meta td:first-child{color:#555588;font-weight:bold;}
-.meta td:last-child{color:#bbbbff;text-align:right;}
+.meta td:last-child{color:#bbbbff;text-align:right;word-break:break-all;}
 .mbtns{display:flex;gap:8px;}
 .mbtns button{flex:1;font-family:'Share Tech Mono',monospace;border-radius:3px;background:transparent;border:1px solid;cursor:pointer;padding:9px;font-size:11px;letter-spacing:1px;transition:all .15s;}
 .mclose{position:absolute;top:14px;right:16px;background:transparent;border:none;color:#444488;font-size:20px;cursor:pointer;z-index:10;}
@@ -49,7 +49,6 @@ body{background:#02020e;min-height:100vh;font-family:'Share Tech Mono',monospace
 </head>
 <body>
 <div id="app">
-<h2 style="position:absolute;left:-9999px;">Omega Robo NFT Forge — 300+ traits cyberpunk robot generator</h2>
 <div class="hdr">
   <div class="hdr-t">⌬ OMEGA ROBO FORGE v3 ⌬</div>
   <div class="hdr-s">300+ TRAITS · CYBER HORNS · SUPERNOVA AURA · MINING READY</div>
@@ -69,7 +68,7 @@ body{background:#02020e;min-height:100vh;font-family:'Share Tech Mono',monospace
   <button class="mclose" id="mclose">✕</button>
   <div class="mtitle" id="mname">OMEGA UNIT</div>
   <div class="mcw"><canvas id="mcanvas" width="512" height="512"></canvas></div>
-  <table class="meta" id="mmeta"><tr></table>
+  <table class="meta" id="mmeta"></tr></table>
   <div class="mbtns">
     <button id="mdlpng" class="bc" style="border-color:#00ccff;color:#00ccff;">⬇ PNG</button>
     <button id="mdljson" class="bg" style="border-color:#00ff88;color:#00ff88;">⬇ JSON</button>
@@ -80,20 +79,21 @@ body{background:#02020e;min-height:100vh;font-family:'Share Tech Mono',monospace
 
 <script>
 (function(){
-const RARITIES=['COMMON','UNCOMMON','RARE','EPIC','LEGENDARY','MYTHIC'];
-const RCOLS={COMMON:'#888899',UNCOMMON:'#00cc66',RARE:'#0099ff',EPIC:'#cc44ff',LEGENDARY:'#ffaa00',MYTHIC:'#ff2255'};
+// ---------- CONSTANTS & UTILS ----------
+const RARITIES = ['COMMON','UNCOMMON','RARE','EPIC','LEGENDARY','MYTHIC'];
+const RCOLS = {COMMON:'#888899',UNCOMMON:'#00cc66',RARE:'#0099ff',EPIC:'#cc44ff',LEGENDARY:'#ffaa00',MYTHIC:'#ff2255'};
 
-const HORN_STYLES=['NONE','NONE','NONE','CYBER_CURVE','DEMON_SCYTHE','ANGEL_BLADE','DRAGON_SPIKE','MECH_RAM','VOLTIC_PRONG','NANO_CROWN','PHANTOM_TWIST','TRIDENT_LANCE','CRYSTAL_HALO','BROKEN_THORN'];
-const POWER_AURAS=['NONE','NONE','SUPERNOVA','NEON_STORM','OMEGA_FLARE','QUANTUM_RIFT','PLASMA_BURST','VOID_CORE','CELESTIAL_RAY'];
-const GLITCH_TYPES=['NONE','NONE','NONE','PIXEL_CRACK','DATA_SCRAMBLE','CHROMA_SHIFT','NEON_FRACTURE','STATIC_PULSE','RGB_SPLIT'];
+const HORN_STYLES = ['NONE','NONE','NONE','CYBER_CURVE','DEMON_SCYTHE','ANGEL_BLADE','DRAGON_SPIKE','MECH_RAM','VOLTIC_PRONG','NANO_CROWN','PHANTOM_TWIST','TRIDENT_LANCE','CRYSTAL_HALO','BROKEN_THORN'];
+const POWER_AURAS = ['NONE','NONE','SUPERNOVA','NEON_STORM','OMEGA_FLARE','QUANTUM_RIFT','PLASMA_BURST','VOID_CORE','CELESTIAL_RAY'];
+const GLITCH_TYPES = ['NONE','NONE','NONE','PIXEL_CRACK','DATA_SCRAMBLE','CHROMA_SHIFT','NEON_FRACTURE','STATIC_PULSE','RGB_SPLIT'];
 
-const CLASS_POOL=['NEMESIS','ORACLE','BERSERKER','ARCHITECT','SPECTRE','TITAN','CHRONO','NOVA','VOIDLORD','STARFALL','THUNDERHEART','CRYPT_KING','PHANTOM','GLITCH_GOD','CHAOS_ENGINE'];
-const WEAPON_POOL=['RAILGUN','PLASMA_SABER','NEURON_WHIP','GRAV_HAMMER','QUANTUM_BOW','PHASE_DAGGER','ION_CANNON','MICROWAVE_ARRAY','DARK_LANCE','VOID_BLADE'];
-const AUGMENT_POOL=['HYPER_CORE','NANO_REGEN','CLOAK_FIELD','BERSERK_CHIP','OMNI_SCAN','SHIELD_FLARE','LEECH_BEAM','TIME_DILATION','PHASE_SHIFT','OMEGA_DRIVE'];
-const PERSONALITY_POOL=['RUTHLESS','CALCULATING','WILDCARD','GUARDIAN','ANARCHIST','MYSTIC','GLADIATOR','TACTICIAN','ROGUE','SILENT_KILLER'];
-const PALETTE_POOL=['MATRIX','INFERNO','AQUA','VOID','SOLAR','CYBER','ULTRA','BLOOD','FROST','SAKURA','GOLD','OCEAN'];
+const CLASS_POOL = ['NEMESIS','ORACLE','BERSERKER','ARCHITECT','SPECTRE','TITAN','CHRONO','NOVA','VOIDLORD','STARFALL','THUNDERHEART','CRYPT_KING','PHANTOM','GLITCH_GOD','CHAOS_ENGINE'];
+const WEAPON_POOL = ['RAILGUN','PLASMA_SABER','NEURON_WHIP','GRAV_HAMMER','QUANTUM_BOW','PHASE_DAGGER','ION_CANNON','MICROWAVE_ARRAY','DARK_LANCE','VOID_BLADE'];
+const AUGMENT_POOL = ['HYPER_CORE','NANO_REGEN','CLOAK_FIELD','BERSERK_CHIP','OMNI_SCAN','SHIELD_FLARE','LEECH_BEAM','TIME_DILATION','PHASE_SHIFT','OMEGA_DRIVE'];
+const PERSONALITY_POOL = ['RUTHLESS','CALCULATING','WILDCARD','GUARDIAN','ANARCHIST','MYSTIC','GLADIATOR','TACTICIAN','ROGUE','SILENT_KILLER'];
+const PALETTE_POOL = ['MATRIX','INFERNO','AQUA','VOID','SOLAR','CYBER','ULTRA','BLOOD','FROST','SAKURA','GOLD','OCEAN'];
 
-const SYM={
+const SYM = {
   intel:['π','∫','∑','∆','∇','λ','Ω','Φ','Ψ','∞','α','β','γ','δ','ε','ζ','η','θ','ℏ','∂','∃','∀','∈','∩','∪','⊆','⊂','∝','≈','≠','≡','≤','≥','⊥','∥','∠'],
   power:['⊕','⊗','⊞','⊠','◈','◉','⊡','⊟','⊛','⊜','⊝','⊘','⊖','⊙','⊚','⋈','⋉','⋊','⋋','⋌','⋍','⋎','⋏','⋐','⋑'],
   control:['⌘','⌥','⌦','⌫','⎋','⏎','⇧','⌃','⌤','⍟','⎈','⎇','⎊','⎍','⏏','⏐','⏑','⏒','⏓','⏔','⏕','⌬','⌭','⌮','⌯','⌱'],
@@ -106,7 +106,7 @@ const SYM={
   special:['⚛','☯','☮','✡','⛎','♾','⚜','♠','♥','♦','♣','🃏']
 };
 
-const PALETTES={
+const PALETTES = {
   MATRIX:{bg:['#020212','#040824','#060520'],a:'#00ff88',b:'#00ccff',c:'#8800ff',d:'#ffaa33'},
   INFERNO:{bg:['#180208','#240408','#200506'],a:'#ff0066',b:'#ff6600',c:'#ffcc00',d:'#ff44aa'},
   AQUA:{bg:['#020c12','#020f1e','#041224'],a:'#00eeff',b:'#0088ff',c:'#00ff44',d:'#aaff00'},
@@ -121,430 +121,391 @@ const PALETTES={
   OCEAN:{bg:['#000a18','#001025','#001530'],a:'#4499ff',b:'#88ccff',c:'#00ffff',d:'#aaddff'}
 };
 
-function pick(a){return a[Math.floor(Math.random()*a.length)];}
-function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)+Math.random().toString(36).slice(2,5);}
-function showToast(msg,d=1800){const t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';setTimeout(()=>t.style.opacity='0',d);}
+function pick(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
+function rnd(min,max){ return Math.floor(Math.random() * (max-min+1)) + min; }
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8) + Math.random().toString(36).slice(2,5); }
+function showToast(msg, dur=1600){ const t=document.getElementById('toast'); t.textContent=msg; t.style.opacity='1'; setTimeout(()=>{ t.style.opacity='0'; }, dur); }
 
+// ----- NFT GENERATION (pure, deterministic traits) -----
 function genNft(idx){
-  const palName=pick(PALETTE_POOL);
-  const pal=PALETTES[palName];
-  const r=Math.random();
-  const rarity=r<0.40?'COMMON':r<0.65?'UNCOMMON':r<0.82?'RARE':r<0.94?'EPIC':r<0.996?'LEGENDARY':'MYTHIC';
-  const horn=pick(HORN_STYLES);
-  const aura=pick(POWER_AURAS);
-  const glitch=pick(GLITCH_TYPES);
-  const cls=pick(CLASS_POOL);
-  const weapon=pick(WEAPON_POOL);
-  const augment=pick(AUGMENT_POOL);
-  const personality=pick(PERSONALITY_POOL);
-  return{
-    id:uid(),idx:idx+1,
-    palette:pal,paletteName:palName,
-    rarity,cls,weapon,augment,personality,
-    horn,aura,glitch,
-    super_power:rnd(150,999),hyper_core:rnd(80,450),
-    luck:rnd(1,100),shield:rnd(10,99),
-    antenna_sym:pick(SYM.intel),
-    eye_l:pick(SYM.power),eye_r:pick(SYM.power),
-    mouth:pick(SYM.control),
-    shoulder_l:pick(SYM.data),shoulder_r:pick(SYM.data),
-    chest:pick(SYM.intel),core:pick(SYM.special),
-    arm_l:pick(SYM.data),arm_r:pick(SYM.data),
-    hand_l:pick(SYM.control),hand_r:pick(SYM.control),
-    hip_l:pick(SYM.misc),hip_r:pick(SYM.misc),
-    knee_l:pick(SYM.power),knee_r:pick(SYM.power),
-    foot_l:pick(SYM.data),foot_r:pick(SYM.data),
-    circuit1:pick(SYM.misc),circuit2:pick(SYM.intel),
-    fire_sym:pick(SYM.fire),skull_sym:pick(SYM.skull),
-    gem_sym:pick(SYM.gems),nature_sym:pick(SYM.nature),
-    created:new Date().toISOString()
+  const palName = pick(PALETTE_POOL);
+  const pal = PALETTES[palName];
+  const r = Math.random();
+  const rarity = r<0.40 ? 'COMMON' : r<0.65 ? 'UNCOMMON' : r<0.82 ? 'RARE' : r<0.94 ? 'EPIC' : r<0.996 ? 'LEGENDARY' : 'MYTHIC';
+  const horn = pick(HORN_STYLES);
+  const aura = pick(POWER_AURAS);
+  const glitch = pick(GLITCH_TYPES);
+  const cls = pick(CLASS_POOL);
+  const weapon = pick(WEAPON_POOL);
+  const augment = pick(AUGMENT_POOL);
+  const personality = pick(PERSONALITY_POOL);
+  return {
+    id: uid(), idx: idx+1,
+    palette: pal, paletteName: palName,
+    rarity, cls, weapon, augment, personality,
+    horn, aura, glitch,
+    super_power: rnd(150,999), hyper_core: rnd(80,450),
+    luck: rnd(1,100), shield: rnd(10,99),
+    antenna_sym: pick(SYM.intel),
+    eye_l: pick(SYM.power), eye_r: pick(SYM.power),
+    mouth: pick(SYM.control),
+    shoulder_l: pick(SYM.data), shoulder_r: pick(SYM.data),
+    chest: pick(SYM.intel), core: pick(SYM.special),
+    arm_l: pick(SYM.data), arm_r: pick(SYM.data),
+    hand_l: pick(SYM.control), hand_r: pick(SYM.control),
+    hip_l: pick(SYM.misc), hip_r: pick(SYM.misc),
+    knee_l: pick(SYM.power), knee_r: pick(SYM.power),
+    foot_l: pick(SYM.data), foot_r: pick(SYM.data),
+    circuit1: pick(SYM.misc), circuit2: pick(SYM.intel),
+    fire_sym: pick(SYM.fire), skull_sym: pick(SYM.skull),
+    gem_sym: pick(SYM.gems), nature_sym: pick(SYM.nature),
+    created: new Date().toISOString()
   };
 }
 
+// roundRect helper
 if(!CanvasRenderingContext2D.prototype.roundRect){
-  CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
-    if(w<2*r)r=w/2;if(h<2*r)r=h/2;
-    this.moveTo(x+r,y);this.lineTo(x+w-r,y);this.quadraticCurveTo(x+w,y,x+w,y+r);
-    this.lineTo(x+w,y+h-r);this.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
-    this.lineTo(x+r,y+h);this.quadraticCurveTo(x,y+h,x,y+h-r);
-    this.lineTo(x,y+r);this.quadraticCurveTo(x,y,x+r,y);return this;
+  CanvasRenderingContext2D.prototype.roundRect = function(x,y,w,h,r){
+    if(w<2*r) r=w/2; if(h<2*r) r=h/2;
+    this.moveTo(x+r,y); this.lineTo(x+w-r,y); this.quadraticCurveTo(x+w,y,x+w,y+r);
+    this.lineTo(x+w,y+h-r); this.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+    this.lineTo(x+r,y+h); this.quadraticCurveTo(x,y+h,x,y+h-r);
+    this.lineTo(x,y+r); this.quadraticCurveTo(x,y,x+r,y); return this;
   };
 }
 
-// CLEAN DRAW: removed all stray dots (scanline particles & tiny random circles)
-// no more random dust or micro-dots — pristine cyborg art.
-function drawRobot(canvas,nft,glowStr){
-  const W=512,H=512;
-  canvas.width=W;canvas.height=H;
-  const ctx=canvas.getContext('2d');
-  const pal=nft.palette;
-  const a=pal.a,b=pal.b,c=pal.c,d=pal.d;
-  const glow=glowStr||20;
-  const cx=W/2;
+// DRAW ROBOT (clean no stray dots, but fully featured)
+function drawRobot(canvas, nft, glowIntensity=20){
+  const W=512, H=512;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const pal = nft.palette;
+  const {a,b,c,d} = pal;
+  const glow = glowIntensity;
+  const cx = W/2;
 
-  // BG radial
-  const bg=ctx.createRadialGradient(cx,H/2,0,cx,H/2,W*0.85);
-  bg.addColorStop(0,pal.bg[1]);bg.addColorStop(0.55,pal.bg[0]);bg.addColorStop(1,pal.bg[2]);
-  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  // BG gradient
+  const bgGrad = ctx.createRadialGradient(cx, H/2, 0, cx, H/2, W*0.85);
+  bgGrad.addColorStop(0, pal.bg[1]);
+  bgGrad.addColorStop(0.55, pal.bg[0]);
+  bgGrad.addColorStop(1, pal.bg[2]);
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0,0,W,H);
+  // nebula soft
+  const nebula = ctx.createRadialGradient(cx, H/2, 0, cx, H/2, 180);
+  nebula.addColorStop(0, a+'0a');
+  nebula.addColorStop(0.5, b+'05');
+  nebula.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = nebula;
+  ctx.fillRect(0,0,W,H);
 
-  // Nebula center (soft glow, no dots)
-  const neb=ctx.createRadialGradient(cx,H/2,0,cx,H/2,180);
-  neb.addColorStop(0,a+'0a');neb.addColorStop(0.5,b+'05');neb.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=neb;ctx.fillRect(0,0,W,H);
+  // subtle grid lines
+  ctx.strokeStyle = a+'18';
+  ctx.lineWidth = 0.6;
+  for(let i=0;i<W;i+=32){ ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,H); ctx.stroke(); }
+  for(let j=0;j<H;j+=32){ ctx.beginPath(); ctx.moveTo(0,j); ctx.lineTo(W,j); ctx.stroke(); }
+  // scanlines
+  for(let y=0;y<H;y+=6){ ctx.fillStyle = 'rgba(0,0,0,0.04)'; ctx.fillRect(0,y,W,1); }
 
-  // Grid lines only — NO STRAY DOTS
-  ctx.strokeStyle=a+'15';ctx.lineWidth=0.5;
-  for(let i=0;i<W;i+=28){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,H);ctx.stroke();}
-  for(let j=0;j<H;j+=28){ctx.beginPath();ctx.moveTo(0,j);ctx.lineTo(W,j);ctx.stroke();}
-  // minimal scanlines (subtle, no dots)
-  for(let y=0;y<H;y+=4){ctx.fillStyle='rgba(0,0,0,0.03)';ctx.fillRect(0,y,W,1);}
-
-  // Corner circuit deco — geometric only, no dot clusters
-  function ccircuit(ox,oy,sx,sy,col){
-    ctx.save();ctx.translate(ox,oy);ctx.scale(sx,sy);
-    ctx.strokeStyle=col+'55';ctx.lineWidth=1;
-    ctx.beginPath();
-    ctx.moveTo(0,0);ctx.lineTo(48,0);ctx.lineTo(48,16);ctx.lineTo(68,16);
-    ctx.moveTo(0,9);ctx.lineTo(26,9);ctx.lineTo(26,36);ctx.lineTo(42,36);
-    ctx.moveTo(14,0);ctx.lineTo(14,22);
-    ctx.stroke();
-    // small filled circles replaced with tiny squares to avoid "dot" look
-    ctx.fillStyle=col;
-    ctx.fillRect(45,13,6,6);
-    ctx.fillRect(23,33,6,6);
+  // circuit deco corners
+  function cornerCircuit(ox,oy,sx,sy,col){
+    ctx.save(); ctx.translate(ox,oy); ctx.scale(sx,sy);
+    ctx.strokeStyle = col+'88'; ctx.lineWidth=1.2;
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(48,0); ctx.lineTo(48,16); ctx.lineTo(68,16);
+    ctx.moveTo(0,9); ctx.lineTo(26,9); ctx.lineTo(26,36); ctx.lineTo(42,36);
+    ctx.moveTo(14,0); ctx.lineTo(14,22); ctx.stroke();
+    ctx.fillStyle = col; ctx.fillRect(45,13,5,5); ctx.fillRect(23,33,5,5);
     ctx.restore();
   }
-  ccircuit(8,8,1,1,a);
-  ccircuit(W-8,8,-1,1,b);
-  ccircuit(8,H-8,1,-1,c);
-  ccircuit(W-8,H-8,-1,-1,d);
+  cornerCircuit(8,8,1,1,a);
+  cornerCircuit(W-8,8,-1,1,b);
+  cornerCircuit(8,H-8,1,-1,c);
+  cornerCircuit(W-8,H-8,-1,-1,d);
 
-  function gt(text,x,y,col,size,gw){
+  // helper text glows
+  function glowText(text,x,y,col,size,blur){
     ctx.save();
-    ctx.font=`bold ${size}px 'Share Tech Mono',monospace`;
-    ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.shadowColor=col;ctx.shadowBlur=gw||glow;
-    ctx.fillStyle=col;ctx.fillText(text,x,y);
-    ctx.shadowBlur=0;ctx.restore();
+    ctx.font = `bold ${size}px 'Share Tech Mono', monospace`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.shadowColor = col; ctx.shadowBlur = blur||glow;
+    ctx.fillStyle = col;
+    ctx.fillText(text, x, y);
+    ctx.restore();
   }
-  function gr(x,y,w,h,col,rad){
+  function glassRect(x,y,w,h,col,rad){
     ctx.save();
-    ctx.shadowColor=col;ctx.shadowBlur=glow-4;
-    ctx.strokeStyle=col;ctx.lineWidth=1.6;
-    ctx.beginPath();ctx.roundRect(x,y,w,h,rad||4);ctx.stroke();
-    const g=ctx.createLinearGradient(x,y,x,y+h);
-    g.addColorStop(0,col+'20');g.addColorStop(1,col+'08');
-    ctx.fillStyle=g;ctx.fill();
+    ctx.shadowColor = col; ctx.shadowBlur = glow-4;
+    ctx.strokeStyle = col; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.roundRect(x,y,w,h,rad||5); ctx.stroke();
+    const grad = ctx.createLinearGradient(x,y,x,y+h);
+    grad.addColorStop(0, col+'20'); grad.addColorStop(1, col+'08');
+    ctx.fillStyle = grad; ctx.fill();
     ctx.restore();
   }
 
-  // ===== BODY LAYOUT =====
-  const headW=126,headH=82;
-  const headY=88;
-  const headX=cx-headW/2;
-  const bodyW=136,bodyH=122;
-  const bodyY=headY+headH+16;
-  const bodyX=cx-bodyW/2;
-  const shlW=32,shlH=30;
-  const shlLX=bodyX-shlW-6;
-  const shlRX=bodyX+bodyW+6;
-  const shlY=bodyY+6;
-  const armW=28,armH=80;
-  const armLX=shlLX+2;
-  const armRX=shlRX+2;
-  const armY=shlY+shlH+4;
-  const handW=26,handH=26;
-  const handLX=armLX+1;
-  const handRX=armRX+1;
-  const handY=armY+armH+4;
-  const hipW=46,hipH=22;
-  const hipY=bodyY+bodyH+8;
-  const hipLX=cx-hipW-2;
-  const hipRX=cx+2;
-  const legW=34,legH=70;
-  const legY=hipY+hipH+4;
-  const legLX=cx-hipW+2;
-  const legRX=cx+hipW/2-legW/2+10;
-  const footW=40,footH=20;
-  const footY=legY+legH+4;
-  const footLX=legLX-3;
-  const footRX=legRX-3;
+  // body geometry
+  const headW=126, headH=82, headY=88, headX=cx-headW/2;
+  const bodyW=136, bodyH=122, bodyY=headY+headH+16, bodyX=cx-bodyW/2;
+  const shlW=32, shlH=30, shlLX=bodyX-shlW-6, shlRX=bodyX+bodyW+6, shlY=bodyY+6;
+  const armW=28, armH=80, armLX=shlLX+2, armRX=shlRX+2, armY=shlY+shlH+4;
+  const handW=26, handH=26, handLX=armLX+1, handRX=armRX+1, handY=armY+armH+4;
+  const hipW=46, hipH=22, hipY=bodyY+bodyH+8, hipLX=cx-hipW-2, hipRX=cx+2;
+  const legW=34, legH=70, legY=hipY+hipH+4, legLX=cx-hipW+2, legRX=cx+hipW/2-legW/2+10;
+  const footW=40, footH=20, footY=legY+legH+4, footLX=legLX-3, footRX=legRX-3;
 
-  // === AURA BG (clean particles replaced with smooth rings, no stray dots) ===
-  if(nft.aura!=='NONE'){
+  // AURA (clean rings, no particles)
+  if(nft.aura !== 'NONE'){
     ctx.save();
-    const auraG=ctx.createRadialGradient(cx,bodyY+bodyH/2,20,cx,bodyY+bodyH/2,160);
-    auraG.addColorStop(0,d+'30');auraG.addColorStop(0.6,d+'10');auraG.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.fillStyle=auraG;ctx.fillRect(0,0,W,H);
-    // aura rings instead of dust particles
-    ctx.shadowColor=d;ctx.shadowBlur=14;
-    for(let i=0;i<8;i++){
-      const ang=(i/8)*Math.PI*2;
-      const rad=100;
-      ctx.beginPath();ctx.ellipse(cx+Math.cos(ang)*rad,bodyY+bodyH/2+Math.sin(ang)*rad*0.6,6,3,ang,0,Math.PI*2);
-      ctx.fillStyle=d+'88';ctx.fill();
+    const auraG = ctx.createRadialGradient(cx, bodyY+bodyH/2, 20, cx, bodyY+bodyH/2, 150);
+    auraG.addColorStop(0, d+'40'); auraG.addColorStop(0.7, d+'18'); auraG.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = auraG; ctx.fillRect(0,0,W,H);
+    ctx.shadowColor = d; ctx.shadowBlur = 12;
+    for(let i=0;i<12;i++){ const ang=(i/12)*Math.PI*2; const rad=95;
+      ctx.beginPath(); ctx.ellipse(cx+Math.cos(ang)*rad, bodyY+bodyH/2+Math.sin(ang)*rad*0.65, 5,3, ang, 0, Math.PI*2);
+      ctx.fillStyle = d+'aa'; ctx.fill();
     }
     ctx.restore();
   }
 
-  // === HORN ===
+  // HORN drawing
   function drawHorn(type){
-    ctx.save();ctx.fillStyle=d;ctx.strokeStyle=d;ctx.lineWidth=2.5;ctx.shadowColor=d;ctx.shadowBlur=glow*1.5;
+    ctx.save(); ctx.fillStyle = d; ctx.strokeStyle = d; ctx.lineWidth=2.5; ctx.shadowColor = d; ctx.shadowBlur = glow*1.3;
     switch(type){
-      case'CYBER_CURVE':
-        ctx.beginPath();ctx.moveTo(cx-28,headY+2);ctx.quadraticCurveTo(cx-50,headY-30,cx-22,headY-58);ctx.stroke();
-        ctx.beginPath();ctx.moveTo(cx+28,headY+2);ctx.quadraticCurveTo(cx+50,headY-30,cx+22,headY-58);ctx.stroke();
-        break;
-      case'DEMON_SCYTHE':
-        ctx.beginPath();ctx.moveTo(cx-22,headY);ctx.lineTo(cx-38,headY-48);ctx.lineTo(cx-16,headY-38);ctx.closePath();ctx.fill();
-        ctx.beginPath();ctx.moveTo(cx+22,headY);ctx.lineTo(cx+38,headY-48);ctx.lineTo(cx+16,headY-38);ctx.closePath();ctx.fill();
-        break;
-      case'ANGEL_BLADE':
-        ctx.beginPath();ctx.moveTo(cx-20,headY);ctx.lineTo(cx-34,headY-52);ctx.lineTo(cx-24,headY-60);ctx.lineTo(cx-14,headY-40);ctx.closePath();ctx.fill();
-        ctx.beginPath();ctx.moveTo(cx+20,headY);ctx.lineTo(cx+34,headY-52);ctx.lineTo(cx+24,headY-60);ctx.lineTo(cx+14,headY-40);ctx.closePath();ctx.fill();
-        break;
-      case'DRAGON_SPIKE':
-        for(let i=-2;i<=2;i++){ const ox=i*14,h=36-Math.abs(i)*6;
-          ctx.beginPath();ctx.moveTo(cx+ox-7,headY);ctx.lineTo(cx+ox,headY-h);ctx.lineTo(cx+ox+7,headY);ctx.closePath();ctx.fill();}
-        break;
-      case'MECH_RAM':
-        ctx.beginPath();ctx.ellipse(cx-22,headY-20,11,26,-0.25,0,Math.PI*2);ctx.fill();
-        ctx.beginPath();ctx.ellipse(cx+22,headY-20,11,26,0.25,0,Math.PI*2);ctx.fill();
-        break;
-      case'VOLTIC_PRONG':
-        ctx.strokeStyle=d;ctx.lineWidth=3;
-        ctx.beginPath();ctx.moveTo(cx-14,headY-4);ctx.lineTo(cx-22,headY-30);ctx.lineTo(cx-10,headY-28);ctx.lineTo(cx-20,headY-55);ctx.stroke();
-        ctx.beginPath();ctx.moveTo(cx+14,headY-4);ctx.lineTo(cx+22,headY-30);ctx.lineTo(cx+10,headY-28);ctx.lineTo(cx+20,headY-55);ctx.stroke();
-        break;
-      case'NANO_CROWN':
-        for(let i=0;i<6;i++){const ang=-1.0+i*0.4;const px=cx+Math.sin(ang)*38;const py=headY-22+Math.cos(Math.abs(ang))*14;ctx.fillRect(px-3,py-3,6,6);}
-        break;
-      case'PHANTOM_TWIST':
-        ctx.beginPath();ctx.moveTo(cx-26,headY-6);ctx.quadraticCurveTo(cx-45,headY-36,cx-14,headY-62);ctx.stroke();
-        ctx.beginPath();ctx.moveTo(cx+26,headY-6);ctx.quadraticCurveTo(cx+45,headY-36,cx+14,headY-62);ctx.stroke();
-        break;
-      case'TRIDENT_LANCE':
-        ctx.beginPath();ctx.moveTo(cx,headY);ctx.lineTo(cx,headY-58);ctx.stroke();
-        ctx.beginPath();ctx.moveTo(cx-24,headY-14);ctx.lineTo(cx-32,headY-55);ctx.stroke();
-        ctx.beginPath();ctx.moveTo(cx+24,headY-14);ctx.lineTo(cx+32,headY-55);ctx.stroke();
-        ctx.fillRect(cx-4,headY-68,8,10); ctx.fillRect(cx-36,headY-65,8,10); ctx.fillRect(cx+28,headY-65,8,10);
-        break;
-      case'CRYSTAL_HALO':
-        ctx.strokeStyle=c;ctx.shadowColor=c;ctx.lineWidth=2;
-        ctx.beginPath();ctx.ellipse(cx,headY-48,34,11,0,0,Math.PI*2);ctx.stroke();
-        for(let i=0;i<6;i++){const ang=(i/6)*Math.PI*2;const px=cx+Math.cos(ang)*34;const py=headY-48+Math.sin(ang)*11;ctx.fillStyle=c;ctx.fillRect(px-2,py-2,4,4);}
-        break;
-      case'BROKEN_THORN':
-        ctx.strokeStyle=b;ctx.shadowColor=b;
-        ctx.beginPath();ctx.moveTo(cx-14,headY-4);ctx.lineTo(cx-24,headY-42);ctx.stroke();
-        ctx.beginPath();ctx.moveTo(cx+14,headY-4);ctx.lineTo(cx+22,headY-36);ctx.lineTo(cx+32,headY-20);ctx.stroke();
-        ctx.setLineDash([3,3]);
-        ctx.beginPath();ctx.moveTo(cx+22,headY-36);ctx.lineTo(cx+12,headY-58);ctx.stroke();
-        ctx.setLineDash([]);
-        break;
+      case 'CYBER_CURVE': ctx.beginPath(); ctx.moveTo(cx-28,headY+2); ctx.quadraticCurveTo(cx-50,headY-30,cx-22,headY-58); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx+28,headY+2); ctx.quadraticCurveTo(cx+50,headY-30,cx+22,headY-58); ctx.stroke(); break;
+      case 'DEMON_SCYTHE': ctx.beginPath(); ctx.moveTo(cx-22,headY); ctx.lineTo(cx-38,headY-48); ctx.lineTo(cx-16,headY-38); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(cx+22,headY); ctx.lineTo(cx+38,headY-48); ctx.lineTo(cx+16,headY-38); ctx.fill(); break;
+      case 'ANGEL_BLADE': ctx.beginPath(); ctx.moveTo(cx-20,headY); ctx.lineTo(cx-34,headY-52); ctx.lineTo(cx-24,headY-60); ctx.lineTo(cx-14,headY-40); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(cx+20,headY); ctx.lineTo(cx+34,headY-52); ctx.lineTo(cx+24,headY-60); ctx.lineTo(cx+14,headY-40); ctx.fill(); break;
+      case 'DRAGON_SPIKE': for(let i=-2;i<=2;i++){ const ox=i*14,hgt=36-Math.abs(i)*6;
+          ctx.beginPath(); ctx.moveTo(cx+ox-7,headY); ctx.lineTo(cx+ox,headY-hgt); ctx.lineTo(cx+ox+7,headY); ctx.fill();} break;
+      case 'MECH_RAM': ctx.beginPath(); ctx.ellipse(cx-22,headY-20,12,28,-0.25,0,Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(cx+22,headY-20,12,28,0.25,0,Math.PI*2); ctx.fill(); break;
+      case 'VOLTIC_PRONG': ctx.strokeStyle=d; ctx.lineWidth=3;
+        ctx.beginPath(); ctx.moveTo(cx-14,headY-4); ctx.lineTo(cx-22,headY-30); ctx.lineTo(cx-10,headY-28); ctx.lineTo(cx-20,headY-55); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx+14,headY-4); ctx.lineTo(cx+22,headY-30); ctx.lineTo(cx+10,headY-28); ctx.lineTo(cx+20,headY-55); ctx.stroke(); break;
+      case 'NANO_CROWN': for(let i=0;i<6;i++){ const ang=-1.0+i*0.4; const px=cx+Math.sin(ang)*38; const py=headY-22+Math.cos(Math.abs(ang))*14; ctx.fillRect(px-3,py-3,6,6);} break;
+      case 'PHANTOM_TWIST': ctx.beginPath(); ctx.moveTo(cx-26,headY-6); ctx.quadraticCurveTo(cx-45,headY-36,cx-14,headY-62); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx+26,headY-6); ctx.quadraticCurveTo(cx+45,headY-36,cx+14,headY-62); ctx.stroke(); break;
+      case 'TRIDENT_LANCE': ctx.beginPath(); ctx.moveTo(cx,headY); ctx.lineTo(cx,headY-58); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx-24,headY-14); ctx.lineTo(cx-32,headY-55); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx+24,headY-14); ctx.lineTo(cx+32,headY-55); ctx.stroke();
+        ctx.fillRect(cx-4,headY-68,8,10); ctx.fillRect(cx-36,headY-65,8,10); ctx.fillRect(cx+28,headY-65,8,10); break;
+      case 'CRYSTAL_HALO': ctx.strokeStyle=c; ctx.shadowColor=c; ctx.lineWidth=2;
+        ctx.beginPath(); ctx.ellipse(cx,headY-48,36,13,0,0,Math.PI*2); ctx.stroke();
+        for(let i=0;i<8;i++){ const ang=(i/8)*Math.PI*2; const px=cx+Math.cos(ang)*35; const py=headY-48+Math.sin(ang)*12; ctx.fillStyle=c; ctx.fillRect(px-2,py-2,4,4);} break;
+      case 'BROKEN_THORN': ctx.strokeStyle=b; ctx.shadowColor=b;
+        ctx.beginPath(); ctx.moveTo(cx-14,headY-4); ctx.lineTo(cx-24,headY-42); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx+14,headY-4); ctx.lineTo(cx+22,headY-36); ctx.lineTo(cx+32,headY-20); ctx.stroke();
+        ctx.setLineDash([3,4]); ctx.beginPath(); ctx.moveTo(cx+22,headY-36); ctx.lineTo(cx+12,headY-58); ctx.stroke(); ctx.setLineDash([]); break;
+      default: break;
     }
     ctx.restore();
   }
-  if(nft.horn!=='NONE') drawHorn(nft.horn);
+  if(nft.horn !== 'NONE') drawHorn(nft.horn);
 
-  // Antenna & rest of drawing unchanged but clean:
-  ctx.save();ctx.strokeStyle=a;ctx.lineWidth=2;ctx.shadowColor=a;ctx.shadowBlur=glow;
-  ctx.beginPath();ctx.moveTo(cx,headY);ctx.lineTo(cx,headY-30);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(cx-16,headY-15);ctx.lineTo(cx,headY-30);ctx.lineTo(cx+16,headY-15);ctx.stroke();
+  // Antenna
+  ctx.save(); ctx.strokeStyle=a; ctx.lineWidth=2; ctx.shadowColor=a; ctx.shadowBlur=glow;
+  ctx.beginPath(); ctx.moveTo(cx,headY); ctx.lineTo(cx,headY-30); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx-16,headY-15); ctx.lineTo(cx,headY-30); ctx.lineTo(cx+16,headY-15); ctx.stroke();
   ctx.restore();
-  gt(nft.antenna_sym,cx,headY-38,a,22,glow);
-  ctx.save();ctx.shadowColor=a;ctx.shadowBlur=glow*2;ctx.fillStyle=a;
-  ctx.fillRect(cx-3,headY-32,6,6);ctx.restore();
+  glowText(nft.antenna_sym, cx, headY-38, a, 22, glow);
+  ctx.fillStyle=a; ctx.fillRect(cx-3,headY-32,6,6);
 
-  // HEAD / BODY same robust geometry, no added noise
-  gr(headX,headY,headW,headH,b,6);
-  ctx.save();ctx.strokeStyle=b+'28';ctx.lineWidth=1;
-  ctx.beginPath();ctx.roundRect(headX+7,headY+7,headW-14,headH-14,3);ctx.stroke();ctx.restore();
+  // HEAD
+  glassRect(headX,headY,headW,headH,b,6);
+  glassRect(headX+7,headY+7,headW-14,headH-14,b,4);
   const eyeY=headY+headH/2-10;
-  gr(headX+16,eyeY,36,28,a,4);
-  gr(headX+headW-52,eyeY,36,28,a,4);
-  ctx.save();ctx.fillStyle='#ffffff1a';
-  ctx.fillRect(headX+22,eyeY+5,6,3); ctx.fillRect(headX+headW-46,eyeY+5,6,3); ctx.restore();
-  gt(nft.eye_l,headX+34,eyeY+14,a,19,glow*1.3);
-  gt(nft.eye_r,headX+headW-34,eyeY+14,a,19,glow*1.3);
-  ctx.save();ctx.strokeStyle=b+'44';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(headX+14,eyeY-3);ctx.lineTo(headX+headW-14,eyeY-3);ctx.stroke();ctx.restore();
-  gt(nft.mouth,cx,headY+headH-14,c,16,glow);
+  glassRect(headX+16,eyeY,36,28,a,4); glassRect(headX+headW-52,eyeY,36,28,a,4);
+  glowText(nft.eye_l, headX+34, eyeY+14, a, 19, glow*1.3);
+  glowText(nft.eye_r, headX+headW-34, eyeY+14, a, 19, glow*1.3);
+  glowText(nft.mouth, cx, headY+headH-14, c, 16, glow);
 
-  // shoulders, arms, hands, body, hips, legs, feet (unchanged from functional clean version)
-  ctx.save();ctx.strokeStyle=c+'55';ctx.lineWidth=2;ctx.shadowColor=c;ctx.shadowBlur=8;
-  ctx.beginPath();ctx.moveTo(shlLX+shlW,shlY+shlH/2);ctx.lineTo(bodyX,shlY+shlH/2);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(shlRX,shlY+shlH/2);ctx.lineTo(bodyX+bodyW,shlY+shlH/2);ctx.stroke();
-  ctx.restore();
-  gr(shlLX,shlY,shlW,shlH,c,4); gr(shlRX,shlY,shlW,shlH,c,4);
-  gt(nft.shoulder_l,shlLX+shlW/2,shlY+shlH/2,c,14); gt(nft.shoulder_r,shlRX+shlW/2,shlY+shlH/2,c,14);
-  gr(armLX,armY,armW,armH,b,4); gr(armRX,armY,armW,armH,b,4);
-  for(let i=1;i<=3;i++){const ay=armY+armH*(i/4);ctx.save();ctx.strokeStyle=b+'44';ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(armLX+4,ay);ctx.lineTo(armLX+armW-4,ay);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(armRX+4,ay);ctx.lineTo(armRX+armW-4,ay);ctx.stroke();ctx.restore();}
-  gt(nft.arm_l,armLX+armW/2,armY+armH/2,b,14); gt(nft.arm_r,armRX+armW/2,armY+armH/2,b,14);
-  gr(handLX,handY,handW,handH,a,4); gr(handRX,handY,handW,handH,a,4);
-  gt(nft.hand_l,handLX+handW/2,handY+handH/2,a,13); gt(nft.hand_r,handRX+handW/2,handY+handH/2,a,13);
-  gr(bodyX,bodyY,bodyW,bodyH,b,6);
-  ctx.save();ctx.strokeStyle=b+'22';ctx.lineWidth=1;
-  ctx.beginPath();ctx.roundRect(bodyX+8,bodyY+8,bodyW-16,bodyH-16,3);ctx.stroke();ctx.restore();
-  gr(bodyX+bodyW/2-26,bodyY+12,52,42,d,5); gt(nft.chest,cx,bodyY+33,d,24,glow*1.6);
-  gr(bodyX+bodyW/2-15,bodyY+64,30,24,c,4); gt(nft.core,cx,bodyY+76,c,17,glow);
-  gt(nft.circuit1,bodyX+20,bodyY+76,c,12,8); gt(nft.circuit2,bodyX+bodyW-20,bodyY+76,c,12,8);
-  ctx.save();ctx.strokeStyle=b+'30';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(bodyX+10,bodyY+58);ctx.lineTo(bodyX+bodyW-10,bodyY+58);ctx.stroke();ctx.restore();
-  gr(hipLX,hipY,hipW,hipH,c,4); gr(hipRX,hipY,hipW,hipH,c,4);
-  gt(nft.hip_l,hipLX+hipW/2,hipY+hipH/2,c,13); gt(nft.hip_r,hipRX+hipW/2,hipY+hipH/2,c,13);
-  gr(legLX,legY,legW,legH,b,4); gr(legRX,legY,legW,legH,b,4);
-  gr(legLX+1,legY+legH/2-13,legW-2,26,a,4); gr(legRX+1,legY+legH/2-13,legW-2,26,a,4);
-  gt(nft.knee_l,legLX+legW/2,legY+legH/2,a,14); gt(nft.knee_r,legRX+legW/2,legY+legH/2,a,14);
-  gr(footLX,footY,footW,footH,c,4); gr(footRX,footY,footW,footH,c,4);
-  gt(nft.foot_l,footLX+footW/2,footY+footH/2,c,12); gt(nft.foot_r,footRX+footW/2,footY+footH/2,c,12);
-  ctx.save();ctx.font="bold 11px 'Share Tech Mono',monospace";
-  ctx.textAlign='left';ctx.fillStyle=d;ctx.shadowColor=d;ctx.shadowBlur=10;
-  ctx.fillText(`⚡${nft.super_power}`,12,H-14);
-  ctx.textAlign='center';ctx.fillStyle=a;ctx.fillText(`🜸${nft.hyper_core}`,cx,H-14);
-  ctx.textAlign='right';ctx.fillStyle=b;ctx.fillText(nft.paletteName,W-12,H-14);
-  ctx.restore();
-  if(nft.rarity==='LEGENDARY'||nft.rarity==='MYTHIC'){
-    gt(nft.fire_sym,bodyX-10,bodyY+38,a,16,glow); gt(nft.skull_sym,bodyX+bodyW+10,bodyY+38,c,16,glow);
-  }
-  if(nft.rarity==='MYTHIC'){
-    gt(nft.gem_sym,cx,bodyY-18,d,20,glow*2); gt(nft.nature_sym,bodyX-10,bodyY+bodyH/2,b,14,glow);
-    gt(nft.nature_sym,bodyX+bodyW+10,bodyY+bodyH/2,b,14,glow);
-  }
-  if(nft.glitch!=='NONE'){ ctx.save();
-    if(nft.glitch==='CHROMA_SHIFT'){ ctx.globalCompositeOperation='screen';ctx.globalAlpha=0.07; ctx.fillStyle='#ff0000';ctx.fillRect(4,0,W,H); ctx.fillStyle='#0000ff';ctx.fillRect(-4,0,W,H); }
-    else if(nft.glitch==='PIXEL_CRACK'){ ctx.globalAlpha=0.4; for(let i=0;i<5;i++){ ctx.fillStyle=i%2?a+'66':b+'66'; ctx.fillRect(10+Math.random()*30,80+Math.random()*350,15,2); } }
-    else if(nft.glitch==='DATA_SCRAMBLE'){ ctx.globalAlpha=0.04; for(let i=0;i<90;i++){ ctx.fillStyle=Math.random()>.5?a:c; ctx.fillRect(Math.random()*W,Math.random()*H,2,2); } }
-    else if(nft.glitch==='NEON_FRACTURE'){ ctx.globalAlpha=0.2; for(let i=0;i<4;i++){ const gy=100+i*80; const g2=ctx.createLinearGradient(0,gy,W,gy); g2.addColorStop(0,'rgba(0,0,0,0)');g2.addColorStop(.3,a);g2.addColorStop(.7,c);g2.addColorStop(1,'rgba(0,0,0,0)'); ctx.fillStyle=g2; ctx.fillRect(0,gy,W,2);} }
-    else if(nft.glitch==='STATIC_PULSE'){ ctx.globalAlpha=0.05; for(let i=0;i<60;i++){ ctx.fillStyle=Math.random()>.5?a:d; ctx.fillRect(Math.random()*W,Math.random()*H,2,2); } }
-    else if(nft.glitch==='RGB_SPLIT'){ ctx.globalCompositeOperation='screen';ctx.globalAlpha=0.06; ctx.fillStyle='#ff000044';ctx.fillRect(6,0,W-6,H); ctx.fillStyle='#0000ff44';ctx.fillRect(-6,0,W-6,H); }
+  // Shoulders & arms
+  glassRect(shlLX,shlY,shlW,shlH,c,4); glassRect(shlRX,shlY,shlW,shlH,c,4);
+  glowText(nft.shoulder_l, shlLX+shlW/2, shlY+shlH/2, c, 14);
+  glowText(nft.shoulder_r, shlRX+shlW/2, shlY+shlH/2, c, 14);
+  glassRect(armLX,armY,armW,armH,b,4); glassRect(armRX,armY,armW,armH,b,4);
+  glowText(nft.arm_l, armLX+armW/2, armY+armH/2, b, 14);
+  glowText(nft.arm_r, armRX+armW/2, armY+armH/2, b, 14);
+  glassRect(handLX,handY,handW,handH,a,4); glassRect(handRX,handY,handW,handH,a,4);
+  glowText(nft.hand_l, handLX+handW/2, handY+handH/2, a, 13);
+  glowText(nft.hand_r, handRX+handW/2, handY+handH/2, a, 13);
+
+  // Torso & core
+  glassRect(bodyX,bodyY,bodyW,bodyH,b,6);
+  glassRect(bodyX+bodyW/2-26,bodyY+12,52,42,d,5);
+  glowText(nft.chest, cx, bodyY+33, d, 24, glow*1.6);
+  glassRect(bodyX+bodyW/2-15,bodyY+64,30,24,c,4);
+  glowText(nft.core, cx, bodyY+76, c, 17, glow);
+  glowText(nft.circuit1, bodyX+20, bodyY+76, c, 12);
+  glowText(nft.circuit2, bodyX+bodyW-20, bodyY+76, c, 12);
+
+  glassRect(hipLX,hipY,hipW,hipH,c,4); glassRect(hipRX,hipY,hipW,hipH,c,4);
+  glowText(nft.hip_l, hipLX+hipW/2, hipY+hipH/2, c, 13);
+  glowText(nft.hip_r, hipRX+hipW/2, hipY+hipH/2, c, 13);
+  glassRect(legLX,legY,legW,legH,b,4); glassRect(legRX,legY,legW,legH,b,4);
+  glowText(nft.knee_l, legLX+legW/2, legY+legH/2, a, 14);
+  glowText(nft.knee_r, legRX+legW/2, legY+legH/2, a, 14);
+  glassRect(footLX,footY,footW,footH,c,4); glassRect(footRX,footY,footW,footH,c,4);
+  glowText(nft.foot_l, footLX+footW/2, footY+footH/2, c, 12);
+  glowText(nft.foot_r, footRX+footW/2, footY+footH/2, c, 12);
+
+  // stats & glitch effects (optional)
+  ctx.font = "bold 11px 'Share Tech Mono'";
+  ctx.fillStyle = d; ctx.shadowBlur = 8;
+  ctx.fillText(`⚡${nft.super_power}`, 14, H-14);
+  ctx.fillStyle = a; ctx.textAlign='center'; ctx.fillText(`🜸${nft.hyper_core}`, cx, H-14);
+  ctx.fillStyle = b; ctx.textAlign='right'; ctx.fillText(nft.paletteName, W-14, H-14);
+  
+  if(nft.glitch !== 'NONE'){
+    ctx.save();
+    if(nft.glitch === 'CHROMA_SHIFT'){ ctx.globalCompositeOperation='screen'; ctx.globalAlpha=0.06; ctx.fillStyle='#ff0000'; ctx.fillRect(5,0,W-5,H); ctx.fillStyle='#0000ff'; ctx.fillRect(-5,0,W-5,H);}
+    else if(nft.glitch === 'PIXEL_CRACK'){ ctx.globalAlpha=0.3; for(let i=0;i<8;i++){ ctx.fillStyle=i%2?a:b; ctx.fillRect(12+Math.random()*40, 70+Math.random()*380, 12,2);} }
+    else if(nft.glitch === 'DATA_SCRAMBLE'){ ctx.globalAlpha=0.05; for(let i=0;i<80;i++){ ctx.fillStyle=Math.random()>0.5?a:c; ctx.fillRect(Math.random()*W,Math.random()*H,2,2);} }
     ctx.restore();
   }
-  const rcol=RCOLS[nft.rarity];
-  ctx.save();ctx.strokeStyle=rcol;ctx.lineWidth=2.5;ctx.shadowColor=rcol;ctx.shadowBlur=glow*1.2;
-  ctx.strokeRect(4,4,W-8,H-8);ctx.restore();
-  ctx.save();ctx.strokeStyle=rcol+'30';ctx.lineWidth=1;ctx.strokeRect(10,10,W-20,H-20);ctx.restore();
-  [[18,18],[W-18,18],[18,H-18],[W-18,H-18]].forEach(([px,py])=>gt('◆',px,py,rcol,12,10));
-  ctx.save();ctx.font="bold 9px 'Share Tech Mono',monospace";ctx.textAlign='right';
-  ctx.fillStyle=rcol;ctx.shadowColor=rcol;ctx.shadowBlur=8;
-  ctx.fillText(nft.cls.slice(0,10),W-24,24);ctx.restore();
+
+  const rcol = RCOLS[nft.rarity];
+  ctx.strokeStyle = rcol; ctx.lineWidth=2.5; ctx.shadowBlur=glow*1.2; ctx.shadowColor=rcol;
+  ctx.strokeRect(4,4,W-8,H-8);
+  ctx.strokeStyle = rcol+'30'; ctx.lineWidth=1; ctx.strokeRect(10,10,W-20,H-20);
+  [[18,18],[W-18,18],[18,H-18],[W-18,H-18]].forEach(([px,py])=> glowText('◆',px,py,rcol,12,10));
+  ctx.font="bold 9px 'Share Tech Mono'"; ctx.fillStyle=rcol; ctx.fillText(nft.cls.slice(0,10), W-24, 24);
 }
 
-let nfts=[],selected=null,exporting=false;
-
-async function makePng(nft){
-  const c=document.createElement('canvas');
-  drawRobot(c,nft,20);
-  return new Promise(r=>c.toBlob(r,'image/png'));
+// ---------- Download Core (fixed) ----------
+async function downloadPNG(nft, silent = false) {
+  const canvas = document.createElement('canvas');
+  drawRobot(canvas, nft, 20);
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => {
+      if(!blob) { showToast('❌ PNG creation failed'); resolve(false); return; }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `OmegaBot_${nft.idx}_${nft.cls}_${nft.rarity}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      if(!silent) showToast(`✅ PNG: ${nft.cls} #${nft.idx}`);
+      resolve(true);
+    }, 'image/png');
+  });
 }
 
-async function dlPng(id,silent=false){
-  const nft=nfts.find(n=>n.id===id); if(!nft) return;
-  try{
-    const blob=await makePng(nft);
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a'); a.href=url;
-    a.download=`OmegaBot_${nft.idx}_${nft.cls}_${nft.rarity}.png`;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+function downloadJSON(nft, silent = false) {
+  try {
+    const meta = {
+      name: `Omega Robo #${nft.idx}`,
+      description: `${nft.cls} class cyberpunk robot. Weapon: ${nft.weapon}. Augment: ${nft.augment}. Horn: ${nft.horn}. Aura: ${nft.aura}. Palette: ${nft.paletteName}.`,
+      image: `OmegaBot_${nft.idx}_${nft.cls}_${nft.rarity}.png`,
+      attributes: [
+        {trait_type:'Class',value:nft.cls},{trait_type:'Rarity',value:nft.rarity},{trait_type:'Weapon',value:nft.weapon},
+        {trait_type:'Augment',value:nft.augment},{trait_type:'Personality',value:nft.personality},{trait_type:'Horn Style',value:nft.horn},
+        {trait_type:'Power Aura',value:nft.aura},{trait_type:'Glitch Effect',value:nft.glitch},{trait_type:'Palette',value:nft.paletteName},
+        {trait_type:'Super Power',value:nft.super_power},{trait_type:'Hyper Core',value:nft.hyper_core},{trait_type:'Luck',value:nft.luck},{trait_type:'Shield',value:nft.shield}
+      ], id:nft.id, created:nft.created, palette:{name:nft.paletteName,background:nft.palette.bg,colors:[nft.palette.a,nft.palette.b,nft.palette.c,nft.palette.d]}
+    };
+    const blob = new Blob([JSON.stringify(meta, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `OmegaBot_${nft.idx}_${nft.cls}_meta.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    if(!silent) showToast(`✓ PNG: ${nft.cls} #${nft.idx}`);
-  }catch(e){ if(!silent) showToast('⚠ PNG failed');}
+    if(!silent) showToast(`✅ JSON: ${nft.cls} #${nft.idx}`);
+    return true;
+  } catch(e) { console.warn(e); if(!silent) showToast('❌ JSON export error'); return false; }
 }
 
-function dlJson(id,silent=false){
-  const nft=nfts.find(n=>n.id===id); if(!nft) return;
-  const meta={
-    name:`Omega Robo #${nft.idx}`,
-    description:`${nft.cls} class cyberpunk robot. Weapon: ${nft.weapon}. Augment: ${nft.augment}. Horn: ${nft.horn}. Aura: ${nft.aura}. Palette: ${nft.paletteName}.`,
-    image:`OmegaBot_${nft.idx}_${nft.cls}_${nft.rarity}.png`,
-    attributes:[
-      {trait_type:'Class',value:nft.cls},{trait_type:'Rarity',value:nft.rarity},{trait_type:'Weapon',value:nft.weapon},
-      {trait_type:'Augment',value:nft.augment},{trait_type:'Personality',value:nft.personality},{trait_type:'Horn Style',value:nft.horn},
-      {trait_type:'Power Aura',value:nft.aura},{trait_type:'Glitch Effect',value:nft.glitch},{trait_type:'Palette',value:nft.paletteName},
-      {trait_type:'Super Power',value:nft.super_power},{trait_type:'Hyper Core',value:nft.hyper_core},{trait_type:'Luck',value:nft.luck},{trait_type:'Shield',value:nft.shield}
-    ], id:nft.id, created:nft.created, palette:{name:nft.paletteName,background:nft.palette.bg,colors:[nft.palette.a,nft.palette.b,nft.palette.c,nft.palette.d]}
-  };
-  const blob=new Blob([JSON.stringify(meta,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url;
-  a.download=`OmegaBot_${nft.idx}_${nft.cls}_meta.json`;
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  if(!silent) showToast(`✓ JSON: ${nft.cls} #${nft.idx}`);
-}
-
-function exportAll(){
-  if(!nfts.length){ showToast('No robots forged yet'); return; }
-  if(exporting){ showToast('Export in progress...'); return; }
-  exporting=true;
-  const list=[];
-  nfts.forEach(n=>{ list.push({t:'png',id:n.id}); list.push({t:'json',id:n.id}); });
-  let i=0;
-  function next(){
-    if(i>=list.length){ exporting=false; showToast(`✅ Exported ${nfts.length} robots (PNG+JSON)`); return; }
-    const item=list[i++];
-    item.t==='png'? dlPng(item.id,true) : dlJson(item.id,true);
-    setTimeout(next,300);
+// BULK EXPORT
+let exporting = false;
+async function exportAllBots(){
+  if(nfts.length === 0) { showToast('No robots forged yet'); return; }
+  if(exporting) { showToast('Export already in progress...'); return; }
+  exporting = true;
+  for(let i=0; i<nfts.length; i++){
+    await downloadPNG(nfts[i], true);
+    downloadJSON(nfts[i], true);
+    await new Promise(r => setTimeout(r, 180));
   }
-  next();
+  exporting = false;
+  showToast(`✅ Exported ${nfts.length} robots (PNG+JSON)`);
 }
 
-function addCard(nft){
-  document.getElementById('empty').style.display='none';
-  const grid=document.getElementById('grid');
-  const div=document.createElement('div');div.className='card';
-  const rcol=RCOLS[nft.rarity];
-  div.innerHTML=`<div class="cstripe" style="background:${rcol};box-shadow:0 0 8px ${rcol}88;"></div>
+// DOM & STATE
+let nfts = [];
+let selected = null;
+
+function addCardToGrid(nft){
+  document.getElementById('empty').style.display = 'none';
+  const grid = document.getElementById('grid');
+  const div = document.createElement('div'); div.className = 'card';
+  const rcol = RCOLS[nft.rarity];
+  div.setAttribute('data-id', nft.id);
+  div.innerHTML = `<div class="cstripe" style="background:${rcol};box-shadow:0 0 8px ${rcol}88;"></div>
     <div class="cw"><canvas id="c-${nft.id}" width="512" height="512"></canvas></div>
     <div class="clabel">${nft.cls} ${nft.horn!=='NONE'?'·🦄':''} ${nft.aura!=='NONE'?'·⚡':''}</div>
     <div class="rbadge" style="color:${rcol};border-color:${rcol}44;">${nft.rarity} ⚡${nft.super_power}</div>
-    <div class="dlrow"><button class="vb" data-id="${nft.id}">◉ VIEW</button>
-      <button class="pb" data-id="${nft.id}">↓ PNG</button>
-      <button class="jb" data-id="${nft.id}">↓ JSON</button>
+    <div class="dlrow"><button class="viewBtn" data-id="${nft.id}">◉ VIEW</button>
+      <button class="pngBtn" data-id="${nft.id}">↓ PNG</button>
+      <button class="jsonBtn" data-id="${nft.id}">↓ JSON</button>
     </div>`;
   grid.appendChild(div);
-  const can=document.getElementById('c-'+nft.id);
-  drawRobot(can,nft,14);
-  div.querySelector('.vb').addEventListener('click',e=>{e.stopPropagation();openModal(nft.id);});
-  div.querySelector('.pb').addEventListener('click',e=>{e.stopPropagation();dlPng(nft.id);});
-  div.querySelector('.jb').addEventListener('click',e=>{e.stopPropagation();dlJson(nft.id);});
+  const canvas = document.getElementById(`c-${nft.id}`);
+  drawRobot(canvas, nft, 14);
+  
+  div.querySelector('.viewBtn').addEventListener('click', (e) => { e.stopPropagation(); openModal(nft.id); });
+  div.querySelector('.pngBtn').addEventListener('click', async (e) => { e.stopPropagation(); await downloadPNG(nft); });
+  div.querySelector('.jsonBtn').addEventListener('click', (e) => { e.stopPropagation(); downloadJSON(nft); });
 }
 
 function openModal(id){
-  selected=nfts.find(n=>n.id===id); if(!selected) return;
-  drawRobot(document.getElementById('mcanvas'),selected,24);
-  const rcol=RCOLS[selected.rarity];
-  document.getElementById('mname').textContent=`OMEGA #${selected.idx} — ${selected.cls}`;
-  document.getElementById('mmeta').innerHTML=`
+  selected = nfts.find(n => n.id === id);
+  if(!selected) return;
+  drawRobot(document.getElementById('mcanvas'), selected, 24);
+  const rcol = RCOLS[selected.rarity];
+  document.getElementById('mname').innerHTML = `OMEGA #${selected.idx} — ${selected.cls}`;
+  document.getElementById('mmeta').innerHTML = `
     <tr><td>RARITY</td><td style="color:${rcol};">${selected.rarity}</td></tr>
-    <tr><td>CLASS</td><td>${selected.cls}</td></tr><tr><td>WEAPON</td><td>${selected.weapon}</td></tr>
-    <tr><td>AUGMENT</td><td>${selected.augment}</td></tr><tr><td>PERSONALITY</td><td>${selected.personality}</td></tr>
-    <tr><td>HORN STYLE</td><td>${selected.horn}</td></tr><tr><td>POWER AURA</td><td>${selected.aura}</td></tr>
-    <tr><td>GLITCH</td><td>${selected.glitch}</td></tr><tr><td>PALETTE</td><td>${selected.paletteName}</td></tr>
-    <tr><td>SUPER POWER</td><td>${selected.super_power}</td></tr><tr><td>HYPER CORE</td><td>${selected.hyper_core}</td></tr>
-    <tr><td>LUCK</td><td>${selected.luck}</td></tr><tr><td>SHIELD</td><td>${selected.shield}</td></tr>
+    <tr><td>CLASS</td><td>${selected.cls}</td></tr>
+    <tr><td>WEAPON</td><td>${selected.weapon}</td></tr>
+    <tr><td>AUGMENT</td><td>${selected.augment}</td></tr>
+    <tr><td>PERSONALITY</td><td>${selected.personality}</td></tr>
+    <tr><td>HORN</td><td>${selected.horn}</td></tr>
+    <tr><td>AURA</td><td>${selected.aura}</td></tr>
+    <tr><td>GLITCH</td><td>${selected.glitch}</td></tr>
+    <tr><td>PALETTE</td><td>${selected.paletteName}</td></tr>
+    <tr><td>SUPER POWER</td><td>${selected.super_power}</td></tr>
+    <tr><td>HYPER CORE</td><td>${selected.hyper_core}</td></tr>
+    <tr><td>LUCK</td><td>${selected.luck}</td></tr>
+    <tr><td>SHIELD</td><td>${selected.shield}</td></tr>
     <tr><td>ID</td><td style="font-size:9px;">${selected.id}</td></tr>`;
-  document.getElementById('mbg').style.display='flex';
+  document.getElementById('mbg').style.display = 'flex';
 }
 
-document.getElementById('gen1').onclick=()=>{
-  const nft=genNft(nfts.length); nfts.push(nft); addCard(nft);
-  document.getElementById('clbl').textContent=`COLLECTION: ${nfts.length}`;
+// EVENT LISTENERS
+document.getElementById('gen1').onclick = () => {
+  const nft = genNft(nfts.length);
+  nfts.push(nft);
+  addCardToGrid(nft);
+  document.getElementById('clbl').textContent = `COLLECTION: ${nfts.length}`;
   showToast(`⚡ Forged #${nft.idx} ${nft.cls} [${nft.rarity}]`);
 };
-document.getElementById('gen10').onclick=()=>{
-  for(let i=0;i<10;i++){ const nft=genNft(nfts.length); nfts.push(nft); addCard(nft);}
-  document.getElementById('clbl').textContent=`COLLECTION: ${nfts.length}`;
+document.getElementById('gen10').onclick = () => {
+  for(let i=0;i<10;i++){ const nft = genNft(nfts.length); nfts.push(nft); addCardToGrid(nft); }
+  document.getElementById('clbl').textContent = `COLLECTION: ${nfts.length}`;
   showToast(`🌀 10 new robots forged!`);
 };
-document.getElementById('dlAll').onclick=exportAll;
-document.getElementById('mclose').onclick=()=>document.getElementById('mbg').style.display='none';
-document.getElementById('mbg').onclick=e=>{if(e.target.id==='mbg')document.getElementById('mbg').style.display='none';};
-document.getElementById('mdlpng').onclick=()=>{if(selected) dlPng(selected.id);};
-document.getElementById('mdljson').onclick=()=>{if(selected) dlJson(selected.id);};
+document.getElementById('dlAll').onclick = exportAllBots;
+document.getElementById('mclose').onclick = () => document.getElementById('mbg').style.display = 'none';
+document.getElementById('mbg').onclick = e => { if(e.target.id === 'mbg') document.getElementById('mbg').style.display = 'none'; };
+document.getElementById('mdlpng').onclick = async () => { if(selected) await downloadPNG(selected); };
+document.getElementById('mdljson').onclick = () => { if(selected) downloadJSON(selected); };
 })();
 </script>
 </body>
