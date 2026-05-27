@@ -31,7 +31,7 @@
     .dl-row button:hover { border-color: #00ccff88; color: #00ccff; }
     .empty-msg { text-align: center; color: #333366; font-size: 14px; padding: 40px 0; letter-spacing: 2px; }
     .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 999; }
-    .modal-box { background: #070714; border: 1px solid #00ccff55; border-radius: 6px; padding: 20px; max-width: 340px; width: 90%; max-height: 90vh; overflow-y: auto; }
+    .modal-box { background: #070714; border: 1px solid #00ccff55; border-radius: 6px; padding: 20px; max-width: 340px; width: 90%; max-height: 90vh; overflow-y: auto; position: relative; }
     .modal-title { font-family: 'Orbitron', monospace; font-size: 14px; color: #00ccff; margin-bottom: 12px; letter-spacing: 2px; }
     .modal-canvas-wrap { width: 100%; aspect-ratio: 1; margin-bottom: 12px; border-radius: 4px; overflow: hidden; }
     .modal-canvas-wrap canvas { width: 100%; height: 100%; display: block; }
@@ -42,11 +42,12 @@
     .modal-btns { display: flex; gap: 8px; }
     .modal-btns button { flex: 1; font-family: 'Share Tech Mono', monospace; border-radius: 3px; background: transparent; border: 1px solid; cursor: pointer; padding: 8px; font-size: 12px; letter-spacing: 1px; transition: all 0.15s; }
     .modal-close-btn { position: absolute; top: 12px; right: 14px; background: transparent; border: none; color: #666699; font-size: 18px; cursor: pointer; }
+    .toast-msg { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #0a0a2a; border: 1px solid #00ccff; color: #00ccff; padding: 6px 14px; border-radius: 30px; font-family: 'Share Tech Mono', monospace; font-size: 11px; z-index: 1000; opacity: 0; transition: opacity 0.2s; pointer-events: none; white-space: nowrap; }
   </style>
 </head>
 <body style="margin:0; background:#0a0a1a;">
 <div id="nft-app">
-  <h2 class="sr-only">Robo Symbol NFT Generator — create and download cyberpunk robot NFTs</h2>
+  <h2 class="sr-only" style="position:absolute; left:-10000px;">Robo Symbol NFT Generator — create and download cyberpunk robot NFTs</h2>
   <div style="margin-bottom:14px;">
     <div class="orbitron" style="font-size:16px; color:#00ccff; letter-spacing:3px; text-shadow:0 0 20px #00ccff88;">⬡ ROBO SYMBOL NFT GEN</div>
     <div style="font-size:10px; color:#333366; letter-spacing:4px; margin-top:2px;">CYBERPUNK ROBOT COLLECTION FORGE</div>
@@ -62,7 +63,7 @@
 </div>
 
 <div id="modal-bg" class="modal-bg" style="display:none;">
-  <div class="modal-box" style="position:relative;">
+  <div class="modal-box">
     <button class="modal-close-btn" id="modal-close">✕</button>
     <div class="modal-title" id="modal-name">ROBOT #0</div>
     <div class="modal-canvas-wrap"><canvas id="modal-canvas" width="512" height="512"></canvas></div>
@@ -73,6 +74,7 @@
     </div>
   </div>
 </div>
+<div id="toastMsg" class="toast-msg"></div>
 
 <script>
 (function(){
@@ -98,10 +100,20 @@
 
   let nfts = [];
   let selectedNft = null;
+  let pendingDownloads = 0;      // track concurrent downloads to avoid browser conflicts
+  let downloadQueue = [];        // queue for export all
+  let isExportingAll = false;
 
   function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
   function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
   function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,5)+Math.random().toString(36).slice(2,5); }
+
+  function showToast(msg, duration = 1800){
+    const toast = document.getElementById('toastMsg');
+    toast.textContent = msg;
+    toast.style.opacity = '1';
+    setTimeout(() => { toast.style.opacity = '0'; }, duration);
+  }
 
   function genNft(idx){
     const pal = pick(PALETTES);
@@ -179,8 +191,7 @@
       ctx.strokeStyle=col+'66';
       ctx.lineWidth=1;
       ctx.beginPath();
-      const sx=flip?-1:1;
-      ctx.save(); ctx.translate(x,y); ctx.scale(sx,1);
+      ctx.save(); ctx.translate(x,y); ctx.scale(flip?-1:1,1);
       ctx.moveTo(0,0); ctx.lineTo(40,0); ctx.lineTo(40,20); ctx.lineTo(60,20);
       ctx.moveTo(0,10); ctx.lineTo(20,10); ctx.lineTo(20,40);
       ctx.stroke(); ctx.restore();
@@ -334,17 +345,97 @@
     glowText('◆', W-18, H-18, rcol, 12, 10);
   }
 
-  // Store canvas drawing functions in cache for better performance
-  const canvasCache = new Map();
-  
-  function getOrDrawCanvas(nft, glowStrength) {
-    const key = nft.id;
-    if (!canvasCache.has(key)) {
-      const canvas = document.createElement('canvas');
-      drawRobot(canvas, nft, glowStrength);
-      canvasCache.set(key, canvas);
+  // generate fresh canvas for each download to avoid blob conflicts & ensure no caching
+  async function prepareCanvasBlob(nft, glowVal = 18) {
+    const canvas = document.createElement('canvas');
+    drawRobot(canvas, nft, glowVal);
+    return new Promise((resolve) => {
+      canvas.toBlob(blob => resolve(blob), 'image/png');
+    });
+  }
+
+  async function dlPng(id, silent = false){
+    const nft = nfts.find(n=>n.id===id);
+    if(!nft) return;
+    try {
+      const blob = await prepareCanvasBlob(nft, 18);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `RoboSym_${nft.idx}_${nft.trait}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      if (!silent) showToast(`✓ PNG saved: ${nft.trait} #${nft.idx}`, 1200);
+    } catch(e) { console.warn(e); if(!silent) showToast(`⚠️ PNG failed`, 1000); }
+  }
+
+  function dlJson(id, silent = false){
+    const nft = nfts.find(n=>n.id===id);
+    if(!nft) return;
+    try {
+      const meta = {
+        name: `RoboSym #${nft.idx}`,
+        description: `Cyberpunk robot NFT with ${nft.trait} trait.`,
+        image: `RoboSym_${nft.idx}_${nft.trait}.png`,
+        attributes: [
+          {trait_type:'Trait', value:nft.trait},
+          {trait_type:'Rarity', value:nft.rarity},
+          {trait_type:'Power', value:nft.power},
+          {trait_type:'Defense', value:nft.defense},
+          {trait_type:'Speed', value:nft.speed},
+        ],
+        id: nft.id, created: nft.created,
+        palette: {background:nft.palette.bg, colors:[nft.palette.a,nft.palette.b,nft.palette.c]}
+      };
+      const blob = new Blob([JSON.stringify(meta, null, 2)], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `RoboSym_${nft.idx}_${nft.trait}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      if (!silent) showToast(`✓ JSON saved: ${nft.trait} #${nft.idx}`, 1200);
+    } catch(e) { if(!silent) showToast(`⚠️ JSON error`, 1000); }
+  }
+
+  // improved export all with sequential queue + delay to prevent browser blocking
+  function exportAll() {
+    if (nfts.length === 0) {
+      showToast("No NFTs to export", 1500);
+      return;
     }
-    return canvasCache.get(key);
+    if (isExportingAll) {
+      showToast("Export already in progress...", 1000);
+      return;
+    }
+    isExportingAll = true;
+    const exportList = [];
+    for (let i = 0; i < nfts.length; i++) {
+      exportList.push({ type: 'png', id: nfts[i].id });
+      exportList.push({ type: 'json', id: nfts[i].id });
+    }
+    let idx = 0;
+    function processNext() {
+      if (idx >= exportList.length) {
+        isExportingAll = false;
+        showToast(`✅ Exported ${nfts.length} NFTs (PNG + JSON)`, 2500);
+        return;
+      }
+      const item = exportList[idx];
+      idx++;
+      if (item.type === 'png') {
+        dlPng(item.id, true);
+      } else {
+        dlJson(item.id, true);
+      }
+      // delay between each file to avoid browser download conflicts & popup block
+      setTimeout(processNext, 280);
+    }
+    processNext();
   }
 
   function addNftCard(nft){
@@ -352,6 +443,7 @@
     document.getElementById('empty-msg').style.display='none';
     const div=document.createElement('div');
     div.className='nft-card';
+    div.setAttribute('data-nft-id', nft.id);
     div.innerHTML=`<div class="nft-canvas-wrap"><canvas id="c-${nft.id}" width="512" height="512"></canvas></div>
       <div class="nft-label">${nft.trait}</div>
       <div class="rarity-badge" style="color:${RARITY_COLORS[nft.rarity]}; border:1px solid ${RARITY_COLORS[nft.rarity]}44;">${nft.rarity}</div>
@@ -364,28 +456,22 @@
     const canvas=document.getElementById('c-'+nft.id);
     drawRobot(canvas, nft, 14);
     
-    // Add event listeners
-    div.querySelector('.view-btn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      openModal(nft.id);
-    });
-    div.querySelector('.dl-png-btn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      dlPng(nft.id);
-    });
-    div.querySelector('.dl-json-btn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      dlJson(nft.id);
-    });
+    // event listeners using closure
+    const viewBtn = div.querySelector('.view-btn');
+    const pngBtn = div.querySelector('.dl-png-btn');
+    const jsonBtn = div.querySelector('.dl-json-btn');
+    viewBtn.addEventListener('click', (e) => { e.stopPropagation(); openModal(nft.id); });
+    pngBtn.addEventListener('click', (e) => { e.stopPropagation(); dlPng(nft.id); });
+    jsonBtn.addEventListener('click', (e) => { e.stopPropagation(); dlJson(nft.id); });
   }
 
   function openModal(id){
-    selectedNft=nfts.find(n=>n.id===id);
-    if(!selectedNft)return;
-    const mc=document.getElementById('modal-canvas');
+    selectedNft = nfts.find(n=>n.id===id);
+    if(!selectedNft) return;
+    const mc = document.getElementById('modal-canvas');
     drawRobot(mc, selectedNft, 20);
-    document.getElementById('modal-name').textContent=`ROBO #${selectedNft.idx} — ${selectedNft.trait}`;
-    document.getElementById('modal-meta').innerHTML=`
+    document.getElementById('modal-name').textContent = `ROBO #${selectedNft.idx} — ${selectedNft.trait}`;
+    document.getElementById('modal-meta').innerHTML = `
       <tr><td>Rarity</td><td style="color:${RARITY_COLORS[selectedNft.rarity]}">${selectedNft.rarity}</td></tr>
       <tr><td>Trait</td><td>${selectedNft.trait}</td></tr>
       <tr><td>Power</td><td>${selectedNft.power}</td></tr>
@@ -396,82 +482,40 @@
     document.getElementById('modal-bg').style.display='flex';
   }
 
-  function dlPng(id){
-    const nft=nfts.find(n=>n.id===id);
-    if(!nft)return;
-    const canvas = getOrDrawCanvas(nft, 18);
-    canvas.toBlob(blob=>{
-      const url=URL.createObjectURL(blob);
-      const a=document.createElement('a');
-      a.href=url; a.download=`RoboSym_${nft.idx}_${nft.trait}.png`; 
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    },'image/png');
-  }
-
-  function dlJson(id){
-    const nft=nfts.find(n=>n.id===id);
-    if(!nft)return;
-    const meta={
-      name:`RoboSym #${nft.idx}`,
-      description:`Cyberpunk robot NFT with ${nft.trait} trait.`,
-      image:`RoboSym_${nft.idx}_${nft.trait}.png`,
-      attributes:[
-        {trait_type:'Trait',value:nft.trait},
-        {trait_type:'Rarity',value:nft.rarity},
-        {trait_type:'Power',value:nft.power},
-        {trait_type:'Defense',value:nft.defense},
-        {trait_type:'Speed',value:nft.speed},
-      ],
-      id:nft.id, created:nft.created,
-      palette:{background:nft.palette.bg,colors:[nft.palette.a,nft.palette.b,nft.palette.c]}
-    };
-    const blob=new Blob([JSON.stringify(meta,null,2)],{type:'application/json'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url; a.download=`RoboSym_${nft.idx}_${nft.trait}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
-
-  // Export all function with improved handling
-  function exportAll() {
-    if (nfts.length === 0) return;
-    let completed = 0;
-    const total = nfts.length * 2;
-    
-    nfts.forEach((nft) => {
-      setTimeout(() => { 
-        dlPng(nft.id);
-        setTimeout(() => { dlJson(nft.id); }, 100);
-      }, 500);
-    });
-  }
-
-  document.getElementById('gen1').onclick=()=>{
-    const nft=genNft(nfts.length); nfts.push(nft); addNftCard(nft);
-    document.getElementById('countLbl').textContent=`COLLECTION: ${nfts.length}`;
+  document.getElementById('gen1').onclick = () => {
+    const nft = genNft(nfts.length);
+    nfts.push(nft);
+    addNftCard(nft);
+    document.getElementById('countLbl').textContent = `COLLECTION: ${nfts.length}`;
+    showToast(`Minted #${nft.idx} — ${nft.trait} (${nft.rarity})`, 1300);
   };
 
-  document.getElementById('gen10').onclick=()=>{
-    for(let i=0;i<10;i++){ const nft=genNft(nfts.length); nfts.push(nft); addNftCard(nft); }
-    document.getElementById('countLbl').textContent=`COLLECTION: ${nfts.length}`;
+  document.getElementById('gen10').onclick = () => {
+    for(let i=0;i<10;i++){ 
+      const nft = genNft(nfts.length);
+      nfts.push(nft);
+      addNftCard(nft);
+    }
+    document.getElementById('countLbl').textContent = `COLLECTION: ${nfts.length}`;
+    showToast(`⚡ 10 new robots minted!`, 1600);
   };
 
-  document.getElementById('dlAll').onclick=exportAll;
+  document.getElementById('dlAll').onclick = exportAll;
 
-  document.getElementById('modal-close').onclick=()=>{
+  document.getElementById('modal-close').onclick = () => {
     document.getElementById('modal-bg').style.display='none';
   };
-  document.getElementById('modal-bg').onclick=(e)=>{
-    if(e.target.id==='modal-bg') document.getElementById('modal-bg').style.display='none';
+  document.getElementById('modal-bg').onclick = (e) => {
+    if(e.target.id === 'modal-bg') document.getElementById('modal-bg').style.display='none';
   };
-  document.getElementById('modal-dl-png').onclick=()=>{ if(selectedNft) dlPng(selectedNft.id); };
-  document.getElementById('modal-dl-json').onclick=()=>{ if(selectedNft) dlJson(selectedNft.id); };
+  document.getElementById('modal-dl-png').onclick = () => { if(selectedNft) dlPng(selectedNft.id); };
+  document.getElementById('modal-dl-json').onclick = () => { if(selectedNft) dlJson(selectedNft.id); };
+
+  // initial empty state sync
+  window.updateCount = () => {
+    const lbl = document.getElementById('countLbl');
+    if(lbl) lbl.textContent = `COLLECTION: ${nfts.length}`;
+  };
 })();
 </script>
 </body>
