@@ -1,545 +1,279 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>SYMBOTICA · Generative Symbol Art Studio</title>
-    <!-- Google Fonts + Font Awesome -->
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<!doctype html>
+<html class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robo Symbol NFT Generator</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'VT323', monospace; }
+    .win95-border { border: 2px solid; border-color: #ffffff #808080 #808080 #ffffff; }
+    .win95-border-inset { border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; }
+    .win95-btn { border: 2px solid; border-color: #ffffff #000000 #000000 #ffffff; background: #c0c0c0; }
+    .win95-btn:active { border-color: #000000 #ffffff #ffffff #000000; }
+    .title-bar { background: linear-gradient(90deg, #000080, #1084d0); color: white; padding: 2px 4px; }
+    .robot-cell { display: flex; align-items: center; justify-content: center; font-size: 1.2rem; line-height: 1; }
+    .nft-card { cursor: pointer; transition: transform 0.1s; }
+    .nft-card:hover { transform: scale(1.02); }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-[#008080] overflow-auto">
+  <div class="h-full w-full p-4"><!-- Title Bar Window -->
+   <div class="win95-border bg-[#c0c0c0] max-w-6xl mx-auto">
+    <div class="title-bar flex items-center justify-between"><span id="site-title" class="text-lg">⚙️ Robo Symbol NFT Generator</span>
+     <div class="flex gap-1"><button class="win95-btn w-5 h-4 text-xs leading-none">_</button> <button class="win95-btn w-5 h-4 text-xs leading-none">□</button> <button class="win95-btn w-5 h-4 text-xs leading-none">✕</button>
+     </div>
+    </div>
+    <div class="p-3"><!-- Controls -->
+     <div class="flex flex-wrap gap-2 mb-4 items-center"><button id="generate-btn" class="win95-btn px-4 py-1 text-lg">🤖 Generate NFT</button> <button id="generate-10-btn" class="win95-btn px-4 py-1 text-lg">⚡ Generate 10</button> <button id="download-all-btn" class="win95-btn px-4 py-1 text-lg">💾 Download All</button> <span class="text-sm ml-2" id="count-label">Collection: 0 NFTs</span>
+     </div><!-- NFT Grid -->
+     <div class="win95-border-inset bg-white p-3 min-h-[300px]">
+      <div id="nft-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3"></div>
+      <p id="empty-msg" class="text-center text-gray-500 text-xl py-10">Click "Generate NFT" to create your first robot!</p>
+     </div>
+    </div>
+   </div><!-- Modal -->
+   <div id="modal" class="modal-overlay hidden">
+    <div class="win95-border bg-[#c0c0c0] w-[90%] max-w-md">
+     <div class="title-bar flex items-center justify-between"><span>📋 NFT Metadata</span> <button id="modal-close" class="win95-btn w-5 h-4 text-xs leading-none">✕</button>
+     </div>
+     <div class="p-4">
+      <div id="modal-robot" class="win95-border-inset bg-black p-2 mb-3 flex items-center justify-center"></div>
+      <div id="modal-meta" class="win95-border-inset bg-white p-2 text-sm mb-3 overflow-auto max-h-[200px]"></div><button id="download-btn" class="win95-btn px-4 py-1 text-lg w-full">💾 Download JSON</button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    // Config
+    const defaultConfig = {
+      site_title: 'Robo Symbol NFT Generator',
+      background_color: '#008080',
+      surface_color: '#c0c0c0',
+      text_color: '#000000',
+      primary_action: '#000080',
+      secondary_action: '#808080',
+      font_family: 'VT323',
+      font_size: 16
+    };
 
-        body {
-            background: radial-gradient(circle at 30% 10%, #0c0f1c, #020408);
-            font-family: 'Space Grotesk', sans-serif;
-            color: #eef5ff;
-            padding: 2rem 1.5rem;
-        }
+    let nfts = [];
+    let selectedNft = null;
 
-        .glass-panel {
-            background: rgba(12, 20, 30, 0.65);
-            backdrop-filter: blur(12px);
-            border-radius: 2.5rem;
-            border: 1px solid rgba(0, 255, 255, 0.25);
-            box-shadow: 0 20px 35px -10px rgba(0,0,0,0.6);
-        }
+    // Robot generation
+    const HEAD_PARTS = ['⌐■-■','[◉_◉]','(⊙_⊙)','【☰☰】','⟨◈◈⟩','[▓▓▓]','(◕‿◕)','⟦⊡⊡⟧','[●_●]','(⊞_⊞)','【◉‿◉】','⟨▣_▣⟩','[⊕⊕]','(◎‿◎)','⟦■_■⟧'];
+    const BODY_PARTS = ['╔═╗║█║╚═╝','┌─┐│♦│└─┘','╭─╮│◆│╰─╯','┏━┓┃▓┃┗━┛','╔═╗║◈║╚═╝','┌─┐│⊞│└─┘','╭─╮│▣│╰─╯','┏━┓┃⊡┃┗━┛'];
+    const ARMS = ['═╡  ╞═','─┤  ├─','━┥  ┝━','≡╡  ╞≡','─╢  ╟─','⊣   ⊢','╾╡  ╞╼'];
+    const LEGS = ['╨    ╨','┴    ┴','╧    ╧','⊥    ⊥','╩    ╩'];
+    const ANTENNAS = ['  ╦  ','  ┬  ','  ╥  ','  ⊤  ',' ╔╦╗ ',' ┌┬┐ ','  ↑  ','  ⌇  '];
+    const TRAITS = ['Warrior','Scientist','Artist','Explorer','Guardian','Hacker','Mystic','Builder','Healer','Rogue'];
+    const RARITIES = ['Common','Uncommon','Rare','Epic','Legendary'];
+    const BG_PALETTES = [
+      ['#1a1a2e','#16213e','#0f3460'],
+      ['#2d132c','#510a32','#801336'],
+      ['#0a3d62','#3c6382','#60a3bc'],
+      ['#1b1b2f','#162447','#1f4068'],
+      ['#0c0032','#190061','#240090'],
+      ['#2c003e','#512b58','#818181'],
+      ['#1a002e','#3d0066','#7a00cc'],
+    ];
+    const COLORS = ['#00ff41','#ff6600','#00ccff','#ff00ff','#ffff00','#ff3366','#66ff33','#33ccff','#ff9900','#cc33ff'];
 
-        .container {
-            max-width: 1300px;
-            margin: 0 auto;
-        }
+    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function randInt(a,b) { return Math.floor(Math.random()*(b-a+1))+a; }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-            gap: 1rem;
-        }
+    function generateRobot() {
+      const id = Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+      const antenna = pick(ANTENNAS);
+      const head = pick(HEAD_PARTS);
+      const arms = pick(ARMS);
+      const body = pick(BODY_PARTS);
+      const legs = pick(LEGS);
+      const palette = pick(BG_PALETTES);
+      const symbolColors = [pick(COLORS), pick(COLORS), pick(COLORS)];
+      const trait = pick(TRAITS);
+      const rarity = pick(RARITIES);
+      const power = randInt(10, 99);
+      const defense = randInt(10, 99);
+      const speed = randInt(10, 99);
 
-        h1 {
-            font-size: 2.4rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #aaffdd, #88ccff, #ffb3e6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: -1px;
-        }
-        .sub {
-            color: #9bb8ff;
-            margin-top: 6px;
-            font-weight: 400;
-        }
+      return {
+        id, antenna, head, arms, body, legs,
+        bgPalette: palette, symbolColors, trait, rarity,
+        power, defense, speed,
+        name: `RoboSym #${nfts.length + 1}`,
+        created: new Date().toISOString()
+      };
+    }
 
-        .btn-symbol {
-            background: linear-gradient(95deg, #1e2a3a, #0f1722);
-            border: 1.5px solid #2affb6;
-            color: #befff0;
-            padding: 12px 32px;
-            border-radius: 60px;
-            font-weight: 600;
-            font-size: 1.05rem;
-            cursor: pointer;
-            transition: 0.2s;
-            box-shadow: 0 0 8px #2affb680;
-            backdrop-filter: blur(4px);
-        }
-        .btn-symbol:hover {
-            background: #2affb622;
-            border-color: #ffd966;
-            color: white;
-            transform: scale(0.98);
-            box-shadow: 0 0 18px #ffd966;
-        }
+    function renderRobotHTML(nft, size='md') {
+      const s = size === 'sm' ? 'text-xs' : 'text-sm';
+      const bg = `linear-gradient(135deg, ${nft.bgPalette[0]}, ${nft.bgPalette[1]}, ${nft.bgPalette[2]})`;
+      const [c1,c2,c3] = nft.symbolColors;
+      return `<div style="background:${bg}; padding:8px; border-radius:2px; text-align:center; line-height:1.3;" class="${s}">
+        <div style="color:${c1}">${nft.antenna}</div>
+        <div style="color:${c2}">${nft.head}</div>
+        <div style="color:${c3}">${nft.arms}</div>
+        <div style="color:${c1}">${nft.body.slice(0,3)}</div>
+        <div style="color:${c2}">${nft.body.slice(3,6)}</div>
+        <div style="color:${c3}">${nft.body.slice(6)}</div>
+        <div style="color:${c1}">${nft.legs}</div>
+      </div>`;
+    }
 
-        .info-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin: 1rem 0 2rem;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .badge {
-            background: #0a0f1cbb;
-            border-radius: 60px;
-            padding: 6px 20px;
-            font-size: 0.9rem;
-            border-left: 3px solid cyan;
-        }
+    function renderGrid() {
+      const grid = document.getElementById('nft-grid');
+      const empty = document.getElementById('empty-msg');
+      empty.classList.toggle('hidden', nfts.length > 0);
+      document.getElementById('count-label').textContent = `Collection: ${nfts.length} NFTs`;
 
-        .art-showcase {
-            background: #03060cee;
-            border-radius: 2rem;
-            padding: 2rem;
-            margin-bottom: 2.5rem;
-            border: 1px solid #3effc070;
-            box-shadow: 0 15px 35px rgba(0,255,255,0.1);
-        }
-        .canvas-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 24px;
-        }
-        .symbol-canvas {
-            background: #07121f;
-            border-radius: 32px;
-            box-shadow: 0 0 0 3px #0ff3, 0 20px 40px rgba(0,0,0,0.5);
-            transition: all 0.2s;
-        }
-        canvas {
-            display: block;
-            margin: 0 auto;
-            border-radius: 28px;
-            image-rendering: crisp-edges;
-            image-rendering: pixelated;
-            width: 512px;
-            height: 512px;
-        }
-
-        .meta-panel {
-            background: #0b111ecc;
-            border-radius: 2rem;
-            padding: 1.4rem 2rem;
-            margin-top: 1.2rem;
-            width: 100%;
-            backdrop-filter: blur(8px);
-        }
-        .traits-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin: 20px 0 15px;
-        }
-        .trait-chip {
-            background: #1e2a3d;
-            border-radius: 40px;
-            padding: 6px 18px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            letter-spacing: 0.3px;
-            font-family: monospace;
-            border-left: 3px solid cyan;
-        }
-        .btn-group {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            margin-top: 18px;
-        }
-        .btn-icon {
-            background: #0e1727;
-            border: 1px solid #3ca0ff;
-            padding: 10px 22px;
-            border-radius: 40px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: 0.2s;
-            color: #caf0ff;
-        }
-        .btn-icon:hover {
-            background: #2b5797;
-            border-color: cyan;
-            color: white;
-        }
-
-        .history-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 1.2rem;
-            margin-top: 1.5rem;
-            max-height: 480px;
-            overflow-y: auto;
-            padding: 0.5rem;
-        }
-        .history-card {
-            background: #0e1625c9;
-            border-radius: 1.2rem;
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.1s linear;
-            border: 1px solid #2affb630;
-        }
-        .history-card img {
-            width: 100%;
-            aspect-ratio: 1/1;
-            object-fit: cover;
-            border-radius: 16px;
-            background: #00000066;
-        }
-        .history-card p {
-            font-size: 0.7rem;
-            margin-top: 8px;
-            font-weight: 500;
-        }
-        footer {
-            text-align: center;
-            margin-top: 3rem;
-            opacity: 0.6;
-            font-size: 0.8rem;
-        }
-        @media (max-width: 650px) {
-            canvas { width: 100% !important; height: auto !important; }
-            .symbol-canvas { width: 100%; }
-            body { padding: 1rem; }
-        }
-        .section-title {
-            font-size: 1.5rem;
-            margin-bottom: 0.6rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-    </style>
-</head>
-<body>
-<div class="container">
-    <header>
-        <div>
-            <h1><i class="fas fa-robot"></i> SYMBOTICA <span style="font-size: 1rem;">|</span> <span style="font-size: 1rem;">error•symbol•art</span></h1>
-            <div class="sub">~ `√π÷×{} £$℅^°_=[]‌®©™\<> · generative robot kin · each unique traits</div>
+      grid.innerHTML = nfts.map(nft => `
+        <div class="nft-card win95-border bg-[#c0c0c0] p-1">
+          <div onclick="showModal('${nft.id}')" style="cursor:pointer;">
+            ${renderRobotHTML(nft, 'sm')}
+            <div class="text-center text-xs mt-1 truncate">${nft.name}</div>
+            <div class="text-center text-xs text-gray-600">${nft.rarity}</div>
+          </div>
+          <button class="win95-btn w-full text-xs mt-1 py-0" onclick="downloadNFT('${nft.id}')">💾 JSON</button>
         </div>
-        <button id="randomArtBtn" class="btn-symbol"><i class="fas fa-dice-d6"></i> ✦ GENERATE NEW ROBOT ✦</button>
-    </header>
+      `).join('');
+    }
 
-    <div class="info-bar">
-        <div class="badge"><i class="fas fa-cubes"></i> LIVE TRAIT ENGINE | 12 trait slots | full metadata</div>
-        <div class="badge"><i class="fas fa-download"></i> Download PNG + JSON (per art)</div>
-    </div>
+    function showModal(id) {
+      selectedNft = nfts.find(n => n.id === id);
+      if (!selectedNft) return;
+      document.getElementById('modal-robot').innerHTML = renderRobotHTML(selectedNft, 'md');
+      document.getElementById('modal-meta').innerHTML = `
+        <p><b>Name:</b> ${selectedNft.name}</p>
+        <p><b>Trait:</b> ${selectedNft.trait}</p>
+        <p><b>Rarity:</b> ${selectedNft.rarity}</p>
+        <p><b>Power:</b> ${selectedNft.power}</p>
+        <p><b>Defense:</b> ${selectedNft.defense}</p>
+        <p><b>Speed:</b> ${selectedNft.speed}</p>
+        <p><b>Created:</b> ${new Date(selectedNft.created).toLocaleString()}</p>
+        <p><b>ID:</b> ${selectedNft.id}</p>
+      `;
+      document.getElementById('modal').classList.remove('hidden');
+    }
 
-    <!-- Main Showcase -->
-    <div class="art-showcase">
-        <div class="canvas-area">
-            <div class="symbol-canvas">
-                <canvas id="mainCanvas" width="512" height="512" style="width:512px; height:512px;"></canvas>
-            </div>
-            <div class="meta-panel">
-                <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap;">
-                    <h3 id="artName">SYMBIOT #000 — <span id="typeBadge">Pixel-Symbol</span></h3>
-                    <span style="font-family: monospace; background:#00000066; padding: 4px 12px; border-radius: 50px;">ID: <span id="artId">—</span></span>
-                </div>
-                <p id="artDescription" style="margin: 12px 0; color: #bbd4ff;">loading description...</p>
-                <div class="traits-grid" id="traitsContainer"></div>
-                <div class="btn-group">
-                    <button id="downloadPngBtn" class="btn-icon"><i class="fas fa-download"></i> PNG · 512x512</button>
-                    <button id="downloadJsonBtn" class="btn-icon"><i class="fas fa-code"></i> JSON metadata</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    function downloadJSON() {
+      if (!selectedNft) return;
+      const nftIndex = nfts.findIndex(n => n.id === selectedNft.id) + 1;
+      const meta = {
+        name: selectedNft.name,
+        description: `A unique typographic robot NFT with ${selectedNft.trait} trait.`,
+        attributes: [
+          { trait_type: 'Trait', value: selectedNft.trait },
+          { trait_type: 'Rarity', value: selectedNft.rarity },
+          { trait_type: 'Power', value: selectedNft.power },
+          { trait_type: 'Defense', value: selectedNft.defense },
+          { trait_type: 'Speed', value: selectedNft.speed },
+        ],
+        id: selectedNft.id,
+        created: selectedNft.created,
+        robot_parts: { antenna: selectedNft.antenna, head: selectedNft.head, arms: selectedNft.arms, body: selectedNft.body, legs: selectedNft.legs },
+        colors: { background: selectedNft.bgPalette, symbols: selectedNft.symbolColors }
+      };
+      const blob = new Blob([JSON.stringify(meta, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `${nftIndex}.json`; a.click();
+      URL.revokeObjectURL(url);
+    }
 
-    <!-- History Gallery (previously generated arts) -->
-    <div class="section-title">
-        <i class="fas fa-layer-group"></i> <span>✦ ROBOT COLLECTION ✦  <span style="font-size:0.8rem;">(click to reload)</span></span>
-    </div>
-    <div id="historyGallery" class="history-grid glass-panel" style="padding: 1rem;">
-        <div style="text-align:center; padding:2rem;">✨ Generate your first symbol robot ✨</div>
-    </div>
-    <footer>
-        <i class="fas fa-sync-alt"></i> each robot is unique – traits: body, hat, cape, hair, glasses, eyes, mouth, hand pose, tail, horn, dress, bodycolor<br>
-        symbolic error-art generated via glyph mapping | dot • dash ~ √ π ÷ × { } £ $ ℅ ^ ° _ = [ ] ® © ™ \ < >
-    </footer>
-</div>
+    function downloadNFT(id) {
+      const nft = nfts.find(n => n.id === id);
+      if (!nft) return;
+      const nftIndex = nfts.findIndex(n => n.id === id) + 1;
+      const meta = {
+        name: nft.name,
+        description: `A unique typographic robot NFT with ${nft.trait} trait.`,
+        attributes: [
+          { trait_type: 'Trait', value: nft.trait },
+          { trait_type: 'Rarity', value: nft.rarity },
+          { trait_type: 'Power', value: nft.power },
+          { trait_type: 'Defense', value: nft.defense },
+          { trait_type: 'Speed', value: nft.speed },
+        ],
+        id: nft.id,
+        created: nft.created,
+        robot_parts: { antenna: nft.antenna, head: nft.head, arms: nft.arms, body: nft.body, legs: nft.legs },
+        colors: { background: nft.bgPalette, symbols: nft.symbolColors }
+      };
+      const blob = new Blob([JSON.stringify(meta, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `${nftIndex}.json`; a.click();
+      URL.revokeObjectURL(url);
+    }
 
-<script>
-    // --------------------------------------------------------------
-    // TRAITS POOL — every art different
-    const bodySymbols = ["◉", "⬤", "●", "◈", "▣", "◍", "◎", "★", "✪", "⬟"];
-    const hatStyles = ["⌂", "▲", "⛑️", "𝄞", "⍟", "ᗧ", "⎔", "ꕤ", "⌬", "⏣"];
-    const capeTypes = ["⌭", "ᨒ", "⛊", "≋", "𓆣", "༄", "۞", "⚘", "⌲", "𓋴"];
-    const hairStyles = ["ᚠ", "ᛉ", "꧁", "꧂", "〰️", "⤹", "✧", "❋", "✽", "⍟"];
-    const glassesStyles = ["◠◡◠", "⦿◡⦿", "⎊⦊⎊", "◉‿◉", "⍟‿⍟", "⎋◡⎋", "⍜⍜"];
-    const eyeExpressions = ["◉_◉", "◔_◔", "⊙▂⊙", "◕_◕", "✧_✧", "◖_◗", "◉⌣◉", "⍟‿⍟"];
-    const mouthExpressions = ["⌣", "⌢", "ω", "ꞈ", "͜ʖ", "ᴗ", "❥", "◡", "▽", "⏍"];
-    const handPoses = ["✋", "✌️", "🤟", "👆", "🖖", "⎛⎝", "⫸", "⫷", "ᕦ", "ᕤ"];
-    const tailTypes = ["⌭", "⧚", "⌒", "𓃥", "⤹", "〰️", "↯", "ᨒ", "ᛜ"];
-    const hornTypes = ["⩇", "⩈", "⌶", "⍣", "⌁", "⬿", "⫯", "⌾", "⫪"];
-    const dressStyles = ["⫸⫷", "⎔⎔", "⨀", "◈◈", "⫚", "⌬", "꘏", "⛊⛊", "⫯⫯"];
-    const bodyColors = ["#FF5E7C", "#6C5CE7", "#00CEC9", "#F9CA24", "#FDA7DF", "#95CDBA", "#FF9F43", "#A55CFF", "#20BF6B", "#FF7F50", "#4B6584", "#E84393"];
-
-    function randomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
-    function generateUniqueTraits() {
-        return {
-            body: randomItem(bodySymbols),
-            hat: randomItem(hatStyles),
-            cape: randomItem(capeTypes),
-            hair: randomItem(hairStyles),
-            glasses: randomItem(glassesStyles),
-            eyes: randomItem(eyeExpressions),
-            mouth: randomItem(mouthExpressions),
-            hand: randomItem(handPoses),
-            tail: randomItem(tailTypes),
-            horn: randomItem(hornTypes),
-            dress: randomItem(dressStyles),
-            bodyColor: randomItem(bodyColors)
+    function downloadAllNFTs() {
+      if (nfts.length === 0) return;
+      nfts.forEach((nft, idx) => {
+        const nftIndex = idx + 1;
+        const meta = {
+          name: nft.name,
+          description: `A unique typographic robot NFT with ${nft.trait} trait.`,
+          attributes: [
+            { trait_type: 'Trait', value: nft.trait },
+            { trait_type: 'Rarity', value: nft.rarity },
+            { trait_type: 'Power', value: nft.power },
+            { trait_type: 'Defense', value: nft.defense },
+            { trait_type: 'Speed', value: nft.speed },
+          ],
+          id: nft.id,
+          created: nft.created,
+          robot_parts: { antenna: nft.antenna, head: nft.head, arms: nft.arms, body: nft.body, legs: nft.legs },
+          colors: { background: nft.bgPalette, symbols: nft.symbolColors }
         };
-    }
-
-    // metadata constructor
-    function buildMetadata(traits, index) {
-        const name = `SYMBOT #${index} | ${traits.body} ${traits.hat}`;
-        const description = `generative error-art robot. traits: body=${traits.body}, hat=${traits.hat}, cape=${traits.cape}, hair=${traits.hair}, glasses=${traits.glasses}, eyes=${traits.eyes}, mouth=${traits.mouth}, hand=${traits.hand}, tail=${traits.tail}, horn=${traits.horn}, dress=${traits.dress}, color=${traits.bodyColor} – symbol chaos ~√π÷×{}£$℅^°_=[]®©™\<>`;
-        return { name, description };
-    }
-
-    // ========== SYMBOLIC PAINT ENGINE : error symbols & dot matrix ==========
-    function drawSymbolArt(ctx, size, traits) {
-        const w = size, h = size;
-        ctx.clearRect(0, 0, w, h);
-        // cosmic dark background but organic
-        ctx.fillStyle = "#0a0f1d";
-        ctx.fillRect(0, 0, w, h);
-        
-        // decorative circuit + error traces
-        for (let i=0; i<120; i++) {
-            ctx.fillStyle = `rgba(0, 255, 200, ${Math.random() * 0.2})`;
-            ctx.fillRect(Math.random()*w, Math.random()*h, 1.5, 1.5);
-        }
-        
-        // main body shape as large symbol
-        ctx.font = `bold ${size * 0.28}px "Segoe UI Emoji", "Courier New", monospace`;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        // body glyph
-        ctx.fillStyle = traits.bodyColor;
-        ctx.fillText(traits.body, w/2, h/2 - 12);
-        
-        // hat on top
-        ctx.font = `${size * 0.24}px monospace`;
-        ctx.fillStyle = "#E5D0FF";
-        ctx.fillText(traits.hat, w/2, h*0.22);
-        
-        // cape (drawn as arc behind)
-        ctx.font = `${size * 0.16}px monospace`;
-        ctx.fillStyle = "#9ec8ff";
-        ctx.fillText(traits.cape, w/2 - 40, h/2 + 30);
-        ctx.fillText(traits.cape, w/2 + 40, h/2 + 30);
-        
-        // hair symbols (floating)
-        ctx.fillStyle = "#ffb86b";
-        ctx.fillText(traits.hair, w/2 - 35, h*0.32);
-        ctx.fillText(traits.hair, w/2 + 35, h*0.32);
-        
-        // glasses & eyes combined style
-        ctx.font = `${size * 0.08}px monospace`;
-        ctx.fillStyle = "#c0e0ff";
-        let glassesRaw = traits.glasses;
-        ctx.fillText(glassesRaw, w/2, h/2 - 16);
-        ctx.font = `${size * 0.12}px "Segoe UI Emoji"`;
-        ctx.fillStyle = "#ffffffcc";
-        ctx.fillText(traits.eyes, w/2, h/2 - 6);
-        
-        // mouth
-        ctx.font = `${size * 0.1}px monospace`;
-        ctx.fillStyle = "#FFB7B2";
-        ctx.fillText(traits.mouth, w/2, h/2 + 28);
-        
-        // hand poses
-        ctx.font = `${size * 0.15}px monospace`;
-        ctx.fillStyle = "#A6E3D9";
-        ctx.fillText(traits.hand, w/2 - 70, h/2 + 35);
-        ctx.fillText(traits.hand, w/2 + 70, h/2 + 35);
-        
-        // tail
-        ctx.font = `${size * 0.13}px monospace`;
-        ctx.fillStyle = "#f3b0c2";
-        ctx.fillText(traits.tail, w/2 + 88, h/2 + 60);
-        
-        // horn
-        ctx.fillStyle = "#e2bb8e";
-        ctx.fillText(traits.horn, w/2 - 18, h*0.22);
-        ctx.fillText(traits.horn, w/2 + 18, h*0.22);
-        
-        // dress pattern
-        ctx.font = `${size * 0.1}px monospace`;
-        ctx.fillStyle = "#b59fff";
-        ctx.fillText(traits.dress, w/2, h/2 + 75);
-        
-        // unique DOT-DOT & random matrix error symbols like `√π÷×{}£$℅^°_=[]®©™\<>`
-        const errorSymbols = ["√","π","÷","×","{","}","£","$","℅","^","°","_","=","[","]","®","©","™","\\","<",">","~","`"];
-        for (let s=0; s<85; s++) {
-            ctx.font = `${12 + Math.random() * 20}px monospace`;
-            ctx.fillStyle = `rgba(100, 255, 180, ${0.2+Math.random()*0.5})`;
-            const randSym = errorSymbols[Math.floor(Math.random() * errorSymbols.length)];
-            ctx.fillText(randSym, Math.random() * w, Math.random() * h);
-        }
-        
-        // extra pixel dots (hand drawn style)
-        for (let d=0; d<300; d++) {
-            ctx.fillStyle = `rgba(255, 200, 100, 0.4)`;
-            ctx.fillRect(Math.floor(Math.random()*w), Math.floor(Math.random()*h), 2, 2);
-        }
-        // specific highlight: ring of symbols
-        ctx.beginPath();
-        ctx.arc(w/2, h/2, 110, 0, Math.PI*2);
-        ctx.strokeStyle = "#2affb680";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        for(let ang=0; ang<12; ang++) {
-            let rad = ang * (Math.PI*2/12);
-            let x = w/2 + Math.cos(rad)*90;
-            let y = h/2 + Math.sin(rad)*90;
-            ctx.fillStyle = "#ffc857";
-            ctx.font = "20px monospace";
-            ctx.fillText("•", x-4, y+4);
-        }
-    }
-
-    // --------------------- MAIN STATE ---------------------
-    let currentArt = null;     // { traits, meta, imageDataURL, id }
-    let artHistory = [];        // store previous arts (max 30)
-    let nextId = 1;
-    
-    const canvas = document.getElementById('mainCanvas');
-    const ctx = canvas.getContext('2d');
-    
-    function renderArtToCanvas(traits) {
-        drawSymbolArt(ctx, 512, traits);
-        return canvas.toDataURL('image/png');
-    }
-    
-    function generateNewArt() {
-        const traits = generateUniqueTraits();
-        const meta = buildMetadata(traits, nextId);
-        const imageUrl = renderArtToCanvas(traits);
-        const newArt = {
-            id: nextId,
-            traits: traits,
-            meta: meta,
-            imageDataURL: imageUrl,
-            timestamp: Date.now()
-        };
-        currentArt = newArt;
-        // push to history (limit last 25)
-        artHistory.unshift(newArt);
-        if(artHistory.length > 28) artHistory.pop();
-        nextId++;
-        updateUIWithCurrent();
-        renderHistoryGallery();
-        return newArt;
-    }
-    
-    function updateUIWithCurrent() {
-        if(!currentArt) return;
-        document.getElementById('artName').innerHTML = `${currentArt.meta.name} <span style="font-size:0.8rem; background:#1f2a44; padding:2px 10px; border-radius:50px;">error·core</span>`;
-        document.getElementById('artDescription').innerText = currentArt.meta.description.substring(0, 180) + "...";
-        document.getElementById('artId').innerText = `#${currentArt.id}`;
-        const traitsCont = document.getElementById('traitsContainer');
-        traitsCont.innerHTML = '';
-        const t = currentArt.traits;
-        const traitList = [
-            `body ${t.body}`, `hat ${t.hat}`, `cape ${t.cape}`, `hair ${t.hair}`,
-            `glasses ${t.glasses}`, `eyes ${t.eyes}`, `mouth ${t.mouth}`, `hand ${t.hand}`,
-            `tail ${t.tail}`, `horn ${t.horn}`, `dress ${t.dress}`, `color ${t.bodyColor}`
-        ];
-        traitList.forEach(tr => {
-            const chip = document.createElement('span');
-            chip.className = 'trait-chip';
-            chip.innerHTML = `<i class="fas fa-paintbrush-fine" style="font-size:10px;"></i> ${tr}`;
-            traitsCont.appendChild(chip);
-        });
-        // also update canvas image source 
-        const img = new Image();
-        img.onload = () => {
-            ctx.clearRect(0,0,512,512);
-            ctx.drawImage(img,0,0,512,512);
-        };
-        img.src = currentArt.imageDataURL;
-    }
-    
-    function renderHistoryGallery() {
-        const historyDiv = document.getElementById('historyGallery');
-        if(!artHistory.length) {
-            historyDiv.innerHTML = `<div style="text-align:center; padding:2rem;">✨ No robots yet. Click GENERATE ✨</div>`;
-            return;
-        }
-        historyDiv.innerHTML = '';
-        artHistory.forEach(art => {
-            const card = document.createElement('div');
-            card.className = 'history-card';
-            card.innerHTML = `
-                <img src="${art.imageDataURL}" alt="robot #${art.id}">
-                <p>#${art.id} · ${art.traits.body} ${art.traits.hat}</p>
-            `;
-            card.addEventListener('click', () => {
-                // load selected art to main viewer
-                currentArt = art;
-                updateUIWithCurrent();
-            });
-            historyDiv.appendChild(card);
-        });
-    }
-    
-    // download functions
-    function downloadCurrentPNG() {
-        if(!currentArt) return;
-        const link = document.createElement('a');
-        link.download = `symbot_${currentArt.id}_512.png`;
-        link.href = currentArt.imageDataURL;
-        link.click();
-    }
-    
-    function downloadCurrentJSON() {
-        if(!currentArt) return;
-        const exportData = {
-            name: currentArt.meta.name,
-            description: currentArt.meta.description,
-            tokenId: currentArt.id,
-            traits: currentArt.traits,
-            type: "error-symbol-art",
-            generative_style: "~√π÷×{}£$℅^°_=[]®©™\\<>",
-            created: new Date().toISOString()
-        };
-        const blob = new Blob([JSON.stringify(exportData, null, 2)], {type: 'application/json'});
+        const blob = new Blob([JSON.stringify(meta, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url;
-        a.download = `metadata_symbot_${currentArt.id}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
+        a.href = url; a.download = `${nftIndex}.json`; 
+        setTimeout(() => a.click(), idx * 200);
+        setTimeout(() => URL.revokeObjectURL(url), idx * 200 + 100);
+      });
     }
-    
-    // initial random generation and event binding
-    function init() {
-        generateNewArt();  // first random
-        document.getElementById('randomArtBtn').addEventListener('click', () => {
-            generateNewArt();
-        });
-        document.getElementById('downloadPngBtn').addEventListener('click', downloadCurrentPNG);
-        document.getElementById('downloadJsonBtn').addEventListener('click', downloadCurrentJSON);
-    }
-    
-    init();
-</script>
-</body>
+
+    // Events
+    document.getElementById('generate-btn').onclick = () => { nfts.push(generateRobot()); renderGrid(); };
+    document.getElementById('generate-10-btn').onclick = () => { for(let i=0;i<10;i++) nfts.push(generateRobot()); renderGrid(); };
+    document.getElementById('download-all-btn').onclick = downloadAllNFTs;
+    document.getElementById('modal-close').onclick = () => document.getElementById('modal').classList.add('hidden');
+    document.getElementById('modal').onclick = (e) => { if(e.target.id==='modal') document.getElementById('modal').classList.add('hidden'); };
+    document.getElementById('download-btn').onclick = downloadJSON;
+
+    // Element SDK
+    window.elementSdk.init({
+      defaultConfig,
+      onConfigChange: async (config) => {
+        document.getElementById('site-title').textContent = '⚙️ ' + (config.site_title || defaultConfig.site_title);
+        document.body.style.backgroundColor = config.background_color || defaultConfig.background_color;
+      },
+      mapToCapabilities: (config) => ({
+        recolorables: [
+          { get: () => config.background_color || defaultConfig.background_color, set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); } },
+          { get: () => config.surface_color || defaultConfig.surface_color, set: (v) => { config.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); } },
+          { get: () => config.text_color || defaultConfig.text_color, set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); } },
+          { get: () => config.primary_action || defaultConfig.primary_action, set: (v) => { config.primary_action = v; window.elementSdk.setConfig({ primary_action: v }); } },
+          { get: () => config.secondary_action || defaultConfig.secondary_action, set: (v) => { config.secondary_action = v; window.elementSdk.setConfig({ secondary_action: v }); } },
+        ],
+        borderables: [],
+        fontEditable: { get: () => config.font_family || defaultConfig.font_family, set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); } },
+        fontSizeable: { get: () => config.font_size || defaultConfig.font_size, set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); } },
+      }),
+      mapToEditPanelValues: (config) => new Map([
+        ['site_title', config.site_title || defaultConfig.site_title]
+      ])
+    });
+
+    lucide.createIcons();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0261d57de2a25c9',t:'MTc3OTg5NjM5MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
