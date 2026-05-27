@@ -1,521 +1,688 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Robo Symbol NFT Generator — Cyberpunk Robot Collection Forge</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
-    #nft-app { font-family: 'Share Tech Mono', monospace; background: #050510; min-height: 500px; padding: 16px; border-radius: 8px; color: #e0e0ff; }
-    .orbitron { font-family: 'Orbitron', monospace; }
-    .ctrl-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; align-items: center; }
-    .neon-btn { font-family: 'Share Tech Mono', monospace; background: transparent; border: 1px solid; padding: 6px 14px; font-size: 13px; cursor: pointer; letter-spacing: 1px; transition: all 0.15s; border-radius: 3px; }
-    .btn-green { border-color: #00ff88; color: #00ff88; }
-    .btn-green:hover { background: #00ff8822; box-shadow: 0 0 10px #00ff8866; }
-    .btn-cyan { border-color: #00ccff; color: #00ccff; }
-    .btn-cyan:hover { background: #00ccff22; box-shadow: 0 0 10px #00ccff66; }
-    .btn-magenta { border-color: #ff00cc; color: #ff00cc; }
-    .btn-magenta:hover { background: #ff00cc22; box-shadow: 0 0 10px #ff00cc66; }
-    .btn-yellow { border-color: #ffcc00; color: #ffcc00; }
-    .btn-yellow:hover { background: #ffcc0022; box-shadow: 0 0 10px #ffcc0066; }
-    .count-label { font-size: 12px; color: #8888aa; margin-left: 4px; }
-    .nft-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
-    .nft-card { background: #0a0a1e; border: 1px solid #1a1a3a; border-radius: 4px; padding: 6px; cursor: pointer; transition: all 0.15s; }
-    .nft-card:hover { border-color: #00ccff55; box-shadow: 0 0 12px #00ccff33; transform: translateY(-2px); }
-    .nft-canvas-wrap { width: 100%; aspect-ratio: 1; overflow: hidden; border-radius: 3px; }
-    .nft-canvas-wrap canvas { width: 100%; height: 100%; display: block; }
-    .nft-label { font-size: 10px; color: #8888cc; text-align: center; margin-top: 4px; letter-spacing: 0.5px; }
-    .rarity-badge { font-size: 9px; text-align: center; padding: 2px 0; border-radius: 2px; letter-spacing: 1px; margin-top: 2px; }
-    .dl-row { display: flex; gap: 4px; margin-top: 5px; }
-    .dl-row button { flex: 1; font-family: 'Share Tech Mono', monospace; background: transparent; border: 1px solid #222244; border-radius: 2px; font-size: 9px; color: #8888cc; cursor: pointer; padding: 3px 2px; transition: all 0.1s; letter-spacing: 0.5px; }
-    .dl-row button:hover { border-color: #00ccff88; color: #00ccff; }
-    .empty-msg { text-align: center; color: #333366; font-size: 14px; padding: 40px 0; letter-spacing: 2px; }
-    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 999; }
-    .modal-box { background: #070714; border: 1px solid #00ccff55; border-radius: 6px; padding: 20px; max-width: 340px; width: 90%; max-height: 90vh; overflow-y: auto; position: relative; }
-    .modal-title { font-family: 'Orbitron', monospace; font-size: 14px; color: #00ccff; margin-bottom: 12px; letter-spacing: 2px; }
-    .modal-canvas-wrap { width: 100%; aspect-ratio: 1; margin-bottom: 12px; border-radius: 4px; overflow: hidden; }
-    .modal-canvas-wrap canvas { width: 100%; height: 100%; display: block; }
-    .meta-table { width: 100%; font-size: 12px; border-collapse: collapse; margin-bottom: 12px; }
-    .meta-table td { padding: 4px 6px; border-bottom: 1px solid #111133; }
-    .meta-table td:first-child { color: #666699; }
-    .meta-table td:last-child { color: #ccccff; text-align: right; }
-    .modal-btns { display: flex; gap: 8px; }
-    .modal-btns button { flex: 1; font-family: 'Share Tech Mono', monospace; border-radius: 3px; background: transparent; border: 1px solid; cursor: pointer; padding: 8px; font-size: 12px; letter-spacing: 1px; transition: all 0.15s; }
-    .modal-close-btn { position: absolute; top: 12px; right: 14px; background: transparent; border: none; color: #666699; font-size: 18px; cursor: pointer; }
-    .toast-msg { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #0a0a2a; border: 1px solid #00ccff; color: #00ccff; padding: 6px 14px; border-radius: 30px; font-family: 'Share Tech Mono', monospace; font-size: 11px; z-index: 1000; opacity: 0; transition: opacity 0.2s; pointer-events: none; white-space: nowrap; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>OMEGA ROBO FORGE v3</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#02020e;min-height:100vh;font-family:'Share Tech Mono',monospace;}
+#app{padding:16px;color:#e0e0ff;}
+.orb{font-family:'Orbitron',monospace;}
+.hdr{margin-bottom:16px;}
+.hdr-t{font-family:'Orbitron',monospace;font-size:17px;letter-spacing:4px;background:linear-gradient(90deg,#00ffcc,#00ccff,#ff44ff,#ffaa33);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hdr-s{font-size:9px;color:#2a2a5a;letter-spacing:4px;margin-top:3px;}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;align-items:center;}
+.btn{font-family:'Share Tech Mono',monospace;background:transparent;border:1px solid;padding:7px 16px;font-size:12px;cursor:pointer;letter-spacing:1px;border-radius:3px;transition:all .15s;}
+.bg{border-color:#00ff88;color:#00ff88;}.bg:hover{box-shadow:0 0 14px #00ff8844;background:#00ff8810;}
+.bc{border-color:#00ccff;color:#00ccff;}.bc:hover{box-shadow:0 0 14px #00ccff44;background:#00ccff10;}
+.bm{border-color:#ff00cc;color:#ff00cc;}.bm:hover{box-shadow:0 0 14px #ff00cc44;background:#ff00cc10;}
+.by{border-color:#ffaa33;color:#ffaa33;}.by:hover{box-shadow:0 0 14px #ffaa3344;background:#ffaa3310;}
+.clbl{font-size:11px;color:#33336a;letter-spacing:2px;margin-left:4px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;}
+.card{background:linear-gradient(135deg,#08081e,#0c0c22);border:1px solid #16163a;border-radius:6px;padding:7px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.card:hover{border-color:#00ccff55;box-shadow:0 0 18px #00ccff22;transform:translateY(-2px);}
+.cstripe{position:absolute;top:0;left:0;right:0;height:2px;border-radius:6px 6px 0 0;}
+.cw{width:100%;aspect-ratio:1;overflow:hidden;border-radius:4px;border:1px solid #0e0e2a;}
+.cw canvas{width:100%;height:100%;display:block;}
+.clabel{font-size:9px;color:#7777bb;text-align:center;margin-top:5px;letter-spacing:.5px;font-weight:bold;}
+.rbadge{font-size:8px;text-align:center;padding:2px 4px;border-radius:2px;letter-spacing:1px;margin-top:3px;border:1px solid transparent;}
+.dlrow{display:flex;gap:3px;margin-top:5px;}
+.dlrow button{flex:1;font-family:'Share Tech Mono',monospace;background:transparent;border:1px solid #1a1a3a;border-radius:2px;font-size:8px;color:#6666aa;cursor:pointer;padding:3px 0;transition:all .1s;}
+.dlrow button:hover{border-color:#00ccff66;color:#00ccff;background:#00ccff08;}
+.empty{text-align:center;color:#1a1a44;font-size:13px;padding:60px 0;letter-spacing:3px;line-height:2.2;}
+.mbg{position:fixed;inset:0;background:rgba(0,0,4,.93);display:flex;align-items:center;justify-content:center;z-index:999;backdrop-filter:blur(4px);}
+.modal{background:linear-gradient(135deg,#050510,#090916);border:1px solid #00ccff44;border-radius:8px;padding:22px;max-width:380px;width:92%;max-height:92vh;overflow-y:auto;position:relative;box-shadow:0 0 40px #00ccff22;}
+.mtitle{font-family:'Orbitron',monospace;font-size:14px;color:#00ccff;margin-bottom:12px;letter-spacing:2px;}
+.mcw{width:100%;aspect-ratio:1;margin-bottom:12px;border-radius:5px;overflow:hidden;border:1px solid #1a1a3a;}
+.mcw canvas{width:100%;height:100%;display:block;}
+.meta{width:100%;font-size:11px;border-collapse:collapse;margin-bottom:12px;}
+.meta td{padding:4px 8px;border-bottom:1px solid #0e0e22;}
+.meta td:first-child{color:#555588;font-weight:bold;}
+.meta td:last-child{color:#bbbbff;text-align:right;}
+.mbtns{display:flex;gap:8px;}
+.mbtns button{flex:1;font-family:'Share Tech Mono',monospace;border-radius:3px;background:transparent;border:1px solid;cursor:pointer;padding:9px;font-size:11px;letter-spacing:1px;transition:all .15s;}
+.mclose{position:absolute;top:14px;right:16px;background:transparent;border:none;color:#444488;font-size:20px;cursor:pointer;z-index:10;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#050520;border:1px solid #00ccff;color:#00ffaa;padding:7px 18px;border-radius:30px;font-family:'Share Tech Mono',monospace;font-size:11px;z-index:1000;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;box-shadow:0 0 20px #00ccff44;}
+</style>
 </head>
-<body style="margin:0; background:#0a0a1a;">
-<div id="nft-app">
-  <h2 class="sr-only" style="position:absolute; left:-10000px;">Robo Symbol NFT Generator — create and download cyberpunk robot NFTs</h2>
-  <div style="margin-bottom:14px;">
-    <div class="orbitron" style="font-size:16px; color:#00ccff; letter-spacing:3px; text-shadow:0 0 20px #00ccff88;">⬡ ROBO SYMBOL NFT GEN</div>
-    <div style="font-size:10px; color:#333366; letter-spacing:4px; margin-top:2px;">CYBERPUNK ROBOT COLLECTION FORGE</div>
-  </div>
-  <div class="ctrl-bar">
-    <button class="neon-btn btn-green" id="gen1">⊕ GENERATE</button>
-    <button class="neon-btn btn-cyan" id="gen10">⚡ MINT × 10</button>
-    <button class="neon-btn btn-magenta" id="dlAll">↓ EXPORT ALL</button>
-    <span class="count-label" id="countLbl">COLLECTION: 0</span>
-  </div>
-  <div id="nft-grid" class="nft-grid"></div>
-  <div id="empty-msg" class="empty-msg">[ CLICK GENERATE TO MINT YOUR FIRST ROBOT ]</div>
+<body>
+<div id="app">
+<h2 style="position:absolute;left:-9999px;">Omega Robo NFT Forge — 300+ traits cyberpunk robot generator</h2>
+<div class="hdr">
+  <div class="hdr-t">⌬ OMEGA ROBO FORGE v3 ⌬</div>
+  <div class="hdr-s">300+ TRAITS · CYBER HORNS · SUPERNOVA AURA · MINING READY</div>
+</div>
+<div class="ctrl">
+  <button class="btn bg" id="gen1">⚡ FORGE 1</button>
+  <button class="btn bc" id="gen10">🌀 MINT ×10</button>
+  <button class="btn by" id="dlAll">⬇ EXPORT ALL</button>
+  <span class="clbl" id="clbl">COLLECTION: 0</span>
+</div>
+<div id="grid" class="grid"></div>
+<div id="empty" class="empty">⟁ GENERATE YOUR FIRST CYBER LEGEND ⟁<br><span style="font-size:10px;color:#111144;">10,000 UNIQUE · MINING READY · TOP ART</span></div>
 </div>
 
-<div id="modal-bg" class="modal-bg" style="display:none;">
-  <div class="modal-box">
-    <button class="modal-close-btn" id="modal-close">✕</button>
-    <div class="modal-title" id="modal-name">ROBOT #0</div>
-    <div class="modal-canvas-wrap"><canvas id="modal-canvas" width="512" height="512"></canvas></div>
-    <table class="meta-table" id="modal-meta"></table>
-    <div class="modal-btns">
-      <button id="modal-dl-png" class="btn-cyan" style="border-color:#00ccff; color:#00ccff;">↓ PNG</button>
-      <button id="modal-dl-json" class="btn-green" style="border-color:#00ff88; color:#00ff88;">↓ JSON</button>
-    </div>
+<div id="mbg" class="mbg" style="display:none;">
+<div class="modal">
+  <button class="mclose" id="mclose">✕</button>
+  <div class="mtitle" id="mname">OMEGA UNIT</div>
+  <div class="mcw"><canvas id="mcanvas" width="512" height="512"></canvas></div>
+  <table class="meta" id="mmeta"></table>
+  <div class="mbtns">
+    <button id="mdlpng" class="bc" style="border-color:#00ccff;color:#00ccff;">⬇ PNG</button>
+    <button id="mdljson" class="bg" style="border-color:#00ff88;color:#00ff88;">⬇ JSON</button>
   </div>
 </div>
-<div id="toastMsg" class="toast-msg"></div>
+</div>
+<div id="toast" class="toast"></div>
 
 <script>
 (function(){
-  const RARITIES = ['COMMON','UNCOMMON','RARE','EPIC','LEGENDARY'];
-  const RARITY_COLORS = {'COMMON':'#888899','UNCOMMON':'#00cc66','RARE':'#0099ff','EPIC':'#cc44ff','LEGENDARY':'#ffaa00'};
-  const TRAITS = ['HACKER','MYSTIC','WARRIOR','VOID','SAMURAI','SCIENTIST','GUARDIAN','ROGUE','AI_PRIEST','BUILDER'];
-  const SYMBOLS = {
-    intel: ['π','∫','∑','∆','∇','λ','Ω','Φ','Ψ','∞'],
-    power: ['⊕','⊗','⊞','⊠','◈','◉','⊡','⊟','⊛','⊜'],
-    control: ['⌘','⌥','⌦','⌫','⎋','⏎','⇧','⌃','⌤','⍟'],
-    data: ['☰','☷','☵','☳','☴','☱','☲','☶','⊣','⊢'],
-    misc: ['◆','◇','▲','▼','◀','▶','■','□','●','○']
+const RARITIES=['COMMON','UNCOMMON','RARE','EPIC','LEGENDARY','MYTHIC'];
+const RCOLS={COMMON:'#888899',UNCOMMON:'#00cc66',RARE:'#0099ff',EPIC:'#cc44ff',LEGENDARY:'#ffaa00',MYTHIC:'#ff2255'};
+
+const HORN_STYLES=['NONE','NONE','NONE','CYBER_CURVE','DEMON_SCYTHE','ANGEL_BLADE','DRAGON_SPIKE','MECH_RAM','VOLTIC_PRONG','NANO_CROWN','PHANTOM_TWIST','TRIDENT_LANCE','CRYSTAL_HALO','BROKEN_THORN'];
+const POWER_AURAS=['NONE','NONE','SUPERNOVA','NEON_STORM','OMEGA_FLARE','QUANTUM_RIFT','PLASMA_BURST','VOID_CORE','CELESTIAL_RAY'];
+const GLITCH_TYPES=['NONE','NONE','NONE','PIXEL_CRACK','DATA_SCRAMBLE','CHROMA_SHIFT','NEON_FRACTURE','STATIC_PULSE','RGB_SPLIT'];
+
+const CLASS_POOL=['NEMESIS','ORACLE','BERSERKER','ARCHITECT','SPECTRE','TITAN','CHRONO','NOVA','VOIDLORD','STARFALL','THUNDERHEART','CRYPT_KING','PHANTOM','GLITCH_GOD','CHAOS_ENGINE'];
+const WEAPON_POOL=['RAILGUN','PLASMA_SABER','NEURON_WHIP','GRAV_HAMMER','QUANTUM_BOW','PHASE_DAGGER','ION_CANNON','MICROWAVE_ARRAY','DARK_LANCE','VOID_BLADE'];
+const AUGMENT_POOL=['HYPER_CORE','NANO_REGEN','CLOAK_FIELD','BERSERK_CHIP','OMNI_SCAN','SHIELD_FLARE','LEECH_BEAM','TIME_DILATION','PHASE_SHIFT','OMEGA_DRIVE'];
+const PERSONALITY_POOL=['RUTHLESS','CALCULATING','WILDCARD','GUARDIAN','ANARCHIST','MYSTIC','GLADIATOR','TACTICIAN','ROGUE','SILENT_KILLER'];
+const PALETTE_POOL=['MATRIX','INFERNO','AQUA','VOID','SOLAR','CYBER','ULTRA','BLOOD','FROST','SAKURA','GOLD','OCEAN'];
+
+const SYM={
+  intel:['π','∫','∑','∆','∇','λ','Ω','Φ','Ψ','∞','α','β','γ','δ','ε','ζ','η','θ','ℏ','∂','∃','∀','∈','∩','∪','⊆','⊂','∝','≈','≠','≡','≤','≥','⊥','∥','∠'],
+  power:['⊕','⊗','⊞','⊠','◈','◉','⊡','⊟','⊛','⊜','⊝','⊘','⊖','⊙','⊚','⋈','⋉','⋊','⋋','⋌','⋍','⋎','⋏','⋐','⋑'],
+  control:['⌘','⌥','⌦','⌫','⎋','⏎','⇧','⌃','⌤','⍟','⎈','⎇','⎊','⎍','⏏','⏐','⏑','⏒','⏓','⏔','⏕','⌬','⌭','⌮','⌯','⌱'],
+  data:['☰','☷','☵','☳','☴','☱','☲','☶','⊣','⊢','⊤','⊦','⊧','⊨','⊩','⊪','⊫','⊬','⊭','⊮','⊯','⊰','⊱','⊲','⊳','⊴','⊵'],
+  misc:['◆','◇','▲','▼','◀','▶','■','□','●','○','◐','◑','◒','◓','◔','◕','◖','◗','◘','◙','◚','◛','◜','◝','◞','◟','◠','◡','◢','◣','◤','◥'],
+  fire:['🔥','💥','⚡','🌟','✨','💫','♨'],
+  skull:['💀','☠','🔮','👁','⚔','🛡'],
+  gems:['💎','💍','🔷','👑','💠','🔮','🏆'],
+  nature:['🐸','🦊','🐺','🦋','🌿','🍄','🌙','⭐','❄','🌺'],
+  special:['⚛','☯','☮','✡','⛎','♾','⚜','♠','♥','♦','♣','🃏']
+};
+
+const PALETTES={
+  MATRIX:{bg:['#020212','#040824','#060520'],a:'#00ff88',b:'#00ccff',c:'#8800ff',d:'#ffaa33'},
+  INFERNO:{bg:['#180208','#240408','#200506'],a:'#ff0066',b:'#ff6600',c:'#ffcc00',d:'#ff44aa'},
+  AQUA:{bg:['#020c12','#020f1e','#041224'],a:'#00eeff',b:'#0088ff',c:'#00ff44',d:'#aaff00'},
+  VOID:{bg:['#0c0212','#180224','#14061e'],a:'#ff00ff',b:'#cc00ff',c:'#ff4499',d:'#ff8866'},
+  SOLAR:{bg:['#0a0a02','#141202','#181600'],a:'#ffff00',b:'#ccff00',c:'#ff9900',d:'#ff6633'},
+  CYBER:{bg:['#020808','#031212','#041616'],a:'#00ffcc',b:'#00ff88',c:'#00ccff',d:'#44ffaa'},
+  ULTRA:{bg:['#080012','#100020','#0c0018'],a:'#8844ff',b:'#aa00ff',c:'#ff44cc',d:'#cc88ff'},
+  BLOOD:{bg:['#120001','#200002','#1a0102'],a:'#ff2222',b:'#ff6644',c:'#ffaa00',d:'#ff8833'},
+  FROST:{bg:['#010c10','#011a16','#022018'],a:'#00ffaa',b:'#44ffcc',c:'#ccffee',d:'#88ffdd'},
+  SAKURA:{bg:['#0a0008','#150010','#180015'],a:'#ff66cc',b:'#ff99ee',c:'#cc44ff',d:'#ffbbdd'},
+  GOLD:{bg:['#080600','#120900','#180c00'],a:'#ffaa00',b:'#ffdd44',c:'#ff6600',d:'#ffcc88'},
+  OCEAN:{bg:['#000a18','#001025','#001530'],a:'#4499ff',b:'#88ccff',c:'#00ffff',d:'#aaddff'}
+};
+
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)+Math.random().toString(36).slice(2,5);}
+function showToast(msg,d=1800){const t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';setTimeout(()=>t.style.opacity='0',d);}
+
+function genNft(idx){
+  const palName=pick(PALETTE_POOL);
+  const pal=PALETTES[palName];
+  const r=Math.random();
+  const rarity=r<0.40?'COMMON':r<0.65?'UNCOMMON':r<0.82?'RARE':r<0.94?'EPIC':r<0.996?'LEGENDARY':'MYTHIC';
+  const horn=pick(HORN_STYLES);
+  const aura=pick(POWER_AURAS);
+  const glitch=pick(GLITCH_TYPES);
+  const cls=pick(CLASS_POOL);
+  const weapon=pick(WEAPON_POOL);
+  const augment=pick(AUGMENT_POOL);
+  const personality=pick(PERSONALITY_POOL);
+  return{
+    id:uid(),idx:idx+1,
+    palette:pal,paletteName:palName,
+    rarity,cls,weapon,augment,personality,
+    horn,aura,glitch,
+    super_power:rnd(150,999),hyper_core:rnd(80,450),
+    luck:rnd(1,100),shield:rnd(10,99),
+    antenna_sym:pick(SYM.intel),
+    eye_l:pick(SYM.power),eye_r:pick(SYM.power),
+    mouth:pick(SYM.control),
+    shoulder_l:pick(SYM.data),shoulder_r:pick(SYM.data),
+    chest:pick(SYM.intel),core:pick(SYM.special),
+    arm_l:pick(SYM.data),arm_r:pick(SYM.data),
+    hand_l:pick(SYM.control),hand_r:pick(SYM.control),
+    hip_l:pick(SYM.misc),hip_r:pick(SYM.misc),
+    knee_l:pick(SYM.power),knee_r:pick(SYM.power),
+    foot_l:pick(SYM.data),foot_r:pick(SYM.data),
+    circuit1:pick(SYM.misc),circuit2:pick(SYM.intel),
+    fire_sym:pick(SYM.fire),skull_sym:pick(SYM.skull),
+    gem_sym:pick(SYM.gems),nature_sym:pick(SYM.nature),
+    created:new Date().toISOString()
   };
-  const PALETTES = [
-    {bg:['#020212','#040824','#060520'],a:'#00ff88',b:'#00ccff',c:'#8800ff'},
-    {bg:['#120208','#240408','#200506'],a:'#ff0066',b:'#ff6600',c:'#ffcc00'},
-    {bg:['#020c12','#020f1e','#041224'],a:'#00eeff',b:'#0088ff',c:'#00ff44'},
-    {bg:['#0c0212','#180224','#14061e'],a:'#ff00ff',b:'#cc00ff',c:'#ff4499'},
-    {bg:['#0a0a02','#141202','#181600'],a:'#ffff00',b:'#ccff00',c:'#ff9900'},
-    {bg:['#020808','#031212','#041616'],a:'#00ffcc',b:'#00ff88',c:'#00ccff'},
-    {bg:['#080012','#100020','#0c0018'],a:'#8844ff',b:'#aa00ff',c:'#ff44cc'},
-  ];
+}
 
-  let nfts = [];
-  let selectedNft = null;
-  let pendingDownloads = 0;      // track concurrent downloads to avoid browser conflicts
-  let downloadQueue = [];        // queue for export all
-  let isExportingAll = false;
+if(!CanvasRenderingContext2D.prototype.roundRect){
+  CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
+    if(w<2*r)r=w/2;if(h<2*r)r=h/2;
+    this.moveTo(x+r,y);this.lineTo(x+w-r,y);this.quadraticCurveTo(x+w,y,x+w,y+r);
+    this.lineTo(x+w,y+h-r);this.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+    this.lineTo(x+r,y+h);this.quadraticCurveTo(x,y+h,x,y+h-r);
+    this.lineTo(x,y+r);this.quadraticCurveTo(x,y,x+r,y);return this;
+  };
+}
 
-  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-  function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
-  function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,5)+Math.random().toString(36).slice(2,5); }
+function drawRobot(canvas,nft,glowStr){
+  const W=512,H=512;
+  canvas.width=W;canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  const pal=nft.palette;
+  const a=pal.a,b=pal.b,c=pal.c,d=pal.d;
+  const glow=glowStr||20;
+  const cx=W/2;
 
-  function showToast(msg, duration = 1800){
-    const toast = document.getElementById('toastMsg');
-    toast.textContent = msg;
-    toast.style.opacity = '1';
-    setTimeout(() => { toast.style.opacity = '0'; }, duration);
+  // BG radial
+  const bg=ctx.createRadialGradient(cx,H/2,0,cx,H/2,W*0.85);
+  bg.addColorStop(0,pal.bg[1]);bg.addColorStop(0.55,pal.bg[0]);bg.addColorStop(1,pal.bg[2]);
+  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+
+  // Nebula center
+  const neb=ctx.createRadialGradient(cx,H/2,0,cx,H/2,180);
+  neb.addColorStop(0,a+'0a');neb.addColorStop(0.5,b+'05');neb.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=neb;ctx.fillRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle=a+'15';ctx.lineWidth=0.5;
+  for(let i=0;i<W;i+=28){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,H);ctx.stroke();}
+  for(let j=0;j<H;j+=28){ctx.beginPath();ctx.moveTo(0,j);ctx.lineTo(W,j);ctx.stroke();}
+  // Scanlines
+  for(let y=0;y<H;y+=3){ctx.fillStyle='rgba(0,0,0,0.05)';ctx.fillRect(0,y,W,1);}
+
+  // Corner circuit deco
+  function ccircuit(ox,oy,sx,sy,col){
+    ctx.save();ctx.translate(ox,oy);ctx.scale(sx,sy);
+    ctx.strokeStyle=col+'55';ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(0,0);ctx.lineTo(48,0);ctx.lineTo(48,16);ctx.lineTo(68,16);
+    ctx.moveTo(0,9);ctx.lineTo(26,9);ctx.lineTo(26,36);ctx.lineTo(42,36);
+    ctx.moveTo(14,0);ctx.lineTo(14,22);
+    ctx.stroke();
+    ctx.fillStyle=col;
+    ctx.beginPath();ctx.arc(48,16,3.5,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(26,36,2.5,0,Math.PI*2);ctx.fill();
+    ctx.restore();
   }
+  ccircuit(8,8,1,1,a);
+  ccircuit(W-8,8,-1,1,b);
+  ccircuit(8,H-8,1,-1,c);
+  ccircuit(W-8,H-8,-1,-1,d);
 
-  function genNft(idx){
-    const pal = pick(PALETTES);
-    const r = Math.random();
-    const rarity = r<0.45?'COMMON':r<0.72?'UNCOMMON':r<0.88?'RARE':r<0.97?'EPIC':'LEGENDARY';
-    return {
-      id: uid(), idx: idx+1,
-      palette: pal,
-      rarity, trait: pick(TRAITS),
-      power: rnd(10,99), defense: rnd(10,99), speed: rnd(10,99),
-      antenna_sym: pick(SYMBOLS.intel),
-      eye_l: pick(SYMBOLS.power), eye_r: pick(SYMBOLS.power),
-      mouth: pick(SYMBOLS.control),
-      shoulder_l: pick(SYMBOLS.data), shoulder_r: pick(SYMBOLS.data),
-      chest: pick(SYMBOLS.intel),
-      core: pick(SYMBOLS.misc),
-      arm_l: pick(SYMBOLS.data), arm_r: pick(SYMBOLS.data),
-      hand_l: pick(SYMBOLS.control), hand_r: pick(SYMBOLS.control),
-      hip_l: pick(SYMBOLS.misc), hip_r: pick(SYMBOLS.misc),
-      knee_l: pick(SYMBOLS.power), knee_r: pick(SYMBOLS.power),
-      foot_l: pick(SYMBOLS.data), foot_r: pick(SYMBOLS.data),
-      circuit1: pick(SYMBOLS.misc), circuit2: pick(SYMBOLS.intel),
-      created: new Date().toISOString()
-    };
-  }
-
-  // Helper for rounded rect
-  if (!CanvasRenderingContext2D.prototype.roundRect) {
-    CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
-      if (w < 2 * r) r = w / 2;
-      if (h < 2 * r) r = h / 2;
-      this.moveTo(x+r, y);
-      this.lineTo(x+w-r, y);
-      this.quadraticCurveTo(x+w, y, x+w, y+r);
-      this.lineTo(x+w, y+h-r);
-      this.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
-      this.lineTo(x+r, y+h);
-      this.quadraticCurveTo(x, y+h, x, y+h-r);
-      this.lineTo(x, y+r);
-      this.quadraticCurveTo(x, y, x+r, y);
-      return this;
-    };
-  }
-
-  function drawRobot(canvas, nft, glowStrength){
-    const W=512, H=512;
-    canvas.width=W; canvas.height=H;
-    const ctx=canvas.getContext('2d');
-    const pal=nft.palette;
-    const a=pal.a, b=pal.b, c=pal.c;
-    const glow = glowStrength || 18;
-
-    // Background gradient
-    const bgGrad = ctx.createLinearGradient(0,0,W,H);
-    bgGrad.addColorStop(0, pal.bg[0]);
-    bgGrad.addColorStop(0.5, pal.bg[1]);
-    bgGrad.addColorStop(1, pal.bg[2]);
-    ctx.fillStyle = bgGrad;
-    ctx.fillRect(0,0,W,H);
-
-    // Grid floor pattern
-    ctx.strokeStyle = a+'18';
-    ctx.lineWidth = 0.5;
-    for(let i=0;i<W;i+=24){ ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,H); ctx.stroke(); }
-    for(let j=0;j<H;j+=24){ ctx.beginPath(); ctx.moveTo(0,j); ctx.lineTo(W,j); ctx.stroke(); }
-
-    // Scanlines
-    for(let y=0;y<H;y+=4){
-      ctx.fillStyle = 'rgba(0,0,0,0.08)';
-      ctx.fillRect(0,y,W,2);
-    }
-
-    // Corner circuit decorations
-    function drawCornerCircuit(x,y,flip,col){
-      ctx.strokeStyle=col+'66';
-      ctx.lineWidth=1;
-      ctx.beginPath();
-      ctx.save(); ctx.translate(x,y); ctx.scale(flip?-1:1,1);
-      ctx.moveTo(0,0); ctx.lineTo(40,0); ctx.lineTo(40,20); ctx.lineTo(60,20);
-      ctx.moveTo(0,10); ctx.lineTo(20,10); ctx.lineTo(20,40);
-      ctx.stroke(); ctx.restore();
-    }
-    drawCornerCircuit(10,10,1,a);
-    drawCornerCircuit(W-10,10,-1,b);
-    drawCornerCircuit(10,H-10,1,c);
-    drawCornerCircuit(W-10,H-10,-1,a);
-
-    function glowText(text, x, y, col, size, glowW){
-      ctx.save();
-      ctx.font = `bold ${size}px 'Share Tech Mono', monospace`;
-      ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.shadowColor=col; ctx.shadowBlur=glowW||glow;
-      ctx.fillStyle=col; ctx.fillText(text,x,y);
-      ctx.shadowBlur=0; ctx.restore();
-    }
-
-    function glowRect(x,y,w,h,col,rad){
-      ctx.save();
-      ctx.shadowColor=col; ctx.shadowBlur=glow;
-      ctx.strokeStyle=col; ctx.lineWidth=1.5;
-      ctx.beginPath();
-      ctx.roundRect(x,y,w,h,rad||3);
-      ctx.stroke();
-      ctx.fillStyle=col+'18';
-      ctx.fill();
-      ctx.restore();
-    }
-
-    const cx=W/2;
-
-    // Dimensions
-    const headW=120, headH=80;
-    const headX=cx-headW/2, headY=95;
-    const bodyW=130, bodyH=120;
-    const bodyX=cx-bodyW/2, bodyY=headY+headH+16;
-    const shoulderW=30, shoulderH=30;
-    const armW=26, armH=80;
-    const handW=24, handH=24;
-    const hipW=44, hipH=22;
-    const legW=32, legH=70;
-    const footW=38, footH=18;
-    const armGap=14;
-
-    const shlLX=bodyX-shoulderW-6, shlLY=bodyY+6;
-    const shlRX=bodyX+bodyW+6, shlRY=bodyY+6;
-    const armLX=cx-bodyW/2-armW-8, armLY=shlLY+shoulderH+4;
-    const armRX=cx+bodyW/2+8, armRY=shlRY+shoulderH+4;
-    const handLX=armLX+1, handLY=armLY+armH+4;
-    const handRX=armRX+1, handRY=armRY+armH+4;
-    const hipLX=cx-hipW-2, hipRX=cx+2, hipY=bodyY+bodyH+8;
-    const legLX=cx-hipW+4, legLY=hipY+hipH+4;
-    const legRX=cx+hipW/2-legW/2+8, legRY=hipY+hipH+4;
-    const footLX=legLX-3, footLY=legLY+legH+4;
-    const footRX=legRX-3, footRY=legRY+legH+4;
-
-    // Antenna
+  function gt(text,x,y,col,size,gw){
     ctx.save();
-    ctx.strokeStyle=a; ctx.lineWidth=2; ctx.shadowColor=a; ctx.shadowBlur=glow;
-    ctx.beginPath(); ctx.moveTo(cx,headY); ctx.lineTo(cx,headY-30); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(cx-20,headY-15); ctx.lineTo(cx,headY-30); ctx.lineTo(cx+20,headY-15); ctx.stroke();
+    ctx.font=`bold ${size}px 'Share Tech Mono',monospace`;
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.shadowColor=col;ctx.shadowBlur=gw||glow;
+    ctx.fillStyle=col;ctx.fillText(text,x,y);
+    ctx.shadowBlur=0;ctx.restore();
+  }
+  function gr(x,y,w,h,col,rad){
+    ctx.save();
+    ctx.shadowColor=col;ctx.shadowBlur=glow-4;
+    ctx.strokeStyle=col;ctx.lineWidth=1.6;
+    ctx.beginPath();ctx.roundRect(x,y,w,h,rad||4);ctx.stroke();
+    const g=ctx.createLinearGradient(x,y,x,y+h);
+    g.addColorStop(0,col+'20');g.addColorStop(1,col+'08');
+    ctx.fillStyle=g;ctx.fill();
     ctx.restore();
-    glowText(nft.antenna_sym, cx, headY-38, a, 20, glow);
-    ctx.save(); ctx.shadowColor=a; ctx.shadowBlur=glow*1.5;
-    ctx.fillStyle=a; ctx.beginPath(); ctx.arc(cx, headY-30, 3, 0, Math.PI*2); ctx.fill();
-    ctx.restore();
-
-    // Head
-    glowRect(headX, headY, headW, headH, b, 4);
-    const eyeY=headY+headH/2-8;
-    glowRect(headX+16, eyeY, 36, 26, a, 3);
-    glowRect(headX+headW-52, eyeY, 36, 26, a, 3);
-    glowText(nft.eye_l, headX+34, eyeY+13, a, 18, glow*1.2);
-    glowText(nft.eye_r, headX+headW-34, eyeY+13, a, 18, glow*1.2);
-    ctx.save(); ctx.strokeStyle=b+'44'; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.moveTo(headX+14,eyeY-2); ctx.lineTo(headX+headW-14,eyeY-2); ctx.stroke();
-    ctx.restore();
-    glowText(nft.mouth, cx, headY+headH-14, c, 16, glow);
-
-    // Shoulders
-    glowRect(shlLX, shlLY, shoulderW, shoulderH, c, 3);
-    glowRect(shlRX, shlRY, shoulderW, shoulderH, c, 3);
-    glowText(nft.shoulder_l, shlLX+shoulderW/2, shlLY+shoulderH/2, c, 14);
-    glowText(nft.shoulder_r, shlRX+shoulderW/2, shlRY+shoulderH/2, c, 14);
-
-    // Arms
-    glowRect(armLX, armLY, armW, armH, b, 3);
-    glowRect(armRX, armRY, armW, armH, b, 3);
-    for(let i=1;i<=3;i++){
-      const ay=armLY+armH*(i/4);
-      ctx.save(); ctx.strokeStyle=b+'55'; ctx.lineWidth=1;
-      ctx.beginPath(); ctx.moveTo(armLX+3,ay); ctx.lineTo(armLX+armW-3,ay); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(armRX+3,ay); ctx.lineTo(armRX+armW-3,ay); ctx.stroke();
-      ctx.restore();
-    }
-    glowText(nft.arm_l, armLX+armW/2, armLY+armH/2, b, 14);
-    glowText(nft.arm_r, armRX+armW/2, armRY+armH/2, b, 14);
-
-    // Hands
-    glowRect(handLX, handLY, handW, handH, a, 3);
-    glowRect(handRX, handRY, handW, handH, a, 3);
-    glowText(nft.hand_l, handLX+handW/2, handLY+handH/2, a, 12);
-    glowText(nft.hand_r, handRX+handW/2, handRY+handH/2, a, 12);
-
-    // Body
-    glowRect(bodyX, bodyY, bodyW, bodyH, b, 4);
-    glowRect(bodyX+bodyW/2-22, bodyY+14, 44, 38, a, 3);
-    glowText(nft.chest, cx, bodyY+14+19, a, 22, glow*1.5);
-    glowText(nft.core, cx, bodyY+bodyH-24, c, 18, glow);
-    ctx.save(); ctx.strokeStyle=b+'40'; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.moveTo(bodyX+10,bodyY+64); ctx.lineTo(bodyX+bodyW/2-26,bodyY+64); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(bodyX+bodyW-10,bodyY+64); ctx.lineTo(bodyX+bodyW/2+26,bodyY+64); ctx.stroke();
-    ctx.restore();
-    glowText(nft.circuit1, bodyX+22, bodyY+70, c, 12, 8);
-    glowText(nft.circuit2, bodyX+bodyW-22, bodyY+70, c, 12, 8);
-
-    ctx.save(); ctx.strokeStyle=c+'66'; ctx.lineWidth=2; ctx.shadowColor=c; ctx.shadowBlur=8;
-    ctx.beginPath(); ctx.moveTo(shlLX+shoulderW, shlLY+shoulderH/2); ctx.lineTo(bodyX, shlLY+shoulderH/2); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(shlRX, shlRY+shoulderH/2); ctx.lineTo(bodyX+bodyW, shlRY+shoulderH/2); ctx.stroke();
-    ctx.restore();
-
-    // Hips
-    glowRect(hipLX, hipY, hipW, hipH, c, 3);
-    glowRect(hipRX, hipY, hipW, hipH, c, 3);
-    glowText(nft.hip_l, hipLX+hipW/2, hipY+hipH/2, c, 13);
-    glowText(nft.hip_r, hipRX+hipW/2, hipY+hipH/2, c, 13);
-
-    // Legs
-    glowRect(legLX, legLY, legW, legH, b, 3);
-    glowRect(legRX, legRY, legW, legH, b, 3);
-    glowRect(legLX+1, legLY+legH/2-12, legW-2, 24, a, 3);
-    glowRect(legRX+1, legRY+legH/2-12, legW-2, 24, a, 3);
-    glowText(nft.knee_l, legLX+legW/2, legLY+legH/2, a, 13);
-    glowText(nft.knee_r, legRX+legW/2, legRY+legH/2, a, 13);
-
-    // Feet
-    glowRect(footLX, footLY, footW, footH, c, 3);
-    glowRect(footRX, footRY, footW, footH, c, 3);
-    glowText(nft.foot_l, footLX+footW/2, footLY+footH/2, c, 12);
-    glowText(nft.foot_r, footRX+footW/2, footRY+footH/2, c, 12);
-
-    // Rarity glow ring
-    const rcol = RARITY_COLORS[nft.rarity];
-    ctx.save(); ctx.strokeStyle=rcol; ctx.lineWidth=2; ctx.shadowColor=rcol; ctx.shadowBlur=glow;
-    ctx.strokeRect(4,4,W-8,H-8);
-    ctx.restore();
-    glowText('◆', 18, 18, rcol, 12, 10);
-    glowText('◆', W-18, 18, rcol, 12, 10);
-    glowText('◆', 18, H-18, rcol, 12, 10);
-    glowText('◆', W-18, H-18, rcol, 12, 10);
   }
 
-  // generate fresh canvas for each download to avoid blob conflicts & ensure no caching
-  async function prepareCanvasBlob(nft, glowVal = 18) {
-    const canvas = document.createElement('canvas');
-    drawRobot(canvas, nft, glowVal);
-    return new Promise((resolve) => {
-      canvas.toBlob(blob => resolve(blob), 'image/png');
-    });
+  // ===== BODY LAYOUT — all coords derived from center =====
+  // Head
+  const headW=126,headH=82;
+  const headY=88;
+  const headX=cx-headW/2;
+
+  // Body
+  const bodyW=136,bodyH=122;
+  const bodyY=headY+headH+16;
+  const bodyX=cx-bodyW/2;
+
+  // Shoulders — flush to body sides
+  const shlW=32,shlH=30;
+  const shlLX=bodyX-shlW-6;
+  const shlRX=bodyX+bodyW+6;
+  const shlY=bodyY+6;
+
+  // Arms — directly below shoulder, left-aligned to shoulder left edge
+  const armW=28,armH=80;
+  const armLX=shlLX+2;   // aligned to shoulder
+  const armRX=shlRX+2;   // aligned to shoulder
+  const armY=shlY+shlH+4;
+
+  // Hands — directly below arm
+  const handW=26,handH=26;
+  const handLX=armLX+1;
+  const handRX=armRX+1;
+  const handY=armY+armH+4;
+
+  // Hips
+  const hipW=46,hipH=22;
+  const hipY=bodyY+bodyH+8;
+  const hipLX=cx-hipW-2;
+  const hipRX=cx+2;
+
+  // Legs
+  const legW=34,legH=70;
+  const legY=hipY+hipH+4;
+  const legLX=cx-hipW+2;
+  const legRX=cx+hipW/2-legW/2+10;
+
+  // Feet
+  const footW=40,footH=20;
+  const footY=legY+legH+4;
+  const footLX=legLX-3;
+  const footRX=legRX-3;
+
+  // === AURA BG ===
+  if(nft.aura!=='NONE'){
+    ctx.save();
+    const auraG=ctx.createRadialGradient(cx,bodyY+bodyH/2,20,cx,bodyY+bodyH/2,160);
+    auraG.addColorStop(0,d+'30');auraG.addColorStop(0.6,d+'10');auraG.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=auraG;ctx.fillRect(0,0,W,H);
+    // Aura ring particles
+    ctx.shadowColor=d;ctx.shadowBlur=20;
+    for(let i=0;i<12;i++){
+      const ang=(i/12)*Math.PI*2;
+      const rx=110+Math.sin(ang*3)*12,ry=140+Math.cos(ang*2)*10;
+      ctx.fillStyle=d+'66';
+      ctx.beginPath();ctx.arc(cx+Math.cos(ang)*rx,bodyY+bodyH/2+Math.sin(ang)*ry,4,0,Math.PI*2);ctx.fill();
+    }
+    ctx.restore();
   }
 
-  async function dlPng(id, silent = false){
-    const nft = nfts.find(n=>n.id===id);
-    if(!nft) return;
-    try {
-      const blob = await prepareCanvasBlob(nft, 18);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `RoboSym_${nft.idx}_${nft.trait}.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      if (!silent) showToast(`✓ PNG saved: ${nft.trait} #${nft.idx}`, 1200);
-    } catch(e) { console.warn(e); if(!silent) showToast(`⚠️ PNG failed`, 1000); }
+  // === HORN ===
+  function drawHorn(type){
+    ctx.save();ctx.fillStyle=d;ctx.strokeStyle=d;ctx.lineWidth=2.5;ctx.shadowColor=d;ctx.shadowBlur=glow*1.5;
+    switch(type){
+      case'CYBER_CURVE':
+        ctx.beginPath();ctx.moveTo(cx-28,headY+2);ctx.quadraticCurveTo(cx-50,headY-30,cx-22,headY-58);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(cx+28,headY+2);ctx.quadraticCurveTo(cx+50,headY-30,cx+22,headY-58);ctx.stroke();
+        break;
+      case'DEMON_SCYTHE':
+        ctx.beginPath();ctx.moveTo(cx-22,headY);ctx.lineTo(cx-38,headY-48);ctx.lineTo(cx-16,headY-38);ctx.closePath();ctx.fill();
+        ctx.beginPath();ctx.moveTo(cx+22,headY);ctx.lineTo(cx+38,headY-48);ctx.lineTo(cx+16,headY-38);ctx.closePath();ctx.fill();
+        break;
+      case'ANGEL_BLADE':
+        ctx.beginPath();ctx.moveTo(cx-20,headY);ctx.lineTo(cx-34,headY-52);ctx.lineTo(cx-24,headY-60);ctx.lineTo(cx-14,headY-40);ctx.closePath();ctx.fill();
+        ctx.beginPath();ctx.moveTo(cx+20,headY);ctx.lineTo(cx+34,headY-52);ctx.lineTo(cx+24,headY-60);ctx.lineTo(cx+14,headY-40);ctx.closePath();ctx.fill();
+        break;
+      case'DRAGON_SPIKE':
+        for(let i=-2;i<=2;i++){
+          const ox=i*14,h=36-Math.abs(i)*6;
+          ctx.beginPath();ctx.moveTo(cx+ox-7,headY);ctx.lineTo(cx+ox,headY-h);ctx.lineTo(cx+ox+7,headY);ctx.closePath();ctx.fill();
+        }
+        break;
+      case'MECH_RAM':
+        ctx.beginPath();ctx.ellipse(cx-22,headY-20,11,26,-0.25,0,Math.PI*2);ctx.fill();
+        ctx.beginPath();ctx.ellipse(cx+22,headY-20,11,26,0.25,0,Math.PI*2);ctx.fill();
+        break;
+      case'VOLTIC_PRONG':
+        ctx.strokeStyle=d;ctx.lineWidth=3;
+        ctx.beginPath();ctx.moveTo(cx-14,headY-4);ctx.lineTo(cx-22,headY-30);ctx.lineTo(cx-10,headY-28);ctx.lineTo(cx-20,headY-55);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(cx+14,headY-4);ctx.lineTo(cx+22,headY-30);ctx.lineTo(cx+10,headY-28);ctx.lineTo(cx+20,headY-55);ctx.stroke();
+        break;
+      case'NANO_CROWN':
+        for(let i=0;i<6;i++){const ang=-1.0+i*0.4;const px=cx+Math.sin(ang)*38;const py=headY-22+Math.cos(Math.abs(ang))*14;ctx.beginPath();ctx.arc(px,py,7,0,Math.PI*2);ctx.fill();}
+        break;
+      case'PHANTOM_TWIST':
+        ctx.beginPath();ctx.moveTo(cx-26,headY-6);ctx.quadraticCurveTo(cx-45,headY-36,cx-14,headY-62);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(cx+26,headY-6);ctx.quadraticCurveTo(cx+45,headY-36,cx+14,headY-62);ctx.stroke();
+        break;
+      case'TRIDENT_LANCE':
+        ctx.beginPath();ctx.moveTo(cx,headY);ctx.lineTo(cx,headY-58);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(cx-24,headY-14);ctx.lineTo(cx-32,headY-55);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(cx+24,headY-14);ctx.lineTo(cx+32,headY-55);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(cx-8,headY-58);ctx.lineTo(cx,headY-68);ctx.lineTo(cx+8,headY-58);ctx.fill();
+        ctx.beginPath();ctx.moveTo(cx-36,headY-55);ctx.lineTo(cx-28,headY-65);ctx.lineTo(cx-20,headY-55);ctx.fill();
+        ctx.beginPath();ctx.moveTo(cx+20,headY-55);ctx.lineTo(cx+28,headY-65);ctx.lineTo(cx+36,headY-55);ctx.fill();
+        break;
+      case'CRYSTAL_HALO':
+        ctx.strokeStyle=c;ctx.shadowColor=c;ctx.lineWidth=2;
+        ctx.beginPath();ctx.ellipse(cx,headY-48,34,11,0,0,Math.PI*2);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(cx-3,headY-22);ctx.lineTo(cx-3,headY-40);ctx.moveTo(cx+3,headY-22);ctx.lineTo(cx+3,headY-40);ctx.stroke();
+        for(let i=0;i<6;i++){const ang=(i/6)*Math.PI*2;const px=cx+Math.cos(ang)*34;const py=headY-48+Math.sin(ang)*11;ctx.fillStyle=c;ctx.beginPath();ctx.arc(px,py,3,0,Math.PI*2);ctx.fill();}
+        break;
+      case'BROKEN_THORN':
+        ctx.strokeStyle=b;ctx.shadowColor=b;
+        ctx.beginPath();ctx.moveTo(cx-14,headY-4);ctx.lineTo(cx-24,headY-42);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(cx+14,headY-4);ctx.lineTo(cx+22,headY-36);ctx.lineTo(cx+32,headY-20);ctx.stroke();
+        ctx.setLineDash([3,3]);
+        ctx.beginPath();ctx.moveTo(cx+22,headY-36);ctx.lineTo(cx+12,headY-58);ctx.stroke();
+        ctx.setLineDash([]);
+        break;
+    }
+    ctx.restore();
+  }
+  if(nft.horn!=='NONE') drawHorn(nft.horn);
+
+  // Antenna
+  ctx.save();ctx.strokeStyle=a;ctx.lineWidth=2;ctx.shadowColor=a;ctx.shadowBlur=glow;
+  ctx.beginPath();ctx.moveTo(cx,headY);ctx.lineTo(cx,headY-30);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx-16,headY-15);ctx.lineTo(cx,headY-30);ctx.lineTo(cx+16,headY-15);ctx.stroke();
+  ctx.restore();
+  gt(nft.antenna_sym,cx,headY-38,a,22,glow);
+  ctx.save();ctx.shadowColor=a;ctx.shadowBlur=glow*2;ctx.fillStyle=a;
+  ctx.beginPath();ctx.arc(cx,headY-30,4,0,Math.PI*2);ctx.fill();ctx.restore();
+
+  // HEAD
+  gr(headX,headY,headW,headH,b,6);
+  // Inner head frame
+  ctx.save();ctx.strokeStyle=b+'28';ctx.lineWidth=1;
+  ctx.beginPath();ctx.roundRect(headX+7,headY+7,headW-14,headH-14,3);ctx.stroke();ctx.restore();
+  // Eyes
+  const eyeY=headY+headH/2-10;
+  gr(headX+16,eyeY,36,28,a,4);
+  gr(headX+headW-52,eyeY,36,28,a,4);
+  // Eye shine
+  ctx.save();ctx.fillStyle='#ffffff1a';
+  ctx.beginPath();ctx.ellipse(headX+26,eyeY+7,4,2,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(headX+headW-40,eyeY+7,4,2,0,0,Math.PI*2);ctx.fill();ctx.restore();
+  gt(nft.eye_l,headX+34,eyeY+14,a,19,glow*1.3);
+  gt(nft.eye_r,headX+headW-34,eyeY+14,a,19,glow*1.3);
+  // Brow
+  ctx.save();ctx.strokeStyle=b+'44';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(headX+14,eyeY-3);ctx.lineTo(headX+headW-14,eyeY-3);ctx.stroke();ctx.restore();
+  gt(nft.mouth,cx,headY+headH-14,c,16,glow);
+
+  // SHOULDER-BODY connector lines
+  ctx.save();ctx.strokeStyle=c+'55';ctx.lineWidth=2;ctx.shadowColor=c;ctx.shadowBlur=8;
+  ctx.beginPath();ctx.moveTo(shlLX+shlW,shlY+shlH/2);ctx.lineTo(bodyX,shlY+shlH/2);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(shlRX,shlY+shlH/2);ctx.lineTo(bodyX+bodyW,shlY+shlH/2);ctx.stroke();
+  ctx.restore();
+
+  // SHOULDERS
+  gr(shlLX,shlY,shlW,shlH,c,4);
+  gr(shlRX,shlY,shlW,shlH,c,4);
+  gt(nft.shoulder_l,shlLX+shlW/2,shlY+shlH/2,c,14);
+  gt(nft.shoulder_r,shlRX+shlW/2,shlY+shlH/2,c,14);
+
+  // ARMS — straight down from shoulder
+  gr(armLX,armY,armW,armH,b,4);
+  gr(armRX,armY,armW,armH,b,4);
+  // Arm segment lines
+  for(let i=1;i<=3;i++){
+    const ay=armY+armH*(i/4);
+    ctx.save();ctx.strokeStyle=b+'44';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(armLX+4,ay);ctx.lineTo(armLX+armW-4,ay);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(armRX+4,ay);ctx.lineTo(armRX+armW-4,ay);ctx.stroke();
+    ctx.restore();
+  }
+  gt(nft.arm_l,armLX+armW/2,armY+armH/2,b,14);
+  gt(nft.arm_r,armRX+armW/2,armY+armH/2,b,14);
+
+  // HANDS — directly below arm
+  gr(handLX,handY,handW,handH,a,4);
+  gr(handRX,handY,handW,handH,a,4);
+  gt(nft.hand_l,handLX+handW/2,handY+handH/2,a,13);
+  gt(nft.hand_r,handRX+handW/2,handY+handH/2,a,13);
+
+  // BODY
+  gr(bodyX,bodyY,bodyW,bodyH,b,6);
+  // Body inner frame
+  ctx.save();ctx.strokeStyle=b+'22';ctx.lineWidth=1;
+  ctx.beginPath();ctx.roundRect(bodyX+8,bodyY+8,bodyW-16,bodyH-16,3);ctx.stroke();ctx.restore();
+  // Chest plate
+  gr(bodyX+bodyW/2-26,bodyY+12,52,42,d,5);
+  gt(nft.chest,cx,bodyY+33,d,24,glow*1.6);
+  // Core
+  gr(bodyX+bodyW/2-15,bodyY+64,30,24,c,4);
+  gt(nft.core,cx,bodyY+76,c,17,glow);
+  // Side circuits
+  gt(nft.circuit1,bodyX+20,bodyY+76,c,12,8);
+  gt(nft.circuit2,bodyX+bodyW-20,bodyY+76,c,12,8);
+  // Separator
+  ctx.save();ctx.strokeStyle=b+'30';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(bodyX+10,bodyY+58);ctx.lineTo(bodyX+bodyW-10,bodyY+58);ctx.stroke();ctx.restore();
+
+  // HIPS
+  gr(hipLX,hipY,hipW,hipH,c,4);
+  gr(hipRX,hipY,hipW,hipH,c,4);
+  gt(nft.hip_l,hipLX+hipW/2,hipY+hipH/2,c,13);
+  gt(nft.hip_r,hipRX+hipW/2,hipY+hipH/2,c,13);
+
+  // LEGS
+  gr(legLX,legY,legW,legH,b,4);
+  gr(legRX,legY,legW,legH,b,4);
+  // Knee highlight
+  gr(legLX+1,legY+legH/2-13,legW-2,26,a,4);
+  gr(legRX+1,legY+legH/2-13,legW-2,26,a,4);
+  gt(nft.knee_l,legLX+legW/2,legY+legH/2,a,14);
+  gt(nft.knee_r,legRX+legW/2,legY+legH/2,a,14);
+
+  // FEET
+  gr(footLX,footY,footW,footH,c,4);
+  gr(footRX,footY,footW,footH,c,4);
+  gt(nft.foot_l,footLX+footW/2,footY+footH/2,c,12);
+  gt(nft.foot_r,footRX+footW/2,footY+footH/2,c,12);
+
+  // Stat bar bottom
+  ctx.save();
+  ctx.font="bold 11px 'Share Tech Mono',monospace";
+  ctx.textAlign='left';ctx.fillStyle=d;ctx.shadowColor=d;ctx.shadowBlur=10;
+  ctx.fillText(`⚡${nft.super_power}`,12,H-14);
+  ctx.textAlign='center';ctx.fillStyle=a;ctx.shadowColor=a;
+  ctx.fillText(`🜸${nft.hyper_core}`,cx,H-14);
+  ctx.textAlign='right';ctx.fillStyle=b;ctx.shadowColor=b;
+  ctx.fillText(nft.paletteName,W-12,H-14);
+  ctx.restore();
+
+  // LEGENDARY/MYTHIC specials
+  if(nft.rarity==='LEGENDARY'||nft.rarity==='MYTHIC'){
+    gt(nft.fire_sym,bodyX-10,bodyY+38,a,16,glow);
+    gt(nft.skull_sym,bodyX+bodyW+10,bodyY+38,c,16,glow);
+  }
+  if(nft.rarity==='MYTHIC'){
+    gt(nft.gem_sym,cx,bodyY-18,d,20,glow*2);
+    gt(nft.nature_sym,bodyX-10,bodyY+bodyH/2,b,14,glow);
+    gt(nft.nature_sym,bodyX+bodyW+10,bodyY+bodyH/2,b,14,glow);
   }
 
-  function dlJson(id, silent = false){
-    const nft = nfts.find(n=>n.id===id);
-    if(!nft) return;
-    try {
-      const meta = {
-        name: `RoboSym #${nft.idx}`,
-        description: `Cyberpunk robot NFT with ${nft.trait} trait.`,
-        image: `RoboSym_${nft.idx}_${nft.trait}.png`,
-        attributes: [
-          {trait_type:'Trait', value:nft.trait},
-          {trait_type:'Rarity', value:nft.rarity},
-          {trait_type:'Power', value:nft.power},
-          {trait_type:'Defense', value:nft.defense},
-          {trait_type:'Speed', value:nft.speed},
-        ],
-        id: nft.id, created: nft.created,
-        palette: {background:nft.palette.bg, colors:[nft.palette.a,nft.palette.b,nft.palette.c]}
-      };
-      const blob = new Blob([JSON.stringify(meta, null, 2)], {type: 'application/json'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `RoboSym_${nft.idx}_${nft.trait}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      if (!silent) showToast(`✓ JSON saved: ${nft.trait} #${nft.idx}`, 1200);
-    } catch(e) { if(!silent) showToast(`⚠️ JSON error`, 1000); }
-  }
-
-  // improved export all with sequential queue + delay to prevent browser blocking
-  function exportAll() {
-    if (nfts.length === 0) {
-      showToast("No NFTs to export", 1500);
-      return;
-    }
-    if (isExportingAll) {
-      showToast("Export already in progress...", 1000);
-      return;
-    }
-    isExportingAll = true;
-    const exportList = [];
-    for (let i = 0; i < nfts.length; i++) {
-      exportList.push({ type: 'png', id: nfts[i].id });
-      exportList.push({ type: 'json', id: nfts[i].id });
-    }
-    let idx = 0;
-    function processNext() {
-      if (idx >= exportList.length) {
-        isExportingAll = false;
-        showToast(`✅ Exported ${nfts.length} NFTs (PNG + JSON)`, 2500);
-        return;
+  // GLITCH EFFECTS
+  if(nft.glitch!=='NONE'){
+    ctx.save();
+    if(nft.glitch==='CHROMA_SHIFT'){
+      ctx.globalCompositeOperation='screen';ctx.globalAlpha=0.07;
+      ctx.fillStyle='#ff0000';ctx.fillRect(4,0,W,H);
+      ctx.fillStyle='#0000ff';ctx.fillRect(-4,0,W,H);
+      ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
+    }else if(nft.glitch==='PIXEL_CRACK'){
+      ctx.globalAlpha=0.5;
+      for(let i=0;i<6;i++){
+        const gy=80+Math.random()*350,gh=1+Math.random()*4;
+        const gx=Math.random()*30-15;
+        ctx.fillStyle=i%2?a+'55':b+'55';
+        ctx.fillRect(gx,gy,W,gh);
       }
-      const item = exportList[idx];
-      idx++;
-      if (item.type === 'png') {
-        dlPng(item.id, true);
-      } else {
-        dlJson(item.id, true);
+      ctx.globalAlpha=1;
+    }else if(nft.glitch==='DATA_SCRAMBLE'){
+      ctx.globalAlpha=0.03;
+      for(let i=0;i<180;i++){
+        ctx.fillStyle=Math.random()>.5?a:c;
+        ctx.fillRect(Math.random()*W,Math.random()*H,Math.random()*3+1,Math.random()*3+1);
       }
-      // delay between each file to avoid browser download conflicts & popup block
-      setTimeout(processNext, 280);
+      ctx.globalAlpha=1;
+    }else if(nft.glitch==='NEON_FRACTURE'){
+      ctx.globalAlpha=0.25;
+      for(let i=0;i<4;i++){
+        const gy=100+i*80;
+        const g2=ctx.createLinearGradient(0,gy,W,gy);
+        g2.addColorStop(0,'rgba(0,0,0,0)');g2.addColorStop(.3,a);g2.addColorStop(.7,c);g2.addColorStop(1,'rgba(0,0,0,0)');
+        ctx.fillStyle=g2;ctx.fillRect(0,gy,W,2);
+      }
+      ctx.globalAlpha=1;
+    }else if(nft.glitch==='STATIC_PULSE'){
+      ctx.globalAlpha=0.06;
+      for(let i=0;i<120;i++){
+        ctx.fillStyle=Math.random()>.5?a:d;
+        ctx.fillRect(Math.random()*W,Math.random()*H,Math.random()*4,Math.random()*4);
+      }
+      ctx.globalAlpha=1;
+    }else if(nft.glitch==='RGB_SPLIT'){
+      ctx.globalCompositeOperation='screen';ctx.globalAlpha=0.06;
+      ctx.fillStyle='#ff000044';ctx.fillRect(6,0,W-6,H);
+      ctx.fillStyle='#0000ff44';ctx.fillRect(-6,0,W-6,H);
+      ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
     }
-    processNext();
+    ctx.restore();
   }
 
-  function addNftCard(nft){
-    const grid = document.getElementById('nft-grid');
-    document.getElementById('empty-msg').style.display='none';
-    const div=document.createElement('div');
-    div.className='nft-card';
-    div.setAttribute('data-nft-id', nft.id);
-    div.innerHTML=`<div class="nft-canvas-wrap"><canvas id="c-${nft.id}" width="512" height="512"></canvas></div>
-      <div class="nft-label">${nft.trait}</div>
-      <div class="rarity-badge" style="color:${RARITY_COLORS[nft.rarity]}; border:1px solid ${RARITY_COLORS[nft.rarity]}44;">${nft.rarity}</div>
-      <div class="dl-row">
-        <button class="view-btn" data-id="${nft.id}">◉ VIEW</button>
-        <button class="dl-png-btn" data-id="${nft.id}">↓ PNG</button>
-        <button class="dl-json-btn" data-id="${nft.id}">↓ JSON</button>
-      </div>`;
-    grid.appendChild(div);
-    const canvas=document.getElementById('c-'+nft.id);
-    drawRobot(canvas, nft, 14);
-    
-    // event listeners using closure
-    const viewBtn = div.querySelector('.view-btn');
-    const pngBtn = div.querySelector('.dl-png-btn');
-    const jsonBtn = div.querySelector('.dl-json-btn');
-    viewBtn.addEventListener('click', (e) => { e.stopPropagation(); openModal(nft.id); });
-    pngBtn.addEventListener('click', (e) => { e.stopPropagation(); dlPng(nft.id); });
-    jsonBtn.addEventListener('click', (e) => { e.stopPropagation(); dlJson(nft.id); });
+  // Rarity outer border
+  const rcol=RCOLS[nft.rarity];
+  ctx.save();ctx.strokeStyle=rcol;ctx.lineWidth=2.5;ctx.shadowColor=rcol;ctx.shadowBlur=glow*1.2;
+  ctx.strokeRect(4,4,W-8,H-8);ctx.restore();
+  ctx.save();ctx.strokeStyle=rcol+'30';ctx.lineWidth=1;
+  ctx.strokeRect(10,10,W-20,H-20);ctx.restore();
+  // Corner diamonds
+  [[18,18],[W-18,18],[18,H-18],[W-18,H-18]].forEach(([px,py])=>gt('◆',px,py,rcol,12,10));
+  // Class label top right
+  ctx.save();ctx.font="bold 9px 'Share Tech Mono',monospace";ctx.textAlign='right';
+  ctx.fillStyle=rcol;ctx.shadowColor=rcol;ctx.shadowBlur=8;
+  ctx.fillText(nft.cls.slice(0,10),W-24,24);ctx.restore();
+}
+
+let nfts=[],selected=null,exporting=false;
+
+async function makePng(nft){
+  const c=document.createElement('canvas');
+  drawRobot(c,nft,20);
+  return new Promise(r=>c.toBlob(r,'image/png'));
+}
+
+async function dlPng(id,silent=false){
+  const nft=nfts.find(n=>n.id===id);if(!nft)return;
+  try{
+    const blob=await makePng(nft);
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;
+    a.download=`OmegaBot_${nft.idx}_${nft.cls}_${nft.rarity}.png`;
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    if(!silent)showToast(`✓ PNG: ${nft.cls} #${nft.idx}`);
+  }catch(e){if(!silent)showToast('⚠ PNG failed');}
+}
+
+function dlJson(id,silent=false){
+  const nft=nfts.find(n=>n.id===id);if(!nft)return;
+  try{
+    const meta={
+      name:`Omega Robo #${nft.idx}`,
+      description:`${nft.cls} class cyberpunk robot. Weapon: ${nft.weapon}. Augment: ${nft.augment}. Horn: ${nft.horn}. Aura: ${nft.aura}. Palette: ${nft.paletteName}.`,
+      image:`OmegaBot_${nft.idx}_${nft.cls}_${nft.rarity}.png`,
+      attributes:[
+        {trait_type:'Class',value:nft.cls},
+        {trait_type:'Rarity',value:nft.rarity},
+        {trait_type:'Weapon',value:nft.weapon},
+        {trait_type:'Augment',value:nft.augment},
+        {trait_type:'Personality',value:nft.personality},
+        {trait_type:'Horn Style',value:nft.horn},
+        {trait_type:'Power Aura',value:nft.aura},
+        {trait_type:'Glitch Effect',value:nft.glitch},
+        {trait_type:'Palette',value:nft.paletteName},
+        {trait_type:'Super Power',value:nft.super_power},
+        {trait_type:'Hyper Core',value:nft.hyper_core},
+        {trait_type:'Luck',value:nft.luck},
+        {trait_type:'Shield',value:nft.shield}
+      ],
+      id:nft.id,
+      created:nft.created,
+      palette:{name:nft.paletteName,background:nft.palette.bg,colors:[nft.palette.a,nft.palette.b,nft.palette.c,nft.palette.d]}
+    };
+    const blob=new Blob([JSON.stringify(meta,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;
+    a.download=`OmegaBot_${nft.idx}_${nft.cls}_meta.json`;
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    if(!silent)showToast(`✓ JSON: ${nft.cls} #${nft.idx}`);
+  }catch(e){if(!silent)showToast('⚠ JSON failed');}
+}
+
+function exportAll(){
+  if(!nfts.length){showToast('No robots forged yet');return;}
+  if(exporting){showToast('Export in progress...');return;}
+  exporting=true;
+  const list=[];
+  nfts.forEach(n=>{list.push({t:'png',id:n.id});list.push({t:'json',id:n.id});});
+  let i=0;
+  function next(){
+    if(i>=list.length){exporting=false;showToast(`✅ Exported ${nfts.length} robots (PNG+JSON)`);return;}
+    const item=list[i++];
+    item.t==='png'?dlPng(item.id,true):dlJson(item.id,true);
+    setTimeout(next,300);
   }
+  next();
+}
 
-  function openModal(id){
-    selectedNft = nfts.find(n=>n.id===id);
-    if(!selectedNft) return;
-    const mc = document.getElementById('modal-canvas');
-    drawRobot(mc, selectedNft, 20);
-    document.getElementById('modal-name').textContent = `ROBO #${selectedNft.idx} — ${selectedNft.trait}`;
-    document.getElementById('modal-meta').innerHTML = `
-      <tr><td>Rarity</td><td style="color:${RARITY_COLORS[selectedNft.rarity]}">${selectedNft.rarity}</td></tr>
-      <tr><td>Trait</td><td>${selectedNft.trait}</td></tr>
-      <tr><td>Power</td><td>${selectedNft.power}</td></tr>
-      <tr><td>Defense</td><td>${selectedNft.defense}</td></tr>
-      <tr><td>Speed</td><td>${selectedNft.speed}</td></tr>
-      <tr><td>ID</td><td style="font-size:9px;">${selectedNft.id}</td></tr>
-    `;
-    document.getElementById('modal-bg').style.display='flex';
-  }
+function addCard(nft){
+  document.getElementById('empty').style.display='none';
+  const grid=document.getElementById('grid');
+  const div=document.createElement('div');div.className='card';
+  const rcol=RCOLS[nft.rarity];
+  div.innerHTML=`<div class="cstripe" style="background:${rcol};box-shadow:0 0 8px ${rcol}88;"></div>
+    <div class="cw"><canvas id="c-${nft.id}" width="512" height="512"></canvas></div>
+    <div class="clabel">${nft.cls} ${nft.horn!=='NONE'?'·🦄':''} ${nft.aura!=='NONE'?'·⚡':''}</div>
+    <div class="rbadge" style="color:${rcol};border-color:${rcol}44;">${nft.rarity} ⚡${nft.super_power}</div>
+    <div class="dlrow">
+      <button class="vb" data-id="${nft.id}">◉ VIEW</button>
+      <button class="pb" data-id="${nft.id}">↓ PNG</button>
+      <button class="jb" data-id="${nft.id}">↓ JSON</button>
+    </div>`;
+  grid.appendChild(div);
+  const can=document.getElementById('c-'+nft.id);
+  drawRobot(can,nft,14);
+  div.querySelector('.vb').addEventListener('click',e=>{e.stopPropagation();openModal(nft.id);});
+  div.querySelector('.pb').addEventListener('click',e=>{e.stopPropagation();dlPng(nft.id);});
+  div.querySelector('.jb').addEventListener('click',e=>{e.stopPropagation();dlJson(nft.id);});
+}
 
-  document.getElementById('gen1').onclick = () => {
-    const nft = genNft(nfts.length);
-    nfts.push(nft);
-    addNftCard(nft);
-    document.getElementById('countLbl').textContent = `COLLECTION: ${nfts.length}`;
-    showToast(`Minted #${nft.idx} — ${nft.trait} (${nft.rarity})`, 1300);
-  };
+function openModal(id){
+  selected=nfts.find(n=>n.id===id);if(!selected)return;
+  drawRobot(document.getElementById('mcanvas'),selected,24);
+  const rcol=RCOLS[selected.rarity];
+  document.getElementById('mname').textContent=`OMEGA #${selected.idx} — ${selected.cls}`;
+  document.getElementById('mmeta').innerHTML=`
+    <tr><td>RARITY</td><td style="color:${rcol};font-weight:bold;">${selected.rarity}</td></tr>
+    <tr><td>CLASS</td><td>${selected.cls}</td></tr>
+    <tr><td>WEAPON</td><td>${selected.weapon}</td></tr>
+    <tr><td>AUGMENT</td><td>${selected.augment}</td></tr>
+    <tr><td>PERSONALITY</td><td>${selected.personality}</td></tr>
+    <tr><td>HORN STYLE</td><td>${selected.horn}</td></tr>
+    <tr><td>POWER AURA</td><td>${selected.aura}</td></tr>
+    <tr><td>GLITCH</td><td>${selected.glitch}</td></tr>
+    <tr><td>PALETTE</td><td>${selected.paletteName}</td></tr>
+    <tr><td>SUPER POWER</td><td>${selected.super_power}</td></tr>
+    <tr><td>HYPER CORE</td><td>${selected.hyper_core}</td></tr>
+    <tr><td>LUCK</td><td>${selected.luck}</td></tr>
+    <tr><td>SHIELD</td><td>${selected.shield}</td></tr>
+    <tr><td>ID</td><td style="font-size:9px;color:#333366;">${selected.id}</td></tr>`;
+  document.getElementById('mbg').style.display='flex';
+}
 
-  document.getElementById('gen10').onclick = () => {
-    for(let i=0;i<10;i++){ 
-      const nft = genNft(nfts.length);
-      nfts.push(nft);
-      addNftCard(nft);
-    }
-    document.getElementById('countLbl').textContent = `COLLECTION: ${nfts.length}`;
-    showToast(`⚡ 10 new robots minted!`, 1600);
-  };
-
-  document.getElementById('dlAll').onclick = exportAll;
-
-  document.getElementById('modal-close').onclick = () => {
-    document.getElementById('modal-bg').style.display='none';
-  };
-  document.getElementById('modal-bg').onclick = (e) => {
-    if(e.target.id === 'modal-bg') document.getElementById('modal-bg').style.display='none';
-  };
-  document.getElementById('modal-dl-png').onclick = () => { if(selectedNft) dlPng(selectedNft.id); };
-  document.getElementById('modal-dl-json').onclick = () => { if(selectedNft) dlJson(selectedNft.id); };
-
-  // initial empty state sync
-  window.updateCount = () => {
-    const lbl = document.getElementById('countLbl');
-    if(lbl) lbl.textContent = `COLLECTION: ${nfts.length}`;
-  };
+document.getElementById('gen1').onclick=()=>{
+  const nft=genNft(nfts.length);nfts.push(nft);addCard(nft);
+  document.getElementById('clbl').textContent=`COLLECTION: ${nfts.length}`;
+  showToast(`⚡ Forged #${nft.idx} ${nft.cls} [${nft.rarity}]`);
+};
+document.getElementById('gen10').onclick=()=>{
+  for(let i=0;i<10;i++){const nft=genNft(nfts.length);nfts.push(nft);addCard(nft);}
+  document.getElementById('clbl').textContent=`COLLECTION: ${nfts.length}`;
+  showToast(`🌀 10 new robots forged!`);
+};
+document.getElementById('dlAll').onclick=exportAll;
+document.getElementById('mclose').onclick=()=>document.getElementById('mbg').style.display='none';
+document.getElementById('mbg').onclick=e=>{if(e.target.id==='mbg')document.getElementById('mbg').style.display='none';};
+document.getElementById('mdlpng').onclick=()=>{if(selected)dlPng(selected.id);};
+document.getElementById('mdljson').onclick=()=>{if(selected)dlJson(selected.id);};
 })();
 </script>
 </body>
