@@ -101,7 +101,7 @@
 
   function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
   function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
-  function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
+  function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,5)+Math.random().toString(36).slice(2,5); }
 
   function genNft(idx){
     const pal = pick(PALETTES);
@@ -334,6 +334,19 @@
     glowText('◆', W-18, H-18, rcol, 12, 10);
   }
 
+  // Store canvas drawing functions in cache for better performance
+  const canvasCache = new Map();
+  
+  function getOrDrawCanvas(nft, glowStrength) {
+    const key = nft.id;
+    if (!canvasCache.has(key)) {
+      const canvas = document.createElement('canvas');
+      drawRobot(canvas, nft, glowStrength);
+      canvasCache.set(key, canvas);
+    }
+    return canvasCache.get(key);
+  }
+
   function addNftCard(nft){
     const grid = document.getElementById('nft-grid');
     document.getElementById('empty-msg').style.display='none';
@@ -343,16 +356,30 @@
       <div class="nft-label">${nft.trait}</div>
       <div class="rarity-badge" style="color:${RARITY_COLORS[nft.rarity]}; border:1px solid ${RARITY_COLORS[nft.rarity]}44;">${nft.rarity}</div>
       <div class="dl-row">
-        <button onclick="openModal('${nft.id}')">◉ VIEW</button>
-        <button onclick="dlPng('${nft.id}')">↓ PNG</button>
-        <button onclick="dlJson('${nft.id}')">↓ JSON</button>
+        <button class="view-btn" data-id="${nft.id}">◉ VIEW</button>
+        <button class="dl-png-btn" data-id="${nft.id}">↓ PNG</button>
+        <button class="dl-json-btn" data-id="${nft.id}">↓ JSON</button>
       </div>`;
     grid.appendChild(div);
     const canvas=document.getElementById('c-'+nft.id);
     drawRobot(canvas, nft, 14);
+    
+    // Add event listeners
+    div.querySelector('.view-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      openModal(nft.id);
+    });
+    div.querySelector('.dl-png-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      dlPng(nft.id);
+    });
+    div.querySelector('.dl-json-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      dlJson(nft.id);
+    });
   }
 
-  window.openModal=function(id){
+  function openModal(id){
     selectedNft=nfts.find(n=>n.id===id);
     if(!selectedNft)return;
     const mc=document.getElementById('modal-canvas');
@@ -367,27 +394,30 @@
       <tr><td>ID</td><td style="font-size:9px;">${selectedNft.id}</td></tr>
     `;
     document.getElementById('modal-bg').style.display='flex';
-  };
+  }
 
-  window.dlPng=function(id){
+  function dlPng(id){
     const nft=nfts.find(n=>n.id===id);
     if(!nft)return;
-    const c=document.createElement('canvas');
-    drawRobot(c, nft, 18);
-    c.toBlob(blob=>{
+    const canvas = getOrDrawCanvas(nft, 18);
+    canvas.toBlob(blob=>{
       const url=URL.createObjectURL(blob);
       const a=document.createElement('a');
-      a.href=url; a.download=`${nft.idx}.png`; a.click();
+      a.href=url; a.download=`RoboSym_${nft.idx}_${nft.trait}.png`; 
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
       URL.revokeObjectURL(url);
     },'image/png');
-  };
+  }
 
-  window.dlJson=function(id){
+  function dlJson(id){
     const nft=nfts.find(n=>n.id===id);
     if(!nft)return;
     const meta={
       name:`RoboSym #${nft.idx}`,
       description:`Cyberpunk robot NFT with ${nft.trait} trait.`,
+      image:`RoboSym_${nft.idx}_${nft.trait}.png`,
       attributes:[
         {trait_type:'Trait',value:nft.trait},
         {trait_type:'Rarity',value:nft.rarity},
@@ -401,9 +431,26 @@
     const blob=new Blob([JSON.stringify(meta,null,2)],{type:'application/json'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');
-    a.href=url; a.download=`${nft.idx}.json`; a.click();
+    a.href=url; a.download=`RoboSym_${nft.idx}_${nft.trait}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  };
+  }
+
+  // Export all function with improved handling
+  function exportAll() {
+    if (nfts.length === 0) return;
+    let completed = 0;
+    const total = nfts.length * 2;
+    
+    nfts.forEach((nft) => {
+      setTimeout(() => { 
+        dlPng(nft.id);
+        setTimeout(() => { dlJson(nft.id); }, 100);
+      }, 500);
+    });
+  }
 
   document.getElementById('gen1').onclick=()=>{
     const nft=genNft(nfts.length); nfts.push(nft); addNftCard(nft);
@@ -415,12 +462,7 @@
     document.getElementById('countLbl').textContent=`COLLECTION: ${nfts.length}`;
   };
 
-  document.getElementById('dlAll').onclick=()=>{
-    nfts.forEach((nft,i)=>{
-      setTimeout(()=>{ dlPng(nft.id); },i*300);
-      setTimeout(()=>{ dlJson(nft.id); },i*300+150);
-    });
-  };
+  document.getElementById('dlAll').onclick=exportAll;
 
   document.getElementById('modal-close').onclick=()=>{
     document.getElementById('modal-bg').style.display='none';
