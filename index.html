@@ -1,986 +1,805 @@
-<!DOCTYPE html>
-<html lang="en" class="h-full">
-<head>
+<!doctype html>
+<html lang="bn" class="h-full">
+ <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>V2 Dickbutts — NFT Builder (SVG + IPFS + GitHub)</title>
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watercolor Dot Art Studio</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --neon: #7c3aed;
-      --neon2: #a855f7;
-      --neon3: #ec4899;
-      --bg0: #05050f;
-      --bg1: #0a0a1a;
-      --text: #e2e0ff;
-      --muted: #7070a0;
-      --highlight: #c4b5fd;
-      --border: rgba(124,58,237,0.18);
-      --border2: rgba(124,58,237,0.35);
+    @import url('https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,700;9..144,800&display=swap');
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg0);
-      color: var(--text);
-      overflow-x: hidden;
-    }
-    .font-raj { font-family: 'Rajdhani', sans-serif; }
-    .font-orb { font-family: 'Orbitron', monospace; }
-
-    #app { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; }
-
-    header {
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(5,5,15,0.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border2);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .logo-text {
-      font-family: 'Orbitron', monospace;
-      font-size: 20px;
-      font-weight: 900;
-      background: linear-gradient(135deg, #a78bfa, #ec4899, #7c3aed);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .logo-pulse {
-      display: inline-block;
-      width: 8px; height: 8px;
-      background: #a855f7;
-      border-radius: 50%;
-      margin-right: 10px;
-      box-shadow: 0 0 0 0 rgba(168,85,247,0.7);
-      animation: pulse-ring 2s ease infinite;
-    }
-    @keyframes pulse-ring {
-      0%   { box-shadow: 0 0 0 0 rgba(168,85,247,0.7); }
-      70%  { box-shadow: 0 0 0 8px rgba(168,85,247,0); }
-      100% { box-shadow: 0 0 0 0 rgba(168,85,247,0); }
+      font-family: "Anek Bangla", Georgia, serif;
     }
 
-    .tabs-bar {
-      display: flex;
-      padding: 12px 16px;
-      gap: 8px;
-      background: rgba(5,5,15,0.7);
-      border-bottom: 1px solid var(--border);
-    }
-    .tab-btn {
-      padding: 9px 18px;
-      border-radius: 6px;
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid transparent;
-      background: transparent;
-      color: var(--muted);
-      transition: all 0.25s;
-    }
-    .tab-btn.active {
-      color: #fff;
-      border-color: var(--border2);
-      background: rgba(124,58,237,0.15);
-    }
-
-    .panel { flex: 1; padding: 20px 16px; overflow: auto; }
-    @media(min-width:640px){ .panel { padding: 24px 24px; } }
-
-    .glass-card {
-      background: rgba(18,18,42,0.7);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      backdrop-filter: blur(12px);
-      padding: 20px;
-    }
-
-    .section-card {
-      background: rgba(15,15,35,0.8);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 12px;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 16px;
-      cursor: pointer;
-      user-select: none;
-      transition: background 0.2s;
-    }
-    .section-header:hover { background: rgba(124,58,237,0.08); }
-
-    .section-content {
-      padding: 0 16px 16px;
-      border-top: 1px solid var(--border);
-    }
-
-    .section-badge {
-      font-family: 'Rajdhani', monospace;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 4px;
-      background: rgba(124,58,237,0.2);
-      color: #a78bfa;
-    }
-
-    .layer-item {
-      border-radius: 8px;
-      border: 1px solid rgba(124,58,237,0.15);
-      cursor: pointer;
-      padding: 8px;
+    .art-app {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
       position: relative;
-      background: rgba(37,99,235,0.08);
-      transition: all 0.2s;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255, 177, 104, 0.32), transparent 26%),
+        radial-gradient(circle at 84% 12%, rgba(82, 158, 173, 0.26), transparent 28%),
+        radial-gradient(circle at 50% 88%, rgba(168, 110, 83, 0.24), transparent 30%),
+        #f6ead7;
+      color: #33251b;
     }
-    .layer-item:hover { border-color: var(--border2); transform: translateY(-2px); }
-    .layer-item.selected { border-color: #a855f7; background: rgba(168,85,247,0.15); }
-    
-    .svg-badge {
+
+    .paper-grain {
       position: absolute;
-      top: 6px;
-      left: 6px;
-      background: rgba(234,179,8,0.9);
-      color: #000;
-      font-size: 9px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: monospace;
-      font-weight: bold;
-      z-index: 3;
-    }
-    
-    .order-number {
-      position: absolute;
-      top: -6px;
-      left: -6px;
-      background: linear-gradient(135deg, #7c3aed, #a855f7);
-      color: white;
-      border-radius: 50%;
-      width: 22px;
-      height: 22px;
-      font-size: 11px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      z-index: 2;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.28;
+      background-image:
+        radial-gradient(rgba(51, 37, 27, 0.18) 0.8px, transparent 0.8px),
+        radial-gradient(rgba(255,255,255,0.65) 0.8px, transparent 0.8px);
+      background-size: 18px 18px, 23px 23px;
+      background-position: 0 0, 7px 9px;
+      mix-blend-mode: multiply;
     }
 
-    .nft-input, .svg-input {
+    .shell {
+      position: relative;
       width: 100%;
-      background: rgba(5,5,15,0.8);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-size: 14px;
-      color: var(--text);
-      outline: none;
-    }
-    .svg-input {
-      font-family: 'Monaco', 'Menlo', monospace;
-      font-size: 12px;
-      resize: vertical;
-    }
-    .nft-input:focus, .svg-input:focus { border-color: var(--neon2); }
-
-    .btn-primary {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 700;
-      cursor: pointer;
-      border: 1px solid rgba(168,85,247,0.4);
-      background: linear-gradient(135deg, rgba(124,58,237,0.8), rgba(168,85,247,0.6));
-      color: #fff;
-      transition: all 0.2s;
-    }
-    .btn-primary:hover { box-shadow: 0 0 30px rgba(168,85,247,0.5); }
-
-    .btn-generate {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      padding: 15px 24px;
-      border-radius: 8px;
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 700;
-      cursor: pointer;
-      background: linear-gradient(135deg, #7c3aed, #a855f7, #ec4899);
-      color: #fff;
-    }
-    .btn-generate:hover { box-shadow: 0 0 40px rgba(168,85,247,0.6); }
-
-    .btn-sm {
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      background: rgba(20,20,40,0.8);
-      color: var(--muted);
-    }
-    .btn-sm:hover { border-color: var(--border2); color: var(--text); }
-    .btn-danger:hover { background: rgba(239,68,68,0.3); border-color: #ef4444; color: #fca5a5; }
-
-    .preview-canvas {
-      border: 1px solid var(--border2);
-      border-radius: 10px;
-      background: var(--bg0);
-      display: block;
+      max-width: 1240px;
       margin: 0 auto;
+      padding: 34px 22px 28px;
     }
 
-    .info-strip {
-      background: rgba(124,58,237,0.06);
-      border: 1px solid rgba(124,58,237,0.15);
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-size: 12px;
-    }
-    .info-strip span { color: var(--highlight); }
-
-    .order-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(124,58,237,0.12);
-      border: 1px solid rgba(124,58,237,0.2);
-      border-radius: 5px;
-      padding: 4px 10px;
-      font-size: 11px;
+    .hero-card {
+      background: rgba(255, 250, 239, 0.78);
+      border: 1px solid rgba(117, 79, 45, 0.22);
+      box-shadow: 0 28px 80px rgba(89, 55, 28, 0.18);
+      backdrop-filter: blur(18px);
+      border-radius: 34px;
+      overflow: hidden;
     }
 
-    .mode-switch {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    .mode-btn {
-      padding: 6px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-    }
-    .mode-btn.active {
-      background: rgba(124,58,237,0.2);
-      border-color: var(--neon2);
-      color: var(--highlight);
+    .ornament {
+      position: absolute;
+      width: 170px;
+      height: 170px;
+      border-radius: 999px;
+      filter: blur(1px);
+      opacity: 0.62;
+      pointer-events: none;
     }
 
-    .gender-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      padding: 6px 12px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
+    .ornament.one {
+      top: -56px;
+      right: 42px;
+      background: radial-gradient(circle, rgba(202, 87, 62, .4), transparent 66%);
     }
-    .gender-label:has(input:checked) {
-      border-color: var(--neon2);
-      background: rgba(124,58,237,0.12);
+
+    .ornament.two {
+      bottom: -40px;
+      left: 22px;
+      background: radial-gradient(circle, rgba(49, 126, 142, .34), transparent 68%);
     }
-    .gender-label input { display: none; }
 
-    .empty-state { text-align: center; padding: 64px 0; color: var(--muted); }
-    .hidden { display: none; }
-    .fade-in { animation: fadeIn 0.3s ease; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .animate-spin { animation: spin 1s linear infinite; }
-    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-    #toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(10,10,26,0.95);
-      border: 1px solid var(--border2);
-      color: var(--highlight);
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-weight: 600;
-      z-index: 9999;
-      white-space: nowrap;
+    .title-font {
+      font-family: "Fraunces", "Anek Bangla", Georgia, serif;
     }
-    #toast.hidden { display: none; }
-    
-    .male-bg { background: rgba(37,99,235,0.08); }
-    .female-bg { background: rgba(236,72,153,0.08); }
-  </style>
-</head>
-<body>
-<div id="app">
-  <header>
-    <div style="display:flex;align-items:center;gap:12px">
-      <span class="logo-pulse"></span>
-      <h1 class="logo-text">V2 DICKBUTTS</h1>
-    </div>
-    <span class="font-raj text-xs uppercase tracking-widest text-muted">SVG · IPFS · GitHub</span>
-  </header>
 
-  <div class="tabs-bar">
-    <button onclick="App.switchTab('layers')" id="tab-layers" class="tab-btn active">🎨 Layers</button>
-    <button onclick="App.switchTab('create')" id="tab-create" class="tab-btn">✨ Create NFT</button>
-    <button onclick="App.switchTab('collection')" id="tab-collection" class="tab-btn">📦 Collection</button>
-  </div>
-
-  <div style="flex:1;overflow:auto">
-    <div id="panel-layers" class="panel">
-      <div class="glass-card">
-        <div class="mode-switch">
-          <div id="mode-url" class="mode-btn active" onclick="App.setMode('url')">🌐 Image URL</div>
-          <div id="mode-svg" class="mode-btn" onclick="App.setMode('svg')">🎨 SVG Code</div>
-        </div>
-        
-        <div id="url-mode">
-          <div style="display:flex;flex-direction:column;gap:12px">
-            <input type="text" id="image-url" placeholder="GitHub RAW / IPFS URL / Any image URL" class="nft-input">
-            <div style="display:flex;gap:12px">
-              <input type="text" id="url-value" placeholder="Value (e.g., Red Hair)" class="nft-input" style="flex:1">
-              <select id="url-section" class="nft-input" style="flex:1">
-                <option value="Background">Background</option><option value="Body">Body</option><option value="Butt">Butt</option>
-                <option value="Dick">Dick</option><option value="Eyes">Eyes</option><option value="Hand">Hand</option>
-                <option value="Hat">Hat</option><option value="Mouth">Mouth</option><option value="Nose">Nose</option>
-                <option value="Shoes">Shoes</option><option value="Skin">Skin</option><option value="Special">Special</option>
-              </select>
-            </div>
-            <button onclick="App.addLayerFromUrl()" class="btn-primary">➕ Add URL Layer</button>
-          </div>
-        </div>
-
-        <div id="svg-mode" style="display:none">
-          <div style="display:flex;flex-direction:column;gap:12px">
-            <textarea id="svg-code" rows="6" class="svg-input" placeholder='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <circle cx="256" cy="256" r="200" fill="#7c3aed"/>
-  <circle cx="256" cy="256" r="150" fill="#a855f7"/>
-  <circle cx="256" cy="256" r="80" fill="#ec4899"/>
-</svg>'></textarea>
-            <div style="display:flex;gap:12px">
-              <input type="text" id="svg-value" placeholder="Value (e.g., Purple Circles)" class="nft-input" style="flex:1">
-              <select id="svg-section" class="nft-input" style="flex:1">
-                <option value="Background">Background</option><option value="Body">Body</option><option value="Butt">Butt</option>
-                <option value="Dick">Dick</option><option value="Eyes">Eyes</option><option value="Hand">Hand</option>
-                <option value="Hat">Hat</option><option value="Mouth">Mouth</option><option value="Nose">Nose</option>
-                <option value="Shoes">Shoes</option><option value="Skin">Skin</option><option value="Special">Special</option>
-              </select>
-            </div>
-            <div style="display:flex;gap:16px">
-              <label class="gender-label"><input type="radio" name="svg-gender" value="male" checked> ♂ Male</label>
-              <label class="gender-label"><input type="radio" name="svg-gender" value="female"> ♀ Female</label>
-            </div>
-            <button onclick="App.addLayerFromSvg()" class="btn-primary">➕ Add SVG Layer</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="info-strip mt-4">
-        💡 <span>SVG Tip:</span> Use viewBox="0 0 512 512" for best results. SVG automatically converts to PNG and saves permanently.
-      </div>
-
-      <div id="sections-container" class="space-y-3 mt-4"></div>
-      <p id="layers-empty" class="empty-state">No layers yet.<br>Add URL or SVG layers above.</p>
-    </div>
-
-    <div id="panel-create" class="panel hidden">
-      <div class="glass-card">
-        <canvas id="live-preview-canvas" width="512" height="512" class="preview-canvas" style="width:256px;height:256px"></canvas>
-        <p class="font-raj text-center text-xs text-muted mt-3">⬆️ Live Preview (512x512)</p>
-      </div>
-
-      <div id="create-sections-container" class="space-y-3 mt-4"></div>
-
-      <div class="glass-card mt-4">
-        <p class="font-raj text-xs uppercase text-muted mb-2">Selected layers (bottom → top)</p>
-        <div id="order-preview-list" style="display:flex;flex-wrap:wrap;gap:6px"></div>
-      </div>
-
-      <input type="text" id="nft-name" value="V2 Dickbutts" class="nft-input mt-4" placeholder="NFT Name">
-      <textarea id="nft-description" rows="3" class="nft-input mt-4" placeholder="Description">crypto Dickbutts V2 — art community driven.</textarea>
-
-      <button onclick="App.createNFT()" id="btn-create-nft" class="btn-generate mt-4">
-        ✨ Generate NFT
-      </button>
-    </div>
-
-    <div id="panel-collection" class="panel hidden">
-      <div id="nft-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px"></div>
-      <p id="nft-empty" class="empty-state">No NFTs created yet.</p>
-    </div>
-  </div>
-
-  <div id="toast" class="hidden"></div>
-</div>
-
-<script>
-let layersBySection = {
-  "Background":[], "Body":[], "Butt":[], "Dick":[], "Eyes":[], "Hand":[],
-  "Hat":[], "Mouth":[], "Nose":[], "Shoes":[], "Skin":[], "Special":[]
-};
-let selectedOrder = [];
-let nfts = [];
-let currentMode = 'url';
-let previewCanvas = null, previewCtx = null;
-let openSectionLayers = {};
-let openSectionCreate = {};
-
-const SECTIONS = ["Background","Body","Butt","Dick","Eyes","Hand","Hat","Mouth","Nose","Shoes","Skin","Special"];
-
-function escapeHtml(str) {
-  if(!str) return '';
-  return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
-}
-
-function normalizeImageUrl(raw) {
-  let url = raw.trim();
-  if(!url) return '';
-  if(url.includes('github.com') && url.includes('/blob/')) {
-    url = url.replace('github.com','raw.githubusercontent.com').replace('/blob/','/');
-  }
-  if(url.includes('ipfs/') && !url.startsWith('http')) {
-    url = 'https://ipfs.io/ipfs/' + url.split('ipfs/')[1];
-  }
-  if(url.startsWith('ipfs://')) {
-    url = 'https://ipfs.io/ipfs/' + url.substring(7);
-  }
-  if(/^Qm[a-zA-Z0-9]{44,}\//.test(url)) {
-    url = 'https://ipfs.io/ipfs/' + url;
-  }
-  return url;
-}
-
-function compressSvgForStorage(svgString) {
-  // Compress SVG by removing unnecessary whitespace
-  let compressed = svgString
-    .replace(/>\s+</g, '><')
-    .replace(/\s+/g, ' ')
-    .trim();
-  return compressed;
-}
-
-function svgToDataUrl(svgString) {
-  // Ensure proper SVG structure
-  let fixedSvg = svgString;
-  
-  if (!fixedSvg.includes('xmlns="http://www.w3.org/2000/svg"')) {
-    fixedSvg = fixedSvg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
-  }
-  
-  if (!fixedSvg.includes('viewBox')) {
-    fixedSvg = fixedSvg.replace('<svg', '<svg viewBox="0 0 512 512"');
-  }
-  
-  if (!fixedSvg.includes('width="512"')) {
-    fixedSvg = fixedSvg.replace('<svg', '<svg width="512" height="512"');
-  }
-  
-  const encodedSvg = encodeURIComponent(fixedSvg);
-  return 'data:image/svg+xml,' + encodedSvg;
-}
-
-function showToast(msg) {
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.classList.remove('hidden');
-  clearTimeout(window._toastTimer);
-  window._toastTimer = setTimeout(() => toast.classList.add('hidden'), 2500);
-}
-
-function saveToStorage() {
-  try {
-    // Create a clean copy for storage
-    const storageLayers = {};
-    for(let section in layersBySection) {
-      storageLayers[section] = layersBySection[section].map(layer => {
-        const copy = { ...layer };
-        // For SVG layers, store the raw SVG code instead of data URL
-        if(layer.type === 'svg' && layer.svgRaw) {
-          copy.svgRaw = compressSvgForStorage(layer.svgRaw);
-          // Remove imageUrl from storage (will regenerate on load)
-          delete copy.imageUrl;
-        }
-        return copy;
-      });
+    .upload-zone {
+      border: 2px dashed rgba(150, 94, 55, 0.42);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.58), rgba(255, 244, 221, 0.42)),
+        repeating-linear-gradient(-8deg, rgba(116, 73, 41, .035) 0px, rgba(116, 73, 41, .035) 1px, transparent 1px, transparent 8px);
+      transition: transform .25s ease, border-color .25s ease, background .25s ease;
     }
-    localStorage.setItem('v2_layers', JSON.stringify(storageLayers));
-    localStorage.setItem('v2_nfts', JSON.stringify(nfts));
-  } catch(e) {
-    console.error('Save error:', e);
-    showToast('Warning: Storage limit reached. Some data may not save.');
-  }
-}
 
-function loadFromStorage() {
-  try {
-    const layers = localStorage.getItem('v2_layers');
-    const nftsData = localStorage.getItem('v2_nfts');
-    
-    if(layers) {
-      const storedLayers = JSON.parse(layers);
-      for(let section in storedLayers) {
-        if(layersBySection[section]) {
-          layersBySection[section] = storedLayers[section].map(layer => {
-            // Regenerate imageUrl for SVG layers
-            if(layer.type === 'svg' && layer.svgRaw) {
-              return {
-                ...layer,
-                imageUrl: svgToDataUrl(layer.svgRaw)
-              };
-            }
-            return layer;
-          });
-        }
+    .upload-zone.dragging {
+      transform: scale(1.015);
+      border-color: #c85b46;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.75), rgba(255, 225, 197, 0.72)),
+        repeating-linear-gradient(-8deg, rgba(116, 73, 41, .045) 0px, rgba(116, 73, 41, .045) 1px, transparent 1px, transparent 8px);
+    }
+
+    .effect-button {
+      border: 1px solid rgba(117, 79, 45, 0.2);
+      background: rgba(255, 250, 239, 0.72);
+      color: #33251b;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .effect-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(89, 55, 28, 0.15);
+    }
+
+    .effect-button.active {
+      background: #c85b46;
+      color: #fffaf0;
+      border-color: #c85b46;
+      box-shadow: 0 14px 28px rgba(200, 91, 70, 0.3);
+    }
+
+    .range-input {
+      accent-color: #c85b46;
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 26px;
+      background: #fffaf0;
+      box-shadow: inset 0 0 0 1px rgba(117, 79, 45, 0.12);
+    }
+
+    .preview-frame {
+      background:
+        linear-gradient(145deg, rgba(255, 250, 240, 0.88), rgba(240, 220, 190, 0.48)),
+        #fffaf0;
+      border: 1px solid rgba(117, 79, 45, 0.18);
+      box-shadow: 0 22px 60px rgba(89, 55, 28, 0.16);
+    }
+
+    .soft-button {
+      transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+    }
+
+    .soft-button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 30px rgba(200, 91, 70, 0.24);
+    }
+
+    .soft-button:disabled {
+      opacity: .48;
+      cursor: not-allowed;
+    }
+
+    .fade-in {
+      animation: fadeRise .7s ease both;
+    }
+
+    @keyframes fadeRise {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 3px solid rgba(255,255,255,.45);
+      border-top-color: white;
+      border-radius: 999px;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .focusable:focus-visible {
+      outline: 3px solid rgba(200, 91, 70, .55);
+      outline-offset: 4px;
+    }
+
+    @media (max-width: 860px) {
+      .shell {
+        padding: 20px 14px;
+      }
+      .hero-card {
+        border-radius: 24px;
       }
     }
-    if(nftsData) nfts = JSON.parse(nftsData);
-    for(let sec of SECTIONS) if(!layersBySection[sec]) layersBySection[sec] = [];
-  } catch(e) { 
-    console.warn('Load error:', e); 
-    // If error, reset to empty
-    for(let sec of SECTIONS) layersBySection[sec] = [];
-  }
-}
-
-function renderImageToCanvas(ctx, img, w, h) {
-  const imgW = img.width, imgH = img.height;
-  if(imgW === 0 || imgH === 0) return;
-  const canvasAspect = w / h;
-  const imgAspect = imgW / imgH;
-  let dw, dh, dx = 0, dy = 0;
-  if(imgAspect > canvasAspect) {
-    dh = h;
-    dw = imgW * (h / imgH);
-    dx = (w - dw) / 2;
-  } else {
-    dw = w;
-    dh = imgH * (w / imgW);
-    dy = (h - dh) / 2;
-  }
-  ctx.drawImage(img, dx, dy, dw, dh);
-}
-
-async function updateLivePreview() {
-  if(!previewCtx) return;
-  previewCtx.clearRect(0, 0, 512, 512);
-  previewCtx.fillStyle = '#05050f';
-  previewCtx.fillRect(0, 0, 512, 512);
-  for(let item of selectedOrder) {
-    await new Promise(resolve => {
-      const img = new Image();
-      img.crossOrigin = "Anonymous";
-      img.onload = () => { 
-        renderImageToCanvas(previewCtx, img, 512, 512); 
-        resolve(); 
-      };
-      img.onerror = () => {
-        console.error('Failed to load:', item.value);
-        resolve();
-      };
-      img.src = item.imageUrl;
-    });
-  }
-}
-
-function addLayerFromUrl() {
-  const url = document.getElementById('image-url').value.trim();
-  const value = document.getElementById('url-value').value.trim();
-  const section = document.getElementById('url-section').value;
-  if(!url) { showToast('Enter image URL'); return; }
-  if(!value) { showToast('Enter value'); return; }
-  const finalUrl = normalizeImageUrl(url);
-  const newLayer = { 
-    id: Date.now() + '_' + Math.random(), 
-    value, 
-    imageUrl: finalUrl, 
-    gender: 'male', 
-    type: 'url' 
-  };
-  const img = new Image();
-  img.onload = () => {
-    layersBySection[section].push(newLayer);
-    saveToStorage();
-    renderSections();
-    renderCreateSections();
-    showToast(`✅ Added "${value}" to ${section}`);
-    document.getElementById('image-url').value = '';
-    document.getElementById('url-value').value = '';
-  };
-  img.onerror = () => showToast('❌ Failed to load image');
-  img.src = finalUrl;
-}
-
-function addLayerFromSvg() {
-  let svgCode = document.getElementById('svg-code').value.trim();
-  const value = document.getElementById('svg-value').value.trim();
-  const section = document.getElementById('svg-section').value;
-  const radios = document.getElementsByName('svg-gender');
-  let gender = 'male';
-  for(let r of radios) if(r.checked) gender = r.value;
-  
-  if(!svgCode) { showToast('Enter SVG code'); return; }
-  if(!value) { showToast('Enter value'); return; }
-  
-  // Validate SVG
-  if (!svgCode.includes('<svg')) {
-    showToast('❌ Invalid SVG: No <svg> tag found');
-    return;
-  }
-  
-  // Store the compressed SVG raw
-  const compressedSvg = compressSvgForStorage(svgCode);
-  const svgDataUrl = svgToDataUrl(compressedSvg);
-  
-  const newLayer = { 
-    id: Date.now() + '_' + Math.random(), 
-    value, 
-    imageUrl: svgDataUrl,
-    gender, 
-    type: 'svg', 
-    svgRaw: compressedSvg
-  };
-  
-  const img = new Image();
-  img.onload = () => {
-    layersBySection[section].push(newLayer);
-    saveToStorage();
-    renderSections();
-    renderCreateSections();
-    showToast(`✅ Added SVG "${value}" to ${section}`);
-    document.getElementById('svg-code').value = '';
-    document.getElementById('svg-value').value = '';
-  };
-  img.onerror = (err) => { 
-    console.error('SVG load error:', err);
-    showToast('❌ Invalid SVG code. Please check syntax.');
-  };
-  img.src = svgDataUrl;
-}
-
-function deleteLayer(section, layerId) {
-  if(confirm('Delete this layer?')) {
-    layersBySection[section] = layersBySection[section].filter(l => String(l.id) !== String(layerId));
-    selectedOrder = selectedOrder.filter(item => String(item.layerId) !== String(layerId));
-    selectedOrder.forEach((item, idx) => item.order = idx + 1);
-    saveToStorage();
-    renderSections();
-    renderCreateSections();
-    updateOrderPreview();
-    updateLivePreview();
-    showToast('Layer deleted');
-  }
-}
-
-function toggleSectionLayers(section) {
-  openSectionLayers[section] = !openSectionLayers[section];
-  renderSections();
-}
-
-function toggleSectionCreate(section) {
-  openSectionCreate[section] = !openSectionCreate[section];
-  renderCreateSections();
-}
-
-function renderSections() {
-  const container = document.getElementById('sections-container');
-  const empty = document.getElementById('layers-empty');
-  let hasAny = false;
-  let html = '';
-  
-  for(let section of SECTIONS) {
-    const layers = layersBySection[section] || [];
-    if(layers.length > 0) hasAny = true;
-    const isOpen = openSectionLayers[section] === true;
-    
-    html += `
-      <div class="section-card fade-in">
-        <div onclick="App.toggleSectionLayers('${section}')" class="section-header">
-          <div style="display:flex;align-items:center;gap:10px">
-            <span class="font-raj font-bold" style="color:#c4b5fd">${section}</span>
-            <span class="text-xs text-muted">${layers.length} layers</span>
-            <span class="section-badge">${section === 'Background' ? 'UI Only' : 'Trait'}</span>
-          </div>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transform:${isOpen ? 'rotate(180deg)' : 'rotate(0deg)'}; transition:transform 0.25s">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="app" class="art-app h-full w-full">
+   <div class="paper-grain"></div>
+   <div class="shell">
+    <div class="hero-card relative fade-in">
+     <div class="ornament one"></div>
+     <div class="ornament two"></div>
+     <header class="relative px-6 sm:px-9 pt-8 sm:pt-10 pb-6">
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
+       <div>
+        <div class="inline-flex items-center gap-2 rounded-full px-4 py-2 mb-5 text-sm font-semibold" id="badge"><span class="w-2.5 h-2.5 rounded-full" id="badgeDot"></span> Pointillism • Stippling • Dotted watercolor
         </div>
-        ${isOpen ? `<div class="section-content">
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-top:14px">
-            ${layers.map(layer => `
-              <div class="layer-item ${layer.gender === 'male' ? 'male-bg' : 'female-bg'}">
-                ${layer.type === 'svg' ? '<div class="svg-badge">SVG</div>' : ''}
-                <div style="aspect-ratio:1;border-radius:6px;overflow:hidden;background:var(--bg0);margin-bottom:8px">
-                  <img src="${layer.imageUrl}" style="width:100%;height:100%;object-fit:cover" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23333%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23fff%22%3EError%3C/text%3E%3C/svg%3E'">
-                </div>
-                <p style="font-size:11px;font-weight:600;text-align:center;color:var(--text)">${escapeHtml(layer.value)}</p>
-                <button onclick="event.stopPropagation(); App.deleteLayer('${section}', '${layer.id}')" class="btn-sm btn-danger" style="width:100%;margin-top:8px">Delete</button>
-              </div>
-            `).join('')}
-          </div>
-        </div>` : ''}
+        <h1 id="appTitle" class="title-font leading-tight tracking-tight max-w-3xl">Watercolor Dot Art Studio</h1>
+        <p id="appSubtitle" class="mt-4 max-w-2xl leading-relaxed">Upload a photo and turn it into soft dotted watercolor art.</p>
+       </div>
+       <div class="rounded-3xl px-5 py-4 border bg-white/40 max-w-sm">
+        <p class="font-bold flex items-center gap-2"><i data-lucide="sparkles" class="w-5 h-5"></i> ৭টি ওয়াটারকালার ডট ইফেক্ট</p>
+        <p class="mt-1 opacity-80 text-sm">Original ছবির রঙ ধরে রেখে ছোট ছোট ডট দিয়ে আর্ট তৈরি হবে।</p>
+       </div>
       </div>
-    `;
-  }
-  
-  empty.classList.toggle('hidden', hasAny);
-  container.innerHTML = html;
-}
-
-function renderCreateSections() {
-  const container = document.getElementById('create-sections-container');
-  if(!container) return;
-  let html = '';
-  let hasAny = false;
-  
-  for(let section of SECTIONS) {
-    const layers = layersBySection[section] || [];
-    if(layers.length === 0) continue;
-    hasAny = true;
-    const isOpen = openSectionCreate[section] === true;
-    const selectedItem = selectedOrder.find(item => item.section === section);
-    const selectedId = selectedItem ? selectedItem.layerId : null;
-    
-    html += `
-      <div class="section-card fade-in">
-        <div onclick="App.toggleSectionCreate('${section}')" class="section-header">
-          <div style="display:flex;align-items:center;gap:10px">
-            <span class="font-raj font-bold" style="color:#c4b5fd">${section}</span>
-            <span class="text-xs text-muted">${layers.length} layers</span>
-            ${selectedItem ? `<span class="text-xs" style="color:#34d399">✓ ORDER ${selectedItem.order}</span>` : ''}
-          </div>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transform:${isOpen ? 'rotate(180deg)' : 'rotate(0deg)'}; transition:transform 0.25s">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
+     </header>
+     <main class="relative grid grid-cols-1 lg:grid-cols-[390px_1fr] gap-6 px-6 sm:px-9 pb-8 sm:pb-10">
+      <section aria-labelledby="uploadHeading" class="space-y-5">
+       <div class="upload-zone rounded-[28px] p-6 text-center" id="uploadZone">
+        <div class="mx-auto w-16 h-16 rounded-2xl flex items-center justify-center mb-4" id="uploadIconBox"><i data-lucide="image-plus" class="w-8 h-8"></i>
         </div>
-        ${isOpen ? `<div class="section-content">
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:14px">
-            ${layers.map(layer => {
-              const isSel = String(selectedId) === String(layer.id);
-              const orderNum = isSel ? selectedOrder.find(item => String(item.layerId) === String(layer.id))?.order : null;
-              return `
-                <div onclick="App.selectLayer('${section}','${layer.id}','${escapeHtml(layer.value).replace(/'/g, "\\'")}','${layer.imageUrl.replace(/'/g, "\\'")}','${layer.gender}')"
-                     class="layer-item ${isSel ? 'selected' : ''}" style="cursor:pointer">
-                  ${isSel && orderNum ? `<div class="order-number">${orderNum}</div>` : ''}
-                  ${layer.type === 'svg' ? '<div class="svg-badge">SVG</div>' : ''}
-                  <div style="aspect-ratio:1;border-radius:6px;overflow:hidden;background:var(--bg0);margin-bottom:6px">
-                    <img src="${layer.imageUrl}" style="width:100%;height:100%;object-fit:cover" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23333%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23fff%22%3ELoad Error%3C/text%3E%3C/svg%3E'">
-                  </div>
-                  <p style="font-size:10px;font-weight:600;text-align:center;color:var(--text)">${escapeHtml(layer.value)}</p>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        </div>` : ''}
-      </div>
-    `;
-  }
-  
-  if(!hasAny) {
-    container.innerHTML = '<div class="empty-state">No layers added yet.<br>Go to Layers tab and add layers.</div>';
-  } else {
-    container.innerHTML = html;
-  }
-  updateOrderPreview();
-}
-
-function selectLayer(section, layerId, value, imageUrl, gender) {
-  const existingIndex = selectedOrder.findIndex(item => item.section === section);
-  if(existingIndex !== -1) {
-    selectedOrder.splice(existingIndex, 1);
-    selectedOrder.forEach((item, idx) => item.order = idx + 1);
-  } else {
-    selectedOrder.push({ section, layerId, value, imageUrl, gender, order: selectedOrder.length + 1 });
-  }
-  renderCreateSections();
-  updateLivePreview();
-}
-
-function updateOrderPreview() {
-  const div = document.getElementById('order-preview-list');
-  if(!div) return;
-  if(selectedOrder.length === 0) {
-    div.innerHTML = '<span class="text-muted text-xs">No layers selected</span>';
-    return;
-  }
-  div.innerHTML = selectedOrder.map(item => `
-    <span class="order-tag">
-      <span style="color:#a855f7;font-weight:800">${item.order}</span>
-      ${item.section === 'Background' ? 'BG' : item.section}: ${escapeHtml(item.value)}
-    </span>
-  `).join('');
-}
-
-async function compositeFromSelected() {
-  const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 512;
-  const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#05050f';
-  ctx.fillRect(0, 0, 512, 512);
-  for(let item of selectedOrder) {
-    await new Promise((resolve, reject) => {
-      const img = new Image();
-      img.crossOrigin = "Anonymous";
-      img.onload = () => { renderImageToCanvas(ctx, img, 512, 512); resolve(); };
-      img.onerror = () => reject(new Error(`Failed to load ${item.section}: ${item.value}`));
-      img.src = item.imageUrl;
-    });
-  }
-  return canvas.toDataURL('image/png');
-}
-
-async function createNFT() {
-  if(selectedOrder.length === 0) { showToast('Select at least one layer'); return; }
-  const name = document.getElementById('nft-name').value.trim() || "V2 Dickbutts";
-  const description = document.getElementById('nft-description').value.trim();
-  const btn = document.getElementById('btn-create-nft');
-  btn.disabled = true;
-  btn.innerHTML = '<div class="animate-spin" style="width:18px;height:18px;border:2px solid white;border-top-color:transparent;border-radius:50%"></div> Generating...';
-  try {
-    const imageData = await compositeFromSelected();
-    const attributes = selectedOrder.filter(item => item.section !== "Background")
-      .map(item => ({ trait_type: item.section, value: item.value }));
-    attributes.push({ trait_type: "Attribute Count", value: attributes.length.toString() });
-    nfts.push({ id: Date.now() + '_' + Math.random().toString(36).substr(2, 6), name, description, image: imageData, attributes });
-    saveToStorage();
-    selectedOrder = [];
-    renderCreateSections();
-    renderCollection();
-    updateLivePreview();
-    showToast(`✅ "${name}" created!`);
-    switchTab('collection');
-  } catch(err) { showToast(`Error: ${err.message}`); }
-  finally { btn.disabled = false; btn.innerHTML = '✨ Generate NFT'; }
-}
-
-function renderCollection() {
-  const container = document.getElementById('nft-list');
-  const empty = document.getElementById('nft-empty');
-  if(!container) return;
-  empty.classList.toggle('hidden', nfts.length > 0);
-  if(nfts.length === 0) { container.innerHTML = ''; return; }
-  container.innerHTML = nfts.map(nft => `
-    <div class="section-card fade-in" onclick="App.viewMetadata('${nft.id}')" style="cursor:pointer">
-      <div style="aspect-ratio:1;background:var(--bg0);overflow:hidden">
-        <img src="${nft.image}" style="width:100%;height:100%;object-fit:contain">
-      </div>
-      <div style="padding:14px">
-        <h3 class="font-raj font-bold">${escapeHtml(nft.name)}</h3>
-        <p class="text-muted text-xs mt-1">${nft.attributes.length - 1} traits</p>
-        <div style="display:flex;gap:8px;margin-top:12px" onclick="event.stopPropagation()">
-          <button onclick="App.downloadImage('${nft.id}')" class="btn-sm">📷 Image</button>
-          <button onclick="App.downloadJSON('${nft.id}')" class="btn-sm">📄 JSON</button>
-          <button onclick="App.deleteNFT('${nft.id}')" class="btn-sm btn-danger">🗑️</button>
+        <h2 id="uploadHeading" class="font-extrabold">Drop your picture here</h2>
+        <p id="uploadHint" class="mt-1 opacity-75">PNG, JPG, or WEBP</p><label for="imageInput" class="focusable inline-flex items-center justify-center gap-2 mt-5 rounded-full px-5 py-3 font-bold cursor-pointer" id="chooseLabel" tabindex="0"> <i data-lucide="upload" class="w-5 h-5"></i> ছবি আপলোড করুন </label> <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp" class="sr-only">
+       </div>
+       <div class="rounded-[28px] p-5 border bg-white/45">
+        <h2 class="font-extrabold mb-4 flex items-center gap-2"><i data-lucide="wand-2" class="w-5 h-5"></i> ইফেক্ট বাছাই করুন</h2>
+        <div id="effectsList" class="grid grid-cols-1 gap-3" role="group" aria-label="Art effects"><button type="button" class="effect-button active focusable rounded-2xl p-3 text-left font-bold" data-effect="pointillism"> Pointillism Bloom <span class="block text-sm font-medium opacity-75">গোল, ঘন, রঙিন ডট</span> </button> <button type="button" class="effect-button focusable rounded-2xl p-3 text-left font-bold" data-effect="stippling"> Fine Stippling <span class="block text-sm font-medium opacity-75">খুব ছোট সূক্ষ্ম ডট</span> </button> <button type="button" class="effect-button focusable rounded-2xl p-3 text-left font-bold" data-effect="dotted"> Dotted Poster <span class="block text-sm font-medium opacity-75">স্পষ্ট বড় ডট</span> </button> <button type="button" class="effect-button focusable rounded-2xl p-3 text-left font-bold" data-effect="textured"> Textured Impressionism <span class="block text-sm font-medium opacity-75">ব্রাশি টেক্সচার ডট</span> </button> <button type="button" class="effect-button focusable rounded-2xl p-3 text-left font-bold" data-effect="mist"> Watercolor Mist <span class="block text-sm font-medium opacity-75">নরম ঝাপসা জলরঙ</span> </button> <button type="button" class="effect-button focusable rounded-2xl p-3 text-left font-bold" data-effect="mosaic"> Color Pebble Mosaic <span class="block text-sm font-medium opacity-75">অসমান রঙিন পেবল ডট</span> </button> <button type="button" class="effect-button focusable rounded-2xl p-3 text-left font-bold" data-effect="inkwash"> Ink Wash Speckles <span class="block text-sm font-medium opacity-75">কালি-জলরঙের স্পেকল</span> </button>
         </div>
-      </div>
+       </div>
+       <div class="rounded-[28px] p-5 border bg-white/45 space-y-5">
+        <div>
+         <div class="flex justify-between gap-4 mb-2"><label for="dotDensity" class="font-bold">ডটের ঘনত্ব</label> <span id="densityValue" class="font-bold">70%</span>
+         </div><input id="dotDensity" class="range-input w-full" type="range" min="35" max="100" value="70">
+        </div>
+        <div>
+         <div class="flex justify-between gap-4 mb-2"><label for="dotSize" class="font-bold">ডটের সাইজ</label> <span id="sizeValue" class="font-bold">8</span>
+         </div><input id="dotSize" class="range-input w-full" type="range" min="3" max="18" value="8">
+        </div><button type="button" id="downloadBtn" class="soft-button focusable w-full rounded-full px-5 py-3 font-extrabold inline-flex items-center justify-center gap-2" disabled> <i data-lucide="download" class="w-5 h-5"></i> <span id="buttonText">Download artwork</span> </button>
+        <p id="statusMessage" class="text-sm opacity-80 min-h-[24px]" aria-live="polite">প্রথমে একটি ছবি আপলোড করুন।</p>
+       </div>
+      </section>
+      <section aria-labelledby="previewHeading" class="preview-frame rounded-[32px] p-4 sm:p-5">
+       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+        <div>
+         <h2 id="previewHeading" class="font-extrabold flex items-center gap-2"><i data-lucide="palette" class="w-5 h-5"></i> Live watercolor dot preview</h2>
+         <p class="text-sm opacity-75">ছবি আপলোড করলে এখানে ডট ডট আর্ট দেখা যাবে।</p>
+        </div>
+        <div id="processingPill" class="hidden items-center gap-2 rounded-full px-4 py-2 text-sm font-bold"><span class="spinner"></span> তৈরি হচ্ছে...
+        </div>
+       </div>
+       <div class="relative rounded-[28px] overflow-hidden">
+        <canvas id="artCanvas" width="960" height="640" aria-label="Generated dotted watercolor artwork"></canvas>
+        <div id="emptyState" class="absolute inset-0 flex items-center justify-center p-8 text-center">
+         <div class="max-w-md">
+          <div class="mx-auto w-24 h-24 rounded-[32px] flex items-center justify-center mb-5" id="emptyIcon"><i data-lucide="paintbrush" class="w-11 h-11"></i>
+          </div>
+          <p class="title-font text-3xl font-extrabold">আপনার ছবির জন্য অপেক্ষা করছি</p>
+          <p class="mt-3 opacity-75">ছবি দিলে সেটি ছোট ছোট জলরঙের ডট দিয়ে তৈরি হবে, যাতে আসল ছবিটা বোঝা যায়।</p>
+         </div>
+        </div>
+       </div>
+       <footer class="pt-5">
+        <p id="footerText" class="text-sm opacity-75">Tip: try portraits, flowers, pets, or landscapes.</p>
+       </footer>
+      </section>
+     </main>
     </div>
-  `).join('');
-}
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      background_color: "#f6ead7",
+      surface_color: "#fffaf0",
+      text_color: "#33251b",
+      primary_action_color: "#c85b46",
+      secondary_action_color: "#317e8e",
+      font_family: "Anek Bangla",
+      font_size: 17,
+      app_title: "Watercolor Dot Art Studio",
+      app_subtitle: "Upload a photo and turn it into soft dotted watercolor art.",
+      upload_title: "Drop your picture here",
+      upload_hint: "PNG, JPG, or WEBP",
+      button_text: "Download artwork",
+      footer_text: "Tip: try portraits, flowers, pets, or landscapes."
+    };
 
-function viewMetadata(id) {
-  const nft = nfts.find(n => n.id == id);
-  if(!nft) return;
-  alert(`Name: ${nft.name}\nDescription: ${nft.description}\nTraits: ${nft.attributes.map(a => `${a.trait_type}: ${a.value}`).join('\n')}`);
-}
+    const state = {
+      image: null,
+      effect: "pointillism",
+      density: 70,
+      dotSize: 8,
+      isProcessing: false,
+      lastFileName: "watercolor-dot-art"
+    };
 
-function downloadJSON(id) {
-  const nft = nfts.find(n => n.id == id);
-  const metadata = { name: nft.name, description: nft.description, image: "ipfs://placeholder", attributes: nft.attributes };
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(metadata, null, 2)], { type: 'application/json' }));
-  a.download = `${nft.name.replace(/[^a-z0-9]/gi, '_')}.json`;
-  a.click();
-  showToast('JSON downloaded');
-}
+    const app = document.getElementById("app");
+    const appTitle = document.getElementById("appTitle");
+    const appSubtitle = document.getElementById("appSubtitle");
+    const uploadHeading = document.getElementById("uploadHeading");
+    const uploadHint = document.getElementById("uploadHint");
+    const buttonText = document.getElementById("buttonText");
+    const footerText = document.getElementById("footerText");
+    const badge = document.getElementById("badge");
+    const badgeDot = document.getElementById("badgeDot");
+    const chooseLabel = document.getElementById("chooseLabel");
+    const uploadIconBox = document.getElementById("uploadIconBox");
+    const emptyIcon = document.getElementById("emptyIcon");
+    const canvas = document.getElementById("artCanvas");
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    const emptyState = document.getElementById("emptyState");
+    const imageInput = document.getElementById("imageInput");
+    const uploadZone = document.getElementById("uploadZone");
+    const effectsList = document.getElementById("effectsList");
+    const dotDensity = document.getElementById("dotDensity");
+    const dotSize = document.getElementById("dotSize");
+    const densityValue = document.getElementById("densityValue");
+    const sizeValue = document.getElementById("sizeValue");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const statusMessage = document.getElementById("statusMessage");
+    const processingPill = document.getElementById("processingPill");
 
-function downloadImage(id) {
-  const nft = nfts.find(n => n.id == id);
-  const a = document.createElement('a');
-  a.href = nft.image;
-  a.download = `${nft.name.replace(/[^a-z0-9]/gi, '_')}.png`;
-  a.click();
-  showToast('Image downloaded');
-}
-
-function deleteNFT(id) {
-  if(confirm('Delete this NFT?')) {
-    nfts = nfts.filter(n => n.id != id);
-    saveToStorage();
-    renderCollection();
-    showToast('NFT deleted');
-  }
-}
-
-function setMode(mode) {
-  currentMode = mode;
-  document.getElementById('mode-url').classList.toggle('active', mode === 'url');
-  document.getElementById('mode-svg').classList.toggle('active', mode === 'svg');
-  document.getElementById('url-mode').style.display = mode === 'url' ? 'block' : 'none';
-  document.getElementById('svg-mode').style.display = mode === 'svg' ? 'block' : 'none';
-}
-
-function switchTab(tab) {
-  document.getElementById('panel-layers').classList.toggle('hidden', tab !== 'layers');
-  document.getElementById('panel-create').classList.toggle('hidden', tab !== 'create');
-  document.getElementById('panel-collection').classList.toggle('hidden', tab !== 'collection');
-  document.getElementById('tab-layers').classList.toggle('active', tab === 'layers');
-  document.getElementById('tab-create').classList.toggle('active', tab === 'create');
-  document.getElementById('tab-collection').classList.toggle('active', tab === 'collection');
-  if(tab === 'create') {
-    if(!previewCanvas) {
-      previewCanvas = document.getElementById('live-preview-canvas');
-      previewCtx = previewCanvas.getContext('2d');
+    function getConfigValue(config, key) {
+      return config[key] || defaultConfig[key];
     }
-    updateLivePreview();
-  }
-  if(tab === 'collection') renderCollection();
-}
 
-function init() {
-  loadFromStorage();
-  previewCanvas = document.getElementById('live-preview-canvas');
-  if(previewCanvas) previewCtx = previewCanvas.getContext('2d');
-  renderSections();
-  renderCreateSections();
-  renderCollection();
-  setMode('url');
-}
+    async function onConfigChange(config) {
+      const bg = getConfigValue(config, "background_color");
+      const surface = getConfigValue(config, "surface_color");
+      const text = getConfigValue(config, "text_color");
+      const primary = getConfigValue(config, "primary_action_color");
+      const secondary = getConfigValue(config, "secondary_action_color");
+      const fontFamily = getConfigValue(config, "font_family");
+      const baseSize = Number(config.font_size || defaultConfig.font_size);
 
-window.App = {
-  switchTab, setMode, addLayerFromUrl, addLayerFromSvg, deleteLayer,
-  toggleSectionLayers, toggleSectionCreate, selectLayer, createNFT,
-  viewMetadata, downloadJSON, downloadImage, deleteNFT
-};
+      app.style.background = `
+        radial-gradient(circle at 12% 18%, ${hexToRgba(primary, 0.24)}, transparent 26%),
+        radial-gradient(circle at 84% 12%, ${hexToRgba(secondary, 0.22)}, transparent 28%),
+        radial-gradient(circle at 50% 88%, rgba(168, 110, 83, 0.20), transparent 30%),
+        ${bg}
+      `;
+      app.style.color = text;
+      app.style.fontFamily = `${fontFamily}, Georgia, serif`;
 
-init();
-</script>
-</body>
+      appTitle.textContent = getConfigValue(config, "app_title");
+      appSubtitle.textContent = getConfigValue(config, "app_subtitle");
+      uploadHeading.textContent = getConfigValue(config, "upload_title");
+      uploadHint.textContent = getConfigValue(config, "upload_hint");
+      buttonText.textContent = getConfigValue(config, "button_text");
+      footerText.textContent = getConfigValue(config, "footer_text");
+
+      appTitle.style.fontFamily = `${fontFamily}, Georgia, serif`;
+      appSubtitle.style.fontFamily = `${fontFamily}, Georgia, serif`;
+      uploadHeading.style.fontFamily = `${fontFamily}, Georgia, serif`;
+      footerText.style.fontFamily = `${fontFamily}, Georgia, serif`;
+
+      appTitle.style.fontSize = `${baseSize * 2.75}px`;
+      appSubtitle.style.fontSize = `${baseSize * 1.08}px`;
+      uploadHeading.style.fontSize = `${baseSize * 1.34}px`;
+      uploadHint.style.fontSize = `${baseSize * 0.9}px`;
+      document.querySelectorAll("button, label, p, span").forEach(el => {
+        if (!el.closest("#appTitle")) el.style.fontSize = "";
+      });
+      statusMessage.style.fontSize = `${baseSize * 0.84}px`;
+      footerText.style.fontSize = `${baseSize * 0.84}px`;
+
+      document.querySelector(".hero-card").style.background = hexToRgba(surface, 0.78);
+      document.querySelector(".preview-frame").style.background = `linear-gradient(145deg, ${hexToRgba(surface, 0.88)}, ${hexToRgba(bg, 0.5)})`;
+      badge.style.backgroundColor = hexToRgba(surface, 0.7);
+      badge.style.color = text;
+      badgeDot.style.backgroundColor = primary;
+      chooseLabel.style.backgroundColor = primary;
+      chooseLabel.style.color = surface;
+      downloadBtn.style.backgroundColor = primary;
+      downloadBtn.style.color = surface;
+      uploadIconBox.style.backgroundColor = hexToRgba(secondary, 0.15);
+      uploadIconBox.style.color = secondary;
+      emptyIcon.style.backgroundColor = hexToRgba(primary, 0.12);
+      emptyIcon.style.color = primary;
+      processingPill.style.backgroundColor = primary;
+      processingPill.style.color = surface;
+
+      document.querySelectorAll(".effect-button").forEach(btn => {
+        if (btn.classList.contains("active")) {
+          btn.style.backgroundColor = primary;
+          btn.style.borderColor = primary;
+          btn.style.color = surface;
+        } else {
+          btn.style.backgroundColor = hexToRgba(surface, 0.72);
+          btn.style.borderColor = hexToRgba(text, 0.18);
+          btn.style.color = text;
+        }
+      });
+    }
+
+    function hexToRgba(hex, alpha) {
+      const clean = hex.replace("#", "");
+      const bigint = parseInt(clean.length === 3 ? clean.split("").map(c => c + c).join("") : clean, 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    function initElementSdk() {
+      if (!window.elementSdk) return;
+
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => window.elementSdk.setConfig({ background_color: value })
+            },
+            {
+              get: () => config.surface_color || defaultConfig.surface_color,
+              set: (value) => window.elementSdk.setConfig({ surface_color: value })
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => window.elementSdk.setConfig({ text_color: value })
+            },
+            {
+              get: () => config.primary_action_color || defaultConfig.primary_action_color,
+              set: (value) => window.elementSdk.setConfig({ primary_action_color: value })
+            },
+            {
+              get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+              set: (value) => window.elementSdk.setConfig({ secondary_action_color: value })
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (value) => window.elementSdk.setConfig({ font_family: value })
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (value) => window.elementSdk.setConfig({ font_size: value })
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ["app_title", config.app_title || defaultConfig.app_title],
+          ["app_subtitle", config.app_subtitle || defaultConfig.app_subtitle],
+          ["upload_title", config.upload_title || defaultConfig.upload_title],
+          ["upload_hint", config.upload_hint || defaultConfig.upload_hint],
+          ["button_text", config.button_text || defaultConfig.button_text],
+          ["footer_text", config.footer_text || defaultConfig.footer_text]
+        ])
+      });
+    }
+
+    initElementSdk();
+    onConfigChange(window.elementSdk ? window.elementSdk.config : defaultConfig);
+
+    function setProcessing(isProcessing) {
+      state.isProcessing = isProcessing;
+      processingPill.classList.toggle("hidden", !isProcessing);
+      processingPill.classList.toggle("inline-flex", isProcessing);
+      downloadBtn.disabled = isProcessing || !state.image;
+      imageInput.disabled = isProcessing;
+    }
+
+    function fitImageToCanvas(img) {
+      const maxW = 1000;
+      const maxH = 700;
+      const ratio = Math.min(maxW / img.width, maxH / img.height, 1);
+      canvas.width = Math.max(320, Math.round(img.width * ratio));
+      canvas.height = Math.max(240, Math.round(img.height * ratio));
+    }
+
+    function loadFile(file) {
+      if (!file || !file.type.startsWith("image/")) {
+        statusMessage.textContent = "দয়া করে একটি ছবি ফাইল দিন।";
+        return;
+      }
+
+      const reader = new FileReader();
+      statusMessage.textContent = "ছবি পড়া হচ্ছে...";
+      setProcessing(true);
+
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          state.image = img;
+          state.lastFileName = file.name.replace(/\.[^/.]+$/, "") || "watercolor-dot-art";
+          emptyState.style.display = "none";
+          fitImageToCanvas(img);
+          renderArtwork();
+        };
+        img.onerror = () => {
+          statusMessage.textContent = "এই ছবিটি লোড করা যায়নি। অন্য ছবি চেষ্টা করুন।";
+          setProcessing(false);
+        };
+        img.src = reader.result;
+      };
+
+      reader.onerror = () => {
+        statusMessage.textContent = "ছবি পড়তে সমস্যা হয়েছে। আবার চেষ্টা করুন।";
+        setProcessing(false);
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    function renderArtwork() {
+      if (!state.image) return;
+      setProcessing(true);
+      statusMessage.textContent = "ডট ডট জলরঙের আর্ট তৈরি হচ্ছে...";
+
+      setTimeout(() => {
+        const img = state.image;
+        const temp = document.createElement("canvas");
+        temp.width = canvas.width;
+        temp.height = canvas.height;
+        const tctx = temp.getContext("2d", { willReadFrequently: true });
+
+        tctx.fillStyle = "#fffaf0";
+        tctx.fillRect(0, 0, temp.width, temp.height);
+
+        const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+        const drawW = img.width * scale;
+        const drawH = img.height * scale;
+        const dx = (canvas.width - drawW) / 2;
+        const dy = (canvas.height - drawH) / 2;
+        tctx.drawImage(img, dx, dy, drawW, drawH);
+
+        const imageData = tctx.getImageData(0, 0, temp.width, temp.height);
+        const data = imageData.data;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawPaperBase();
+
+        const densityFactor = state.density / 100;
+        const base = Number(state.dotSize);
+        const effect = state.effect;
+        const settings = getEffectSettings(effect, base, densityFactor);
+        const step = Math.max(3, Math.round(settings.step));
+
+        ctx.globalCompositeOperation = "multiply";
+
+        for (let y = step / 2; y < canvas.height; y += step) {
+          for (let x = step / 2; x < canvas.width; x += step) {
+            if (Math.random() > settings.keepChance) continue;
+
+            const jitterX = (Math.random() - 0.5) * settings.jitter;
+            const jitterY = (Math.random() - 0.5) * settings.jitter;
+            const px = Math.max(0, Math.min(canvas.width - 1, Math.round(x + jitterX)));
+            const py = Math.max(0, Math.min(canvas.height - 1, Math.round(y + jitterY)));
+            const i = (py * canvas.width + px) * 4;
+
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            const brightness = (r + g + b) / 3;
+            const darkness = 1 - brightness / 255;
+
+            if (brightness > 246 && Math.random() > 0.1) continue;
+
+            const radius = Math.max(
+              0.9,
+              settings.radiusBase * (0.55 + darkness * settings.darkBoost) * (0.72 + Math.random() * 0.7)
+            );
+
+            const colorShift = settings.colorShift;
+            const rr = clamp(r + randomBetween(-colorShift, colorShift));
+            const gg = clamp(g + randomBetween(-colorShift, colorShift));
+            const bb = clamp(b + randomBetween(-colorShift, colorShift));
+            const alpha = Math.min(settings.alphaMax, settings.alphaMin + darkness * settings.alphaBoost);
+
+            drawWaterDot(px, py, radius, rr, gg, bb, alpha, settings);
+          }
+        }
+
+        if (settings.speckles) drawSpeckles(data, settings);
+        addSoftTexture();
+
+        ctx.globalCompositeOperation = "source-over";
+        statusMessage.textContent = "তৈরি! চাইলে ইফেক্ট, ডট সাইজ বা ঘনত্ব বদলাতে পারেন।";
+        setProcessing(false);
+      }, 80);
+    }
+
+    function drawPaperBase() {
+      const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      grad.addColorStop(0, "#fffaf0");
+      grad.addColorStop(0.48, "#f8ecd5");
+      grad.addColorStop(1, "#fff7e8");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.globalAlpha = 0.16;
+      for (let i = 0; i < 1200; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const shade = Math.random() > 0.5 ? 255 : 110;
+        ctx.fillStyle = `rgba(${shade}, ${shade * 0.9}, ${shade * 0.75}, 0.16)`;
+        ctx.fillRect(x, y, Math.random() * 1.7, Math.random() * 1.7);
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function getEffectSettings(effect, base, density) {
+      const common = {
+        step: Math.max(3, base * (1.35 - density * 0.55)),
+        keepChance: 0.5 + density * 0.48,
+        jitter: base * 0.9,
+        radiusBase: base * 0.52,
+        darkBoost: 1.35,
+        colorShift: 18,
+        alphaMin: 0.35,
+        alphaBoost: 0.42,
+        alphaMax: 0.86,
+        bloom: 1.3,
+        oval: false,
+        speckles: false,
+        rough: 2
+      };
+
+      const variants = {
+        pointillism: { step: base * (1.25 - density * 0.45), radiusBase: base * 0.58, colorShift: 20, bloom: 1.55, rough: 3 },
+        stippling: { step: base * (0.88 - density * 0.28), radiusBase: base * 0.26, colorShift: 10, alphaMin: 0.32, alphaBoost: 0.34, bloom: 0.9, rough: 1 },
+        dotted: { step: base * (1.7 - density * 0.62), radiusBase: base * 0.72, colorShift: 14, alphaMin: 0.5, alphaBoost: 0.36, bloom: 1.15, rough: 1 },
+        textured: { step: base * (1.18 - density * 0.38), radiusBase: base * 0.55, colorShift: 28, bloom: 1.7, oval: true, rough: 4 },
+        mist: { step: base * (1.02 - density * 0.34), radiusBase: base * 0.76, colorShift: 24, alphaMin: 0.18, alphaBoost: 0.34, alphaMax: 0.62, bloom: 2.2, rough: 5 },
+        mosaic: { step: base * (1.58 - density * 0.48), radiusBase: base * 0.82, colorShift: 34, alphaMin: 0.42, alphaBoost: 0.42, bloom: 1.2, rough: 2 },
+        inkwash: { step: base * (1.1 - density * 0.32), radiusBase: base * 0.42, colorShift: 16, alphaMin: 0.26, alphaBoost: 0.55, alphaMax: 0.78, bloom: 1.4, speckles: true, rough: 3 }
+      };
+
+      return { ...common, ...(variants[effect] || variants.pointillism) };
+    }
+
+    function drawWaterDot(x, y, radius, r, g, b, alpha, settings) {
+      const bloomRadius = radius * settings.bloom;
+      const grad = ctx.createRadialGradient(x, y, radius * 0.08, x, y, bloomRadius);
+      grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha})`);
+      grad.addColorStop(0.58, `rgba(${r}, ${g}, ${b}, ${alpha * 0.46})`);
+      grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+
+      if (settings.oval) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(Math.random() * Math.PI);
+        ctx.scale(1 + Math.random() * 0.75, 0.55 + Math.random() * 0.55);
+        irregularCircle(0, 0, bloomRadius, settings.rough);
+        ctx.restore();
+      } else {
+        irregularCircle(x, y, bloomRadius, settings.rough);
+      }
+
+      ctx.fill();
+
+      ctx.fillStyle = `rgba(${clamp(r + 20)}, ${clamp(g + 20)}, ${clamp(b + 20)}, ${alpha * 0.22})`;
+      ctx.beginPath();
+      ctx.arc(x - radius * 0.18, y - radius * 0.15, radius * 0.35, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function irregularCircle(x, y, radius, roughness) {
+      const points = 12 + roughness * 3;
+      for (let p = 0; p <= points; p++) {
+        const angle = (p / points) * Math.PI * 2;
+        const wobble = 1 + (Math.random() - 0.5) * 0.18 * roughness;
+        const px = x + Math.cos(angle) * radius * wobble;
+        const py = y + Math.sin(angle) * radius * wobble;
+        if (p === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+    }
+
+    function drawSpeckles(data, settings) {
+      ctx.globalCompositeOperation = "multiply";
+      for (let i = 0; i < 1800; i++) {
+        const x = Math.floor(Math.random() * canvas.width);
+        const y = Math.floor(Math.random() * canvas.height);
+        const idx = (y * canvas.width + x) * 4;
+        const r = data[idx];
+        const g = data[idx + 1];
+        const b = data[idx + 2];
+        const brightness = (r + g + b) / 3;
+        if (brightness > 230 && Math.random() > 0.12) continue;
+        const size = Math.random() * settings.radiusBase * 0.38 + 0.4;
+        ctx.fillStyle = `rgba(${r * 0.75}, ${g * 0.75}, ${b * 0.75}, ${0.08 + Math.random() * 0.22})`;
+        ctx.beginPath();
+        ctx.arc(x, y, size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function addSoftTexture() {
+      ctx.globalCompositeOperation = "overlay";
+      ctx.globalAlpha = 0.12;
+      for (let i = 0; i < 320; i++) {
+        ctx.strokeStyle = Math.random() > 0.5 ? "#ffffff" : "#6a4b35";
+        ctx.lineWidth = Math.random() * 1.4 + 0.2;
+        ctx.beginPath();
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + randomBetween(-18, 18), y + randomBetween(-6, 6));
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = "source-over";
+    }
+
+    function randomBetween(min, max) {
+      return min + Math.random() * (max - min);
+    }
+
+    function clamp(value) {
+      return Math.max(0, Math.min(255, Math.round(value)));
+    }
+
+    imageInput.addEventListener("change", (event) => {
+      const file = event.target.files && event.target.files[0];
+      loadFile(file);
+    });
+
+    uploadZone.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      uploadZone.classList.add("dragging");
+    });
+
+    uploadZone.addEventListener("dragleave", () => {
+      uploadZone.classList.remove("dragging");
+    });
+
+    uploadZone.addEventListener("drop", (event) => {
+      event.preventDefault();
+      uploadZone.classList.remove("dragging");
+      const file = event.dataTransfer.files && event.dataTransfer.files[0];
+      loadFile(file);
+    });
+
+    chooseLabel.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        imageInput.click();
+      }
+    });
+
+    effectsList.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-effect]");
+      if (!button) return;
+
+      state.effect = button.dataset.effect;
+      document.querySelectorAll(".effect-button").forEach(btn => btn.classList.remove("active"));
+      button.classList.add("active");
+      onConfigChange(window.elementSdk ? window.elementSdk.config : defaultConfig);
+
+      if (state.image) renderArtwork();
+    });
+
+    dotDensity.addEventListener("input", () => {
+      state.density = Number(dotDensity.value);
+      densityValue.textContent = `${state.density}%`;
+      if (state.image) {
+        clearTimeout(dotDensity.renderTimer);
+        dotDensity.renderTimer = setTimeout(renderArtwork, 180);
+      }
+    });
+
+    dotSize.addEventListener("input", () => {
+      state.dotSize = Number(dotSize.value);
+      sizeValue.textContent = state.dotSize;
+      if (state.image) {
+        clearTimeout(dotSize.renderTimer);
+        dotSize.renderTimer = setTimeout(renderArtwork, 180);
+      }
+    });
+
+    downloadBtn.addEventListener("click", () => {
+      if (!state.image || state.isProcessing) return;
+
+      const link = document.createElement("a");
+      link.download = `${state.lastFileName}-${state.effect}-watercolor-dots.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+      statusMessage.textContent = "ডাউনলোড শুরু হয়েছে।";
+    });
+
+    function drawInitialCanvas() {
+      drawPaperBase();
+    }
+
+    drawInitialCanvas();
+
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a022e2dd490dff99',t:'MTc3OTg2MjUzNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
