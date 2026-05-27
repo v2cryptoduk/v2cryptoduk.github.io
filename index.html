@@ -209,59 +209,75 @@
      <header class="relative px-6 sm:px-9 pt-8 sm:pt-10 pb-6">
       <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
        <div>
-        <div class="inline-flex items-center gap-2 rounded-full px-4 py-2 mb-5 text-sm font-semibold" id="badge"><span class="w-2.5 h-2.5 rounded-full" id="badgeDot"></span> Pointillism • Stippling • Dotted watercolor
+        <div class="inline-flex items-center gap-2 rounded-full px-4 py-2 mb-5 text-sm font-semibold" id="badge">
+         <span class="w-2.5 h-2.5 rounded-full" id="badgeDot"></span> ৮টি ডট স্টাইল • রেইনবো মোড • সেপিয়া &amp; Risograph
         </div>
         <h1 id="appTitle" class="title-font leading-tight tracking-tight max-w-3xl">Watercolor Dot Art Studio</h1>
         <p id="appSubtitle" class="mt-4 max-w-2xl leading-relaxed">Upload a photo and turn it into soft dotted watercolor art.</p>
        </div>
        <div class="rounded-3xl px-5 py-4 border bg-white/40 max-w-sm">
-        <p class="font-bold flex items-center gap-2"><i data-lucide="sparkles" class="w-5 h-5"></i> ৭টি ওয়াটারকালার ডট ইফেক্ট</p>
-        <p class="mt-1 opacity-80 text-sm">Original ছবির রঙ ধরে রেখে ছোট ছোট ডট দিয়ে আর্ট তৈরি হবে।</p>
+        <p class="font-bold flex items-center gap-2"><i data-lucide="sparkles" class="w-5 h-5"></i> প্রো ফিচারস</p>
+        <p class="mt-1 opacity-80 text-sm">গন ডট, বর্গ, ডিম, রত্ন - সব স্টাইলে HD আর্ট তৈরি করুন।</p>
        </div>
       </div>
      </header>
-     <main class="relative grid grid-cols-1 lg:grid-cols-[390px_1fr] gap-6 px-6 sm:px-9 pb-8 sm:pb-10">
-      <section aria-labelledby="uploadHeading" class="space-y-5">
+     <main class="relative grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-6 px-6 sm:px-9 pb-8 sm:pb-10">
+      <section aria-labelledby="uploadHeading" class="space-y-5 max-h-[90vh] overflow-y-auto">
        <div class="upload-zone rounded-[28px] p-6 text-center" id="uploadZone">
-        <div class="mx-auto w-16 h-16 rounded-2xl flex items-center justify-center mb-4" id="uploadIconBox"><i data-lucide="image-plus" class="w-8 h-8"></i>
+        <div class="mx-auto w-16 h-16 rounded-2xl flex items-center justify-center mb-4" id="uploadIconBox">
+         <i data-lucide="image-plus" class="w-8 h-8"></i>
         </div>
         <h2 id="uploadHeading" class="font-extrabold">Drop your picture here</h2>
-        <p id="uploadHint" class="mt-1 opacity-75">PNG, JPG, or WEBP</p><label for="imageInput" class="focusable inline-flex items-center justify-center gap-2 mt-5 rounded-full px-5 py-3 font-bold cursor-pointer" id="chooseLabel" tabindex="0"> <i data-lucide="upload" class="w-5 h-5"></i> ছবি আপলোড করুন </label> <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp" class="sr-only">
+        <p id="uploadHint" class="mt-1 opacity-75">PNG, JPG, or WEBP</p><label for="imageInput" class="focusable inline-flex items-center justify-center gap-2 mt-5 rounded-full px-5 py-3 font-bold cursor-pointer" id="chooseLabel" tabindex="0"><i data-lucide="upload" class="w-5 h-5"></i> ছবি আপলোড করুন</label> <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp" class="sr-only">
        </div>
        <div class="rounded-[28px] p-5 border bg-white/45">
-        <h2 class="font-extrabold mb-4 flex items-center gap-2"><i data-lucide="wand-2" class="w-5 h-5"></i> ইফেক্ট বাছাই করুন</h2>
-        <div id="effectsList" class="grid grid-cols-1 gap-3" role="group" aria-label="Art effects"><button type="button" class="effect-button active focusable rounded-2xl p-3 text-left font-bold" data-effect="pointillism"> Pointillism Bloom <span class="block text-sm font-medium opacity-75">গোল, ঘন, রঙিন ডট</span> </button> <button type="button" class="effect-button focusable rounded-2xl p-3 text-left font-bold" data-effect="stippling"> Fine Stippling <span class="block text-sm font-medium opacity-75">খুব ছোট সূক্ষ্ম ডট</span> </button> <button type="button" class="effect-button focusable rounded-2xl p-3 text-left font-bold" data-effect="dotted"> Dotted Poster <span class="block text-sm font-medium opacity-75">স্পষ্ট বড় ডট</span> </button> <button type="button" class="effect-button focusable rounded-2xl p-3 text-left font-bold" data-effect="textured"> Textured Impressionism <span class="block text-sm font-medium opacity-75">ব্রাশি টেক্সচার ডট</span> </button> <button type="button" class="effect-button focusable rounded-2xl p-3 text-left font-bold" data-effect="mist"> Watercolor Mist <span class="block text-sm font-medium opacity-75">নরম ঝাপসা জলরঙ</span> </button> <button type="button" class="effect-button focusable rounded-2xl p-3 text-left font-bold" data-effect="mosaic"> Color Pebble Mosaic <span class="block text-sm font-medium opacity-75">অসমান রঙিন পেবল ডট</span> </button> <button type="button" class="effect-button focusable rounded-2xl p-3 text-left font-bold" data-effect="inkwash"> Ink Wash Speckles <span class="block text-sm font-medium opacity-75">কালি-জলরঙের স্পেকল</span> </button>
+        <h2 class="font-extrabold mb-4 text-sm flex items-center gap-2"><i data-lucide="wand-2" class="w-5 h-5"></i>আর্ট ইফেক্ট (৮টি)</h2>
+        <div id="effectsList" class="grid grid-cols-1 gap-2" role="group" aria-label="Art effects"><button type="button" class="effect-button active focusable rounded-xl p-2 text-xs font-bold" data-effect="pointillism">Pointillism</button> <button type="button" class="effect-button focusable rounded-xl p-2 text-xs font-bold" data-effect="stippling">Fine Stippling</button> <button type="button" class="effect-button focusable rounded-xl p-2 text-xs font-bold" data-effect="dotted">Dotted Poster</button> <button type="button" class="effect-button focusable rounded-xl p-2 text-xs font-bold" data-effect="textured">Textured</button> <button type="button" class="effect-button focusable rounded-xl p-2 text-xs font-bold" data-effect="mist">Watercolor Mist</button> <button type="button" class="effect-button focusable rounded-xl p-2 text-xs font-bold" data-effect="mosaic">Mosaic</button> <button type="button" class="effect-button focusable rounded-xl p-2 text-xs font-bold" data-effect="inkwash">Ink Wash</button> <button type="button" class="effect-button focusable rounded-xl p-2 text-xs font-bold" data-effect="risograph">Risograph</button>
         </div>
        </div>
-       <div class="rounded-[28px] p-5 border bg-white/45 space-y-5">
+       <div class="rounded-[28px] p-5 border bg-white/45">
+        <h3 class="font-extrabold mb-3 text-sm flex items-center gap-2"><i data-lucide="droplet" class="w-4 h-4"></i>ডট স্টাইল</h3>
+        <div id="dotStyleList" class="grid grid-cols-2 gap-2" role="group" aria-label="Dot shapes"><button type="button" class="effect-button active focusable rounded-lg p-2 text-xs font-bold" data-dot-style="circle">● গোল</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-dot-style="square">■ বর্গ</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-dot-style="oval">◐ ডিম</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-dot-style="diamond">◆ রত্ন</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-dot-style="hex">⬡ ষড়ভুজ</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-dot-style="triangle">▲ ত্রিভুজ</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-dot-style="star">★ তারা</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-dot-style="cross">✚ ক্রস</button>
+        </div>
+       </div>
+       <div class="rounded-[28px] p-5 border bg-white/45">
+        <h3 class="font-extrabold mb-3 text-sm flex items-center gap-2"><i data-lucide="palette" class="w-4 h-4"></i>কালার মোড</h3>
+        <div id="colorStyleList" class="grid grid-cols-2 gap-2" role="group" aria-label="Color styles"><button type="button" class="effect-button active focusable rounded-lg p-2 text-xs font-bold" data-color-style="original">Original</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-color-style="pop">🌈 Pop</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-color-style="sepia">🟫 Sepia</button> <button type="button" class="effect-button focusable rounded-lg p-2 text-xs font-bold" data-color-style="risograph">🎨 Riso</button>
+        </div>
+       </div>
+       <div class="rounded-[28px] p-5 border bg-white/45 space-y-4">
         <div>
-         <div class="flex justify-between gap-4 mb-2"><label for="dotDensity" class="font-bold">ডটের ঘনত্ব</label> <span id="densityValue" class="font-bold">70%</span>
-         </div><input id="dotDensity" class="range-input w-full" type="range" min="35" max="100" value="70">
+         <div class="flex justify-between gap-4 mb-2">
+          <label for="dotDensity" class="font-bold text-xs">ডটের ঘনত্ব</label><span id="densityValue" class="font-bold text-xs">70%</span>
+         </div><input id="dotDensity" class="range-input w-full" type="range" min="40" max="100" value="70">
         </div>
         <div>
-         <div class="flex justify-between gap-4 mb-2"><label for="dotSize" class="font-bold">ডটের সাইজ</label> <span id="sizeValue" class="font-bold">8</span>
-         </div><input id="dotSize" class="range-input w-full" type="range" min="3" max="18" value="8">
-        </div><button type="button" id="downloadBtn" class="soft-button focusable w-full rounded-full px-5 py-3 font-extrabold inline-flex items-center justify-center gap-2" disabled> <i data-lucide="download" class="w-5 h-5"></i> <span id="buttonText">Download artwork</span> </button>
-        <p id="statusMessage" class="text-sm opacity-80 min-h-[24px]" aria-live="polite">প্রথমে একটি ছবি আপলোড করুন।</p>
+         <div class="flex justify-between gap-4 mb-2">
+          <label for="dotSize" class="font-bold text-xs">ডটের সাইজ</label><span id="sizeValue" class="font-bold text-xs">7</span>
+         </div><input id="dotSize" class="range-input w-full" type="range" min="2" max="16" value="7">
+        </div><button type="button" id="downloadBtn" class="soft-button focusable w-full rounded-full px-5 py-3 font-extrabold inline-flex items-center justify-center gap-2 text-sm" disabled><i data-lucide="download" class="w-4 h-4"></i><span id="buttonText">Download artwork</span></button>
+        <p id="statusMessage" class="text-xs opacity-80 min-h-[20px]" aria-live="polite">প্রথমে একটি ছবি আপলোড করুন।</p>
        </div>
       </section>
       <section aria-labelledby="previewHeading" class="preview-frame rounded-[32px] p-4 sm:p-5">
        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
         <div>
-         <h2 id="previewHeading" class="font-extrabold flex items-center gap-2"><i data-lucide="palette" class="w-5 h-5"></i> Live watercolor dot preview</h2>
-         <p class="text-sm opacity-75">ছবি আপলোড করলে এখানে ডট ডট আর্ট দেখা যাবে।</p>
+         <h2 id="previewHeading" class="font-extrabold flex items-center gap-2"><i data-lucide="palette" class="w-5 h-5"></i>Live Preview HD</h2>
+         <p class="text-sm opacity-75">আপনার ডট আর্ট এখানে প্রদর্শিত হবে।</p>
         </div>
-        <div id="processingPill" class="hidden items-center gap-2 rounded-full px-4 py-2 text-sm font-bold"><span class="spinner"></span> তৈরি হচ্ছে...
+        <div id="processingPill" class="hidden items-center gap-2 rounded-full px-4 py-2 text-sm font-bold">
+         <span class="spinner"></span>তৈরি হচ্ছে...
         </div>
        </div>
-       <div class="relative rounded-[28px] overflow-hidden">
-        <canvas id="artCanvas" width="960" height="640" aria-label="Generated dotted watercolor artwork"></canvas>
+       <div class="relative rounded-[28px] overflow-hidden bg-white">
+        <canvas id="artCanvas" width="1200" height="850" aria-label="Generated dotted watercolor artwork"></canvas>
         <div id="emptyState" class="absolute inset-0 flex items-center justify-center p-8 text-center">
          <div class="max-w-md">
-          <div class="mx-auto w-24 h-24 rounded-[32px] flex items-center justify-center mb-5" id="emptyIcon"><i data-lucide="paintbrush" class="w-11 h-11"></i>
+          <div class="mx-auto w-24 h-24 rounded-[32px] flex items-center justify-center mb-5" id="emptyIcon">
+           <i data-lucide="paintbrush" class="w-11 h-11"></i>
           </div>
           <p class="title-font text-3xl font-extrabold">আপনার ছবির জন্য অপেক্ষা করছি</p>
-          <p class="mt-3 opacity-75">ছবি দিলে সেটি ছোট ছোট জলরঙের ডট দিয়ে তৈরি হবে, যাতে আসল ছবিটা বোঝা যায়।</p>
+          <p class="mt-3 opacity-75">ছবি দিলে সেটি ছোট ছোট জলরঙের ডট দিয়ে তৈরি হবে।</p>
          </div>
         </div>
        </div>
@@ -293,37 +309,44 @@
     const state = {
       image: null,
       effect: "pointillism",
+      dotStyle: "circle",
+      colorStyle: "original",
       density: 70,
-      dotSize: 8,
+      dotSize: 7,
       isProcessing: false,
       lastFileName: "watercolor-dot-art"
     };
 
-    const app = document.getElementById("app");
-    const appTitle = document.getElementById("appTitle");
-    const appSubtitle = document.getElementById("appSubtitle");
-    const uploadHeading = document.getElementById("uploadHeading");
-    const uploadHint = document.getElementById("uploadHint");
-    const buttonText = document.getElementById("buttonText");
-    const footerText = document.getElementById("footerText");
-    const badge = document.getElementById("badge");
-    const badgeDot = document.getElementById("badgeDot");
-    const chooseLabel = document.getElementById("chooseLabel");
-    const uploadIconBox = document.getElementById("uploadIconBox");
-    const emptyIcon = document.getElementById("emptyIcon");
-    const canvas = document.getElementById("artCanvas");
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    const emptyState = document.getElementById("emptyState");
-    const imageInput = document.getElementById("imageInput");
-    const uploadZone = document.getElementById("uploadZone");
-    const effectsList = document.getElementById("effectsList");
-    const dotDensity = document.getElementById("dotDensity");
-    const dotSize = document.getElementById("dotSize");
-    const densityValue = document.getElementById("densityValue");
-    const sizeValue = document.getElementById("sizeValue");
-    const downloadBtn = document.getElementById("downloadBtn");
-    const statusMessage = document.getElementById("statusMessage");
-    const processingPill = document.getElementById("processingPill");
+    const elements = {
+      app: document.getElementById("app"),
+      appTitle: document.getElementById("appTitle"),
+      appSubtitle: document.getElementById("appSubtitle"),
+      uploadHeading: document.getElementById("uploadHeading"),
+      uploadHint: document.getElementById("uploadHint"),
+      buttonText: document.getElementById("buttonText"),
+      footerText: document.getElementById("footerText"),
+      badge: document.getElementById("badge"),
+      badgeDot: document.getElementById("badgeDot"),
+      chooseLabel: document.getElementById("chooseLabel"),
+      uploadIconBox: document.getElementById("uploadIconBox"),
+      emptyIcon: document.getElementById("emptyIcon"),
+      canvas: document.getElementById("artCanvas"),
+      emptyState: document.getElementById("emptyState"),
+      imageInput: document.getElementById("imageInput"),
+      uploadZone: document.getElementById("uploadZone"),
+      effectsList: document.getElementById("effectsList"),
+      dotStyleList: document.getElementById("dotStyleList"),
+      colorStyleList: document.getElementById("colorStyleList"),
+      dotDensity: document.getElementById("dotDensity"),
+      dotSize: document.getElementById("dotSize"),
+      densityValue: document.getElementById("densityValue"),
+      sizeValue: document.getElementById("sizeValue"),
+      downloadBtn: document.getElementById("downloadBtn"),
+      statusMessage: document.getElementById("statusMessage"),
+      processingPill: document.getElementById("processingPill")
+    };
+
+    const ctx = elements.canvas.getContext("2d", { willReadFrequently: true });
 
     function getConfigValue(config, key) {
       return config[key] || defaultConfig[key];
@@ -338,52 +361,48 @@
       const fontFamily = getConfigValue(config, "font_family");
       const baseSize = Number(config.font_size || defaultConfig.font_size);
 
-      app.style.background = `
+      elements.app.style.background = `
         radial-gradient(circle at 12% 18%, ${hexToRgba(primary, 0.24)}, transparent 26%),
         radial-gradient(circle at 84% 12%, ${hexToRgba(secondary, 0.22)}, transparent 28%),
         radial-gradient(circle at 50% 88%, rgba(168, 110, 83, 0.20), transparent 30%),
         ${bg}
       `;
-      app.style.color = text;
-      app.style.fontFamily = `${fontFamily}, Georgia, serif`;
+      elements.app.style.color = text;
+      elements.app.style.fontFamily = `${fontFamily}, Georgia, serif`;
 
-      appTitle.textContent = getConfigValue(config, "app_title");
-      appSubtitle.textContent = getConfigValue(config, "app_subtitle");
-      uploadHeading.textContent = getConfigValue(config, "upload_title");
-      uploadHint.textContent = getConfigValue(config, "upload_hint");
-      buttonText.textContent = getConfigValue(config, "button_text");
-      footerText.textContent = getConfigValue(config, "footer_text");
+      elements.appTitle.textContent = getConfigValue(config, "app_title");
+      elements.appSubtitle.textContent = getConfigValue(config, "app_subtitle");
+      elements.uploadHeading.textContent = getConfigValue(config, "upload_title");
+      elements.uploadHint.textContent = getConfigValue(config, "upload_hint");
+      elements.buttonText.textContent = getConfigValue(config, "button_text");
+      elements.footerText.textContent = getConfigValue(config, "footer_text");
 
-      appTitle.style.fontFamily = `${fontFamily}, Georgia, serif`;
-      appSubtitle.style.fontFamily = `${fontFamily}, Georgia, serif`;
-      uploadHeading.style.fontFamily = `${fontFamily}, Georgia, serif`;
-      footerText.style.fontFamily = `${fontFamily}, Georgia, serif`;
-
-      appTitle.style.fontSize = `${baseSize * 2.75}px`;
-      appSubtitle.style.fontSize = `${baseSize * 1.08}px`;
-      uploadHeading.style.fontSize = `${baseSize * 1.34}px`;
-      uploadHint.style.fontSize = `${baseSize * 0.9}px`;
-      document.querySelectorAll("button, label, p, span").forEach(el => {
-        if (!el.closest("#appTitle")) el.style.fontSize = "";
+      [elements.appTitle, elements.appSubtitle, elements.uploadHeading, elements.footerText].forEach(el => {
+        el.style.fontFamily = `${fontFamily}, Georgia, serif`;
       });
-      statusMessage.style.fontSize = `${baseSize * 0.84}px`;
-      footerText.style.fontSize = `${baseSize * 0.84}px`;
+
+      elements.appTitle.style.fontSize = `${baseSize * 2.75}px`;
+      elements.appSubtitle.style.fontSize = `${baseSize * 1.08}px`;
+      elements.uploadHeading.style.fontSize = `${baseSize * 1.34}px`;
+      elements.uploadHint.style.fontSize = `${baseSize * 0.9}px`;
+      elements.statusMessage.style.fontSize = `${baseSize * 0.84}px`;
+      elements.footerText.style.fontSize = `${baseSize * 0.84}px`;
 
       document.querySelector(".hero-card").style.background = hexToRgba(surface, 0.78);
       document.querySelector(".preview-frame").style.background = `linear-gradient(145deg, ${hexToRgba(surface, 0.88)}, ${hexToRgba(bg, 0.5)})`;
-      badge.style.backgroundColor = hexToRgba(surface, 0.7);
-      badge.style.color = text;
-      badgeDot.style.backgroundColor = primary;
-      chooseLabel.style.backgroundColor = primary;
-      chooseLabel.style.color = surface;
-      downloadBtn.style.backgroundColor = primary;
-      downloadBtn.style.color = surface;
-      uploadIconBox.style.backgroundColor = hexToRgba(secondary, 0.15);
-      uploadIconBox.style.color = secondary;
-      emptyIcon.style.backgroundColor = hexToRgba(primary, 0.12);
-      emptyIcon.style.color = primary;
-      processingPill.style.backgroundColor = primary;
-      processingPill.style.color = surface;
+      elements.badge.style.backgroundColor = hexToRgba(surface, 0.7);
+      elements.badge.style.color = text;
+      elements.badgeDot.style.backgroundColor = primary;
+      elements.chooseLabel.style.backgroundColor = primary;
+      elements.chooseLabel.style.color = surface;
+      elements.downloadBtn.style.backgroundColor = primary;
+      elements.downloadBtn.style.color = surface;
+      elements.uploadIconBox.style.backgroundColor = hexToRgba(secondary, 0.15);
+      elements.uploadIconBox.style.color = secondary;
+      elements.emptyIcon.style.backgroundColor = hexToRgba(primary, 0.12);
+      elements.emptyIcon.style.color = primary;
+      elements.processingPill.style.backgroundColor = primary;
+      elements.processingPill.style.color = surface;
 
       document.querySelectorAll(".effect-button").forEach(btn => {
         if (btn.classList.contains("active")) {
@@ -415,36 +434,15 @@
         onConfigChange,
         mapToCapabilities: (config) => ({
           recolorables: [
-            {
-              get: () => config.background_color || defaultConfig.background_color,
-              set: (value) => window.elementSdk.setConfig({ background_color: value })
-            },
-            {
-              get: () => config.surface_color || defaultConfig.surface_color,
-              set: (value) => window.elementSdk.setConfig({ surface_color: value })
-            },
-            {
-              get: () => config.text_color || defaultConfig.text_color,
-              set: (value) => window.elementSdk.setConfig({ text_color: value })
-            },
-            {
-              get: () => config.primary_action_color || defaultConfig.primary_action_color,
-              set: (value) => window.elementSdk.setConfig({ primary_action_color: value })
-            },
-            {
-              get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
-              set: (value) => window.elementSdk.setConfig({ secondary_action_color: value })
-            }
+            { get: () => config.background_color || defaultConfig.background_color, set: (value) => window.elementSdk.setConfig({ background_color: value }) },
+            { get: () => config.surface_color || defaultConfig.surface_color, set: (value) => window.elementSdk.setConfig({ surface_color: value }) },
+            { get: () => config.text_color || defaultConfig.text_color, set: (value) => window.elementSdk.setConfig({ text_color: value }) },
+            { get: () => config.primary_action_color || defaultConfig.primary_action_color, set: (value) => window.elementSdk.setConfig({ primary_action_color: value }) },
+            { get: () => config.secondary_action_color || defaultConfig.secondary_action_color, set: (value) => window.elementSdk.setConfig({ secondary_action_color: value }) }
           ],
           borderables: [],
-          fontEditable: {
-            get: () => config.font_family || defaultConfig.font_family,
-            set: (value) => window.elementSdk.setConfig({ font_family: value })
-          },
-          fontSizeable: {
-            get: () => config.font_size || defaultConfig.font_size,
-            set: (value) => window.elementSdk.setConfig({ font_size: value })
-          }
+          fontEditable: { get: () => config.font_family || defaultConfig.font_family, set: (value) => window.elementSdk.setConfig({ font_family: value }) },
+          fontSizeable: { get: () => config.font_size || defaultConfig.font_size, set: (value) => window.elementSdk.setConfig({ font_size: value }) }
         }),
         mapToEditPanelValues: (config) => new Map([
           ["app_title", config.app_title || defaultConfig.app_title],
@@ -462,28 +460,28 @@
 
     function setProcessing(isProcessing) {
       state.isProcessing = isProcessing;
-      processingPill.classList.toggle("hidden", !isProcessing);
-      processingPill.classList.toggle("inline-flex", isProcessing);
-      downloadBtn.disabled = isProcessing || !state.image;
-      imageInput.disabled = isProcessing;
+      elements.processingPill.classList.toggle("hidden", !isProcessing);
+      elements.processingPill.classList.toggle("inline-flex", isProcessing);
+      elements.downloadBtn.disabled = isProcessing || !state.image;
+      elements.imageInput.disabled = isProcessing;
     }
 
     function fitImageToCanvas(img) {
-      const maxW = 1000;
-      const maxH = 700;
-      const ratio = Math.min(maxW / img.width, maxH / img.height, 1);
-      canvas.width = Math.max(320, Math.round(img.width * ratio));
-      canvas.height = Math.max(240, Math.round(img.height * ratio));
+      const maxW = 1200;
+      const maxH = 850;
+      const ratio = Math.min(maxW / img.width, maxH / img.height, 1.2);
+      elements.canvas.width = Math.max(600, Math.round(img.width * ratio));
+      elements.canvas.height = Math.max(400, Math.round(img.height * ratio));
     }
 
     function loadFile(file) {
       if (!file || !file.type.startsWith("image/")) {
-        statusMessage.textContent = "দয়া করে একটি ছবি ফাইল দিন।";
+        elements.statusMessage.textContent = "দয়া করে একটি ছবি ফাইল দিন।";
         return;
       }
 
       const reader = new FileReader();
-      statusMessage.textContent = "ছবি পড়া হচ্ছে...";
+      elements.statusMessage.textContent = "ছবি পড়া হচ্ছে...";
       setProcessing(true);
 
       reader.onload = () => {
@@ -491,19 +489,19 @@
         img.onload = () => {
           state.image = img;
           state.lastFileName = file.name.replace(/\.[^/.]+$/, "") || "watercolor-dot-art";
-          emptyState.style.display = "none";
+          elements.emptyState.style.display = "none";
           fitImageToCanvas(img);
           renderArtwork();
         };
         img.onerror = () => {
-          statusMessage.textContent = "এই ছবিটি লোড করা যায়নি। অন্য ছবি চেষ্টা করুন।";
+          elements.statusMessage.textContent = "এই ছবিটি লোড করা যায়নি।";
           setProcessing(false);
         };
         img.src = reader.result;
       };
 
       reader.onerror = () => {
-        statusMessage.textContent = "ছবি পড়তে সমস্যা হয়েছে। আবার চেষ্টা করুন।";
+        elements.statusMessage.textContent = "ছবি পড়তে সমস্যা হয়েছে।";
         setProcessing(false);
       };
 
@@ -513,48 +511,48 @@
     function renderArtwork() {
       if (!state.image) return;
       setProcessing(true);
-      statusMessage.textContent = "ডট ডট জলরঙের আর্ট তৈরি হচ্ছে...";
+      elements.statusMessage.textContent = "HD ডট আর্ট তৈরি হচ্ছে...";
 
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         const img = state.image;
         const temp = document.createElement("canvas");
-        temp.width = canvas.width;
-        temp.height = canvas.height;
+        temp.width = elements.canvas.width;
+        temp.height = elements.canvas.height;
         const tctx = temp.getContext("2d", { willReadFrequently: true });
 
         tctx.fillStyle = "#fffaf0";
         tctx.fillRect(0, 0, temp.width, temp.height);
 
-        const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+        const scale = Math.max(elements.canvas.width / img.width, elements.canvas.height / img.height);
         const drawW = img.width * scale;
         const drawH = img.height * scale;
-        const dx = (canvas.width - drawW) / 2;
-        const dy = (canvas.height - drawH) / 2;
+        const dx = (elements.canvas.width - drawW) / 2;
+        const dy = (elements.canvas.height - drawH) / 2;
         tctx.drawImage(img, dx, dy, drawW, drawH);
 
         const imageData = tctx.getImageData(0, 0, temp.width, temp.height);
         const data = imageData.data;
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, elements.canvas.width, elements.canvas.height);
         drawPaperBase();
 
         const densityFactor = state.density / 100;
         const base = Number(state.dotSize);
         const effect = state.effect;
         const settings = getEffectSettings(effect, base, densityFactor);
-        const step = Math.max(3, Math.round(settings.step));
+        const step = Math.max(1, Math.round(settings.step));
 
         ctx.globalCompositeOperation = "multiply";
 
-        for (let y = step / 2; y < canvas.height; y += step) {
-          for (let x = step / 2; x < canvas.width; x += step) {
+        for (let y = step / 2; y < elements.canvas.height; y += step) {
+          for (let x = step / 2; x < elements.canvas.width; x += step) {
             if (Math.random() > settings.keepChance) continue;
 
             const jitterX = (Math.random() - 0.5) * settings.jitter;
             const jitterY = (Math.random() - 0.5) * settings.jitter;
-            const px = Math.max(0, Math.min(canvas.width - 1, Math.round(x + jitterX)));
-            const py = Math.max(0, Math.min(canvas.height - 1, Math.round(y + jitterY)));
-            const i = (py * canvas.width + px) * 4;
+            const px = Math.max(0, Math.min(elements.canvas.width - 1, Math.round(x + jitterX)));
+            const py = Math.max(0, Math.min(elements.canvas.height - 1, Math.round(y + jitterY)));
+            const i = (py * elements.canvas.width + px) * 4;
 
             const r = data[i];
             const g = data[i + 1];
@@ -562,20 +560,38 @@
             const brightness = (r + g + b) / 3;
             const darkness = 1 - brightness / 255;
 
-            if (brightness > 246 && Math.random() > 0.1) continue;
+            if (brightness > 248 && Math.random() > 0.06) continue;
 
-            const radius = Math.max(
-              0.9,
-              settings.radiusBase * (0.55 + darkness * settings.darkBoost) * (0.72 + Math.random() * 0.7)
-            );
+            const radius = Math.max(0.8, settings.radiusBase * (0.5 + darkness * settings.darkBoost) * (0.65 + Math.random() * 0.85));
 
-            const colorShift = settings.colorShift;
-            const rr = clamp(r + randomBetween(-colorShift, colorShift));
-            const gg = clamp(g + randomBetween(-colorShift, colorShift));
-            const bb = clamp(b + randomBetween(-colorShift, colorShift));
+            let rr = r, gg = g, bb = b;
+
+            if (state.colorStyle === "original") {
+              const colorShift = settings.colorShift;
+              rr = clamp(r + randomBetween(-colorShift, colorShift));
+              gg = clamp(g + randomBetween(-colorShift, colorShift));
+              bb = clamp(b + randomBetween(-colorShift, colorShift));
+            } else if (state.colorStyle === "pop") {
+              const hsl = rgbToHsl(r, g, b);
+              hsl.s = Math.min(100, hsl.s * 1.9);
+              hsl.l = Math.min(95, hsl.l * 1.15);
+              [rr, gg, bb] = hslToRgb(hsl.h, hsl.s, hsl.l);
+            } else if (state.colorStyle === "sepia") {
+              const gray = brightness * 0.92;
+              rr = clamp(gray * 1.28);
+              gg = clamp(gray * 1.08);
+              bb = clamp(gray * 0.72);
+            } else if (state.colorStyle === "risograph") {
+              const idx = Math.floor((brightness / 255) * 7);
+              const colors = [[229, 0, 0], [255, 149, 0], [255, 242, 0], [0, 176, 80], [0, 176, 240], [0, 0, 255], [176, 0, 240], [230, 0, 126]];
+              const col = colors[idx];
+              rr = col[0];
+              gg = col[1];
+              bb = col[2];
+            }
+
             const alpha = Math.min(settings.alphaMax, settings.alphaMin + darkness * settings.alphaBoost);
-
-            drawWaterDot(px, py, radius, rr, gg, bb, alpha, settings);
+            drawDotShape(px, py, radius, rr, gg, bb, alpha, settings);
           }
         }
 
@@ -583,94 +599,99 @@
         addSoftTexture();
 
         ctx.globalCompositeOperation = "source-over";
-        statusMessage.textContent = "তৈরি! চাইলে ইফেক্ট, ডট সাইজ বা ঘনত্ব বদলাতে পারেন।";
+        elements.statusMessage.textContent = "তৈরি! ডাউনলোড করুন বা আরও পরিবর্তন করুন।";
         setProcessing(false);
-      }, 80);
+      });
     }
 
-    function drawPaperBase() {
-      const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      grad.addColorStop(0, "#fffaf0");
-      grad.addColorStop(0.48, "#f8ecd5");
-      grad.addColorStop(1, "#fff7e8");
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.globalAlpha = 0.16;
-      for (let i = 0; i < 1200; i++) {
-        const x = Math.random() * canvas.width;
-        const y = Math.random() * canvas.height;
-        const shade = Math.random() > 0.5 ? 255 : 110;
-        ctx.fillStyle = `rgba(${shade}, ${shade * 0.9}, ${shade * 0.75}, 0.16)`;
-        ctx.fillRect(x, y, Math.random() * 1.7, Math.random() * 1.7);
-      }
-      ctx.globalAlpha = 1;
-    }
-
-    function getEffectSettings(effect, base, density) {
-      const common = {
-        step: Math.max(3, base * (1.35 - density * 0.55)),
-        keepChance: 0.5 + density * 0.48,
-        jitter: base * 0.9,
-        radiusBase: base * 0.52,
-        darkBoost: 1.35,
-        colorShift: 18,
-        alphaMin: 0.35,
-        alphaBoost: 0.42,
-        alphaMax: 0.86,
-        bloom: 1.3,
-        oval: false,
-        speckles: false,
-        rough: 2
-      };
-
-      const variants = {
-        pointillism: { step: base * (1.25 - density * 0.45), radiusBase: base * 0.58, colorShift: 20, bloom: 1.55, rough: 3 },
-        stippling: { step: base * (0.88 - density * 0.28), radiusBase: base * 0.26, colorShift: 10, alphaMin: 0.32, alphaBoost: 0.34, bloom: 0.9, rough: 1 },
-        dotted: { step: base * (1.7 - density * 0.62), radiusBase: base * 0.72, colorShift: 14, alphaMin: 0.5, alphaBoost: 0.36, bloom: 1.15, rough: 1 },
-        textured: { step: base * (1.18 - density * 0.38), radiusBase: base * 0.55, colorShift: 28, bloom: 1.7, oval: true, rough: 4 },
-        mist: { step: base * (1.02 - density * 0.34), radiusBase: base * 0.76, colorShift: 24, alphaMin: 0.18, alphaBoost: 0.34, alphaMax: 0.62, bloom: 2.2, rough: 5 },
-        mosaic: { step: base * (1.58 - density * 0.48), radiusBase: base * 0.82, colorShift: 34, alphaMin: 0.42, alphaBoost: 0.42, bloom: 1.2, rough: 2 },
-        inkwash: { step: base * (1.1 - density * 0.32), radiusBase: base * 0.42, colorShift: 16, alphaMin: 0.26, alphaBoost: 0.55, alphaMax: 0.78, bloom: 1.4, speckles: true, rough: 3 }
-      };
-
-      return { ...common, ...(variants[effect] || variants.pointillism) };
-    }
-
-    function drawWaterDot(x, y, radius, r, g, b, alpha, settings) {
+    function drawDotShape(x, y, radius, r, g, b, alpha, settings) {
+      const style = state.dotStyle;
       const bloomRadius = radius * settings.bloom;
-      const grad = ctx.createRadialGradient(x, y, radius * 0.08, x, y, bloomRadius);
+
+      const grad = ctx.createRadialGradient(x, y, radius * 0.06, x, y, bloomRadius);
       grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha})`);
-      grad.addColorStop(0.58, `rgba(${r}, ${g}, ${b}, ${alpha * 0.46})`);
+      grad.addColorStop(0.6, `rgba(${r}, ${g}, ${b}, ${alpha * 0.4})`);
       grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
 
       ctx.fillStyle = grad;
       ctx.beginPath();
 
-      if (settings.oval) {
+      if (style === "circle") {
+        irregularCircle(x, y, bloomRadius, settings.rough);
+      } else if (style === "square") {
+        const size = bloomRadius * 0.75;
+        ctx.rect(x - size, y - size, size * 2, size * 2);
+      } else if (style === "oval") {
         ctx.save();
         ctx.translate(x, y);
         ctx.rotate(Math.random() * Math.PI);
-        ctx.scale(1 + Math.random() * 0.75, 0.55 + Math.random() * 0.55);
-        irregularCircle(0, 0, bloomRadius, settings.rough);
+        ctx.scale(1.6, 0.55);
+        irregularCircle(0, 0, bloomRadius * 0.65, settings.rough);
         ctx.restore();
-      } else {
-        irregularCircle(x, y, bloomRadius, settings.rough);
+      } else if (style === "diamond") {
+        const size = bloomRadius * 0.88;
+        ctx.moveTo(x, y - size);
+        ctx.lineTo(x + size, y);
+        ctx.lineTo(x, y + size);
+        ctx.lineTo(x - size, y);
+        ctx.closePath();
+      } else if (style === "hex") {
+        const size = bloomRadius * 0.82;
+        for (let i = 0; i < 6; i++) {
+          const angle = (i * Math.PI) / 3;
+          const px = x + size * Math.cos(angle);
+          const py = y + size * Math.sin(angle);
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+      } else if (style === "triangle") {
+        const size = bloomRadius;
+        ctx.moveTo(x, y - size);
+        ctx.lineTo(x + size, y + size * 0.52);
+        ctx.lineTo(x - size, y + size * 0.52);
+        ctx.closePath();
+      } else if (style === "star") {
+        drawStar(x, y, bloomRadius * 0.88);
+      } else if (style === "cross") {
+        const size = bloomRadius * 0.65;
+        ctx.moveTo(x - size, y);
+        ctx.lineTo(x + size, y);
+        ctx.moveTo(x, y - size);
+        ctx.lineTo(x, y + size);
       }
 
       ctx.fill();
+      if (style !== "cross") {
+        ctx.strokeStyle = `rgba(${clamp(r * 0.65)}, ${clamp(g * 0.65)}, ${clamp(b * 0.65)}, ${alpha * 0.25})`;
+        ctx.lineWidth = radius * 0.12;
+        ctx.stroke();
+      }
 
-      ctx.fillStyle = `rgba(${clamp(r + 20)}, ${clamp(g + 20)}, ${clamp(b + 20)}, ${alpha * 0.22})`;
+      ctx.fillStyle = `rgba(${clamp(r + 35)}, ${clamp(g + 35)}, ${clamp(b + 35)}, ${alpha * 0.16})`;
       ctx.beginPath();
-      ctx.arc(x - radius * 0.18, y - radius * 0.15, radius * 0.35, 0, Math.PI * 2);
+      ctx.arc(x - radius * 0.22, y - radius * 0.2, radius * 0.28, 0, Math.PI * 2);
       ctx.fill();
     }
 
+    function drawStar(cx, cy, radius) {
+      const points = 5;
+      for (let i = 0; i < points * 2; i++) {
+        const angle = (i * Math.PI) / points;
+        const r = i % 2 === 0 ? radius : radius * 0.38;
+        const x = cx + r * Math.cos(angle - Math.PI / 2);
+        const y = cy + r * Math.sin(angle - Math.PI / 2);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+    }
+
     function irregularCircle(x, y, radius, roughness) {
-      const points = 12 + roughness * 3;
+      const points = 14 + roughness * 4;
       for (let p = 0; p <= points; p++) {
         const angle = (p / points) * Math.PI * 2;
-        const wobble = 1 + (Math.random() - 0.5) * 0.18 * roughness;
+        const wobble = 1 + (Math.random() - 0.5) * 0.16 * roughness;
         const px = x + Math.cos(angle) * radius * wobble;
         const py = y + Math.sin(angle) * radius * wobble;
         if (p === 0) ctx.moveTo(px, py);
@@ -679,19 +700,112 @@
       ctx.closePath();
     }
 
+    function rgbToHsl(r, g, b) {
+      r /= 255; g /= 255; b /= 255;
+      const max = Math.max(r, g, b);
+      const min = Math.min(r, g, b);
+      let h, s, l = (max + min) / 2;
+
+      if (max === min) {
+        h = s = 0;
+      } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+          case g: h = ((b - r) / d + 2) / 6; break;
+          case b: h = ((r - g) / d + 4) / 6; break;
+        }
+      }
+      return { h: h * 360, s: s * 100, l: l * 100 };
+    }
+
+    function hslToRgb(h, s, l) {
+      h /= 360; s /= 100; l /= 100;
+      let r, g, b;
+
+      if (s === 0) {
+        r = g = b = l;
+      } else {
+        const hue2rgb = (p, q, t) => {
+          if (t < 0) t += 1;
+          if (t > 1) t -= 1;
+          if (t < 1/6) return p + (q - p) * 6 * t;
+          if (t < 1/2) return q;
+          if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+          return p;
+        };
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+      }
+      return [clamp(r * 255), clamp(g * 255), clamp(b * 255)];
+    }
+
+    function drawPaperBase() {
+      const grad = ctx.createLinearGradient(0, 0, elements.canvas.width, elements.canvas.height);
+      grad.addColorStop(0, "#fffaf0");
+      grad.addColorStop(0.48, "#f8ecd5");
+      grad.addColorStop(1, "#fff7e8");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, elements.canvas.width, elements.canvas.height);
+
+      ctx.globalAlpha = 0.14;
+      for (let i = 0; i < 2400; i++) {
+        const x = Math.random() * elements.canvas.width;
+        const y = Math.random() * elements.canvas.height;
+        const shade = Math.random() > 0.5 ? 255 : 110;
+        ctx.fillStyle = `rgba(${shade}, ${shade * 0.9}, ${shade * 0.75}, 0.14)`;
+        ctx.fillRect(x, y, Math.random() * 1.8, Math.random() * 1.8);
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function getEffectSettings(effect, base, density) {
+      const common = {
+        step: Math.max(1, base * (1.15 - density * 0.48)),
+        keepChance: 0.58 + density * 0.38,
+        jitter: base * 1,
+        radiusBase: base * 0.5,
+        darkBoost: 1.4,
+        colorShift: 16,
+        alphaMin: 0.32,
+        alphaBoost: 0.44,
+        alphaMax: 0.88,
+        bloom: 1.35,
+        speckles: false,
+        rough: 2
+      };
+
+      const variants = {
+        pointillism: { step: base * (1.05 - density * 0.38), radiusBase: base * 0.58, colorShift: 20, bloom: 1.65, rough: 3 },
+        stippling: { step: base * (0.65 - density * 0.18), radiusBase: base * 0.22, colorShift: 6, alphaMin: 0.28, alphaBoost: 0.3, bloom: 0.8, rough: 1 },
+        dotted: { step: base * (1.4 - density * 0.5), radiusBase: base * 0.72, colorShift: 10, alphaMin: 0.5, alphaBoost: 0.32, bloom: 1.25, rough: 1 },
+        textured: { step: base * (0.98 - density * 0.32), radiusBase: base * 0.56, colorShift: 24, bloom: 1.8, rough: 4 },
+        mist: { step: base * (0.9 - density * 0.28), radiusBase: base * 0.78, colorShift: 18, alphaMin: 0.14, alphaBoost: 0.28, alphaMax: 0.6, bloom: 2.4, rough: 5 },
+        mosaic: { step: base * (1.32 - density * 0.4), radiusBase: base * 0.84, colorShift: 30, alphaMin: 0.42, alphaBoost: 0.38, bloom: 1.3, rough: 2 },
+        inkwash: { step: base * (0.95 - density * 0.26), radiusBase: base * 0.44, colorShift: 12, alphaMin: 0.22, alphaBoost: 0.5, alphaMax: 0.76, bloom: 1.5, speckles: true, rough: 3 },
+        risograph: { step: base * (1.12 - density * 0.35), radiusBase: base * 0.52, colorShift: 0, alphaMin: 0.58, alphaBoost: 0.18, alphaMax: 0.85, bloom: 0.98, rough: 1 }
+      };
+
+      return { ...common, ...(variants[effect] || variants.pointillism) };
+    }
+
     function drawSpeckles(data, settings) {
       ctx.globalCompositeOperation = "multiply";
-      for (let i = 0; i < 1800; i++) {
-        const x = Math.floor(Math.random() * canvas.width);
-        const y = Math.floor(Math.random() * canvas.height);
-        const idx = (y * canvas.width + x) * 4;
+      for (let i = 0; i < 3200; i++) {
+        const x = Math.floor(Math.random() * elements.canvas.width);
+        const y = Math.floor(Math.random() * elements.canvas.height);
+        const idx = (y * elements.canvas.width + x) * 4;
         const r = data[idx];
         const g = data[idx + 1];
         const b = data[idx + 2];
         const brightness = (r + g + b) / 3;
-        if (brightness > 230 && Math.random() > 0.12) continue;
-        const size = Math.random() * settings.radiusBase * 0.38 + 0.4;
-        ctx.fillStyle = `rgba(${r * 0.75}, ${g * 0.75}, ${b * 0.75}, ${0.08 + Math.random() * 0.22})`;
+        if (brightness > 232 && Math.random() > 0.08) continue;
+        const size = Math.random() * settings.radiusBase * 0.38 + 0.25;
+        ctx.fillStyle = `rgba(${r * 0.78}, ${g * 0.78}, ${b * 0.78}, ${0.04 + Math.random() * 0.16})`;
         ctx.beginPath();
         ctx.arc(x, y, size, 0, Math.PI * 2);
         ctx.fill();
@@ -700,15 +814,15 @@
 
     function addSoftTexture() {
       ctx.globalCompositeOperation = "overlay";
-      ctx.globalAlpha = 0.12;
-      for (let i = 0; i < 320; i++) {
+      ctx.globalAlpha = 0.08;
+      for (let i = 0; i < 500; i++) {
         ctx.strokeStyle = Math.random() > 0.5 ? "#ffffff" : "#6a4b35";
-        ctx.lineWidth = Math.random() * 1.4 + 0.2;
+        ctx.lineWidth = Math.random() * 1.8 + 0.1;
         ctx.beginPath();
-        const x = Math.random() * canvas.width;
-        const y = Math.random() * canvas.height;
+        const x = Math.random() * elements.canvas.width;
+        const y = Math.random() * elements.canvas.height;
         ctx.moveTo(x, y);
-        ctx.lineTo(x + randomBetween(-18, 18), y + randomBetween(-6, 6));
+        ctx.lineTo(x + randomBetween(-32, 32), y + randomBetween(-10, 10));
         ctx.stroke();
       }
       ctx.globalAlpha = 1;
@@ -723,83 +837,90 @@
       return Math.max(0, Math.min(255, Math.round(value)));
     }
 
-    imageInput.addEventListener("change", (event) => {
-      const file = event.target.files && event.target.files[0];
+    elements.imageInput.addEventListener("change", (e) => {
+      const file = e.target.files?.[0];
       loadFile(file);
     });
 
-    uploadZone.addEventListener("dragover", (event) => {
-      event.preventDefault();
-      uploadZone.classList.add("dragging");
+    elements.uploadZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      elements.uploadZone.classList.add("dragging");
     });
 
-    uploadZone.addEventListener("dragleave", () => {
-      uploadZone.classList.remove("dragging");
+    elements.uploadZone.addEventListener("dragleave", () => {
+      elements.uploadZone.classList.remove("dragging");
     });
 
-    uploadZone.addEventListener("drop", (event) => {
-      event.preventDefault();
-      uploadZone.classList.remove("dragging");
-      const file = event.dataTransfer.files && event.dataTransfer.files[0];
+    elements.uploadZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      elements.uploadZone.classList.remove("dragging");
+      const file = e.dataTransfer.files?.[0];
       loadFile(file);
     });
 
-    chooseLabel.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        imageInput.click();
+    elements.chooseLabel.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        elements.imageInput.click();
       }
     });
 
-    effectsList.addEventListener("click", (event) => {
-      const button = event.target.closest("button[data-effect]");
-      if (!button) return;
-
-      state.effect = button.dataset.effect;
-      document.querySelectorAll(".effect-button").forEach(btn => btn.classList.remove("active"));
-      button.classList.add("active");
-      onConfigChange(window.elementSdk ? window.elementSdk.config : defaultConfig);
-
+    elements.effectsList.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-effect]");
+      if (!btn) return;
+      state.effect = btn.dataset.effect;
+      document.querySelectorAll("#effectsList button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
       if (state.image) renderArtwork();
     });
 
-    dotDensity.addEventListener("input", () => {
-      state.density = Number(dotDensity.value);
-      densityValue.textContent = `${state.density}%`;
+    elements.dotStyleList.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-dot-style]");
+      if (!btn) return;
+      state.dotStyle = btn.dataset.dotStyle;
+      document.querySelectorAll("#dotStyleList button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      if (state.image) renderArtwork();
+    });
+
+    elements.colorStyleList.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-color-style]");
+      if (!btn) return;
+      state.colorStyle = btn.dataset.colorStyle;
+      document.querySelectorAll("#colorStyleList button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      if (state.image) renderArtwork();
+    });
+
+    elements.dotDensity.addEventListener("input", () => {
+      state.density = Number(elements.dotDensity.value);
+      elements.densityValue.textContent = `${state.density}%`;
       if (state.image) {
-        clearTimeout(dotDensity.renderTimer);
-        dotDensity.renderTimer = setTimeout(renderArtwork, 180);
+        clearTimeout(elements.dotDensity.renderTimer);
+        elements.dotDensity.renderTimer = setTimeout(renderArtwork, 100);
       }
     });
 
-    dotSize.addEventListener("input", () => {
-      state.dotSize = Number(dotSize.value);
-      sizeValue.textContent = state.dotSize;
+    elements.dotSize.addEventListener("input", () => {
+      state.dotSize = Number(elements.dotSize.value);
+      elements.sizeValue.textContent = state.dotSize;
       if (state.image) {
-        clearTimeout(dotSize.renderTimer);
-        dotSize.renderTimer = setTimeout(renderArtwork, 180);
+        clearTimeout(elements.dotSize.renderTimer);
+        elements.dotSize.renderTimer = setTimeout(renderArtwork, 100);
       }
     });
 
-    downloadBtn.addEventListener("click", () => {
+    elements.downloadBtn.addEventListener("click", () => {
       if (!state.image || state.isProcessing) return;
-
       const link = document.createElement("a");
-      link.download = `${state.lastFileName}-${state.effect}-watercolor-dots.png`;
-      link.href = canvas.toDataURL("image/png");
+      link.download = `${state.lastFileName}-${state.effect}-${state.dotStyle}-${state.colorStyle}.png`;
+      link.href = elements.canvas.toDataURL("image/png");
       link.click();
-      statusMessage.textContent = "ডাউনলোড শুরু হয়েছে।";
+      elements.statusMessage.textContent = "ডাউনলোড শুরু হয়েছে! 🎨";
     });
 
-    function drawInitialCanvas() {
-      drawPaperBase();
-    }
-
-    drawInitialCanvas();
-
-    if (window.lucide) {
-      lucide.createIcons();
-    }
+    drawPaperBase();
+    if (window.lucide) lucide.createIcons();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a022e2dd490dff99',t:'MTc3OTg2MjUzNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a022fa1d29553505',t:'MTc3OTg2MzQ5MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
