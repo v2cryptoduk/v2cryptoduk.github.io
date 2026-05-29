@@ -117,18 +117,17 @@
   </style>
   <style>body { box-sizing: border-box; }</style>
  <script src="/_sdk/telemetry_sdk.js"></script></head>
- <body class="h-full overflow-auto" style="background: #008080;">
-  <!-- Loading Screen -->
+ <body class="h-full overflow-auto" style="background: #008080;"><!-- Loading Screen -->
   <div id="loading-screen" class="h-full flex items-center justify-center scanlines relative">
    <div class="win95-border p-0" style="width: 400px; max-width: 90%;">
-    <div class="title-bar">
-     <span style="font-size: 13px;">404 Punks Labs - Loading...</span>
+    <div class="title-bar"><span style="font-size: 13px;">404 Punks Labs - Loading...</span>
      <div class="title-bar-btn">
       ×
      </div>
     </div>
     <div class="p-6 flex flex-col items-center gap-4">
-     <div class="text-4xl pixel-skull"><!-- INSERT ANIMATED GIF HERE: <img src="YOUR_GIF_URL" style="width: 80px; height: 80px;" /> --> 💀
+     <div class="text-4xl pixel-skull">
+      <!-- INSERT ANIMATED GIF HERE: <img src="YOUR_GIF_URL" style="width: 80px; height: 80px;" /> --> 💀
      </div>
      <p class="press-start text-xs text-center" style="color: #000080;">404 PUNKS LABS</p>
      <p class="text-lg">Initializing Whitelist Portal...</p>
@@ -140,11 +139,9 @@
    </div>
   </div><!-- Main Portal -->
   <div id="main-portal" class="h-full overflow-auto hidden" style="background: #008080;">
-   <div class="p-4 max-w-4xl mx-auto w-full">
-    <!-- Taskbar style header -->
+   <div class="p-4 max-w-4xl mx-auto w-full"><!-- Taskbar style header -->
     <div class="win95-border p-0 mb-4 fade-in">
-     <div class="title-bar">
-      <span style="font-size: 13px;">🖥️ 404 Punks Labs - Whitelist Portal v1.0</span>
+     <div class="title-bar"><span style="font-size: 13px;">🖥️ 404 Punks Labs - Whitelist Portal v1.0</span>
       <div class="flex gap-1">
        <div class="title-bar-btn">
         _
@@ -164,7 +161,8 @@
     </div><!-- Stats Row -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
      <div class="win95-border p-0 fade-in" style="animation-delay: 0.1s;">
-      <div class="title-bar"><span style="font-size: 11px;">Supply</span>
+      <div class="title-bar">
+       <span style="font-size: 11px;">Supply</span>
       </div>
       <div class="p-3 text-center">
        <p class="text-2xl font-bold" style="color: #000080;">10,000</p>
@@ -172,7 +170,8 @@
       </div>
      </div>
      <div class="win95-border p-0 fade-in" style="animation-delay: 0.2s;">
-      <div class="title-bar"><span style="font-size: 11px;">WL Slots</span>
+      <div class="title-bar">
+       <span style="font-size: 11px;">WL Slots</span>
       </div>
       <div class="p-3 text-center">
        <p class="text-2xl font-bold" style="color: #000080;">9,900</p>
@@ -180,7 +179,8 @@
       </div>
      </div>
      <div class="win95-border p-0 fade-in" style="animation-delay: 0.3s;">
-      <div class="title-bar"><span style="font-size: 11px;">WL Price</span>
+      <div class="title-bar">
+       <span style="font-size: 11px;">WL Price</span>
       </div>
       <div class="p-3 text-center">
        <p class="text-2xl font-bold" style="color: #000080;">0.0011</p>
@@ -188,7 +188,8 @@
       </div>
      </div>
      <div class="win95-border p-0 fade-in" style="animation-delay: 0.4s;">
-      <div class="title-bar"><span style="font-size: 11px;">GDT Mint</span>
+      <div class="title-bar">
+       <span style="font-size: 11px;">GDT Mint</span>
       </div>
       <div class="p-3 text-center">
        <p class="text-2xl font-bold" style="color: green;">FREE</p>
@@ -197,19 +198,18 @@
      </div>
     </div><!-- Live Counter -->
     <div class="win95-border p-0 mb-4 fade-in" style="animation-delay: 0.5s;">
-     <div class="title-bar">
-      <span style="font-size: 11px;">📡 LIVE - Whitelist Claims</span>
+     <div class="title-bar"><span style="font-size: 11px;">📡 LIVE - Whitelist Claims</span>
       <div class="live-dot"></div>
      </div>
      <div class="p-4 flex items-center justify-center gap-4">
-      <div class="win95-inset px-6 py-3 bg-black">
-       <span class="text-3xl" style="color: #00ff00;" id="live-counter">0</span> <span class="text-lg" style="color: #00ff00;"> / 9,900</span>
+      <div class="win95-inset px-6 py-3 bg-black"><span class="text-3xl" style="color: #00ff00;" id="live-counter">0</span> <span class="text-lg" style="color: #00ff00;"> / 9,900</span>
       </div>
       <p class="text-lg">Wallets Whitelisted</p>
      </div>
     </div><!-- Mint Date -->
     <div class="win95-border p-0 mb-4 fade-in" style="animation-delay: 0.55s;">
-     <div class="title-bar"><span style="font-size: 11px;">📅 Mint Date</span>
+     <div class="title-bar">
+      <span style="font-size: 11px;">📅 Mint Date</span>
      </div>
      <div class="p-3 text-center">
       <p class="text-2xl" style="color: #800000;" id="el-mint-date">June 8, 2025</p>
@@ -217,8 +217,7 @@
      </div>
     </div><!-- Tasks Window -->
     <div class="win95-border p-0 mb-4 fade-in" style="animation-delay: 0.6s;">
-     <div class="title-bar">
-      <span style="font-size: 13px;">📋 Whitelist Tasks - Complete All to Claim</span>
+     <div class="title-bar"><span style="font-size: 13px;">📋 Whitelist Tasks - Complete All to Claim</span>
      </div>
      <div class="p-4 space-y-3">
       <div class="flex items-center gap-3 p-2 win95-inset" id="task-follow">
@@ -228,17 +227,15 @@
        <div class="task-check" id="check-like"></div><span class="text-lg flex-1">Like Tweet #2059633409714979308</span> <a href="https://x.com/i/status/2059633409714979308" target="_blank" rel="noopener noreferrer"> <button class="win95-btn text-sm" onclick="verifyTask('like', this)">Verify ↗</button> </a>
       </div>
       <div class="flex items-center gap-3 p-2 win95-inset" id="task-retweet">
-       <div class="task-check" id="check-retweet"></div><span class="text-lg flex-1">Retweet Tweet #2059633409714979308</span> <a href="https://x.com/i/status/2059633409714979308" target="_blank" rel="noopener noreferrer"> <button class="win95-btn text-sm" onclick="completeTask('retweet')">Done ✓</button> </a>
+       <div class="task-check" id="check-retweet"></div><span class="text-lg flex-1">Retweet Tweet #2059633409714979308</span> <a href="https://x.com/i/status/2059633409714979308" target="_blank" rel="noopener noreferrer"> <button class="win95-btn text-sm" onclick="verifyTask('retweet', this)">Verify ↗</button> </a>
       </div>
      </div>
     </div><!-- Submit Window -->
     <div class="win95-border p-0 mb-4 fade-in" style="animation-delay: 0.7s;">
-     <div class="title-bar">
-      <span style="font-size: 13px;">🔑 Submit Wallet Address</span>
+     <div class="title-bar"><span style="font-size: 13px;">🔑 Submit Wallet Address</span>
      </div>
      <div class="p-4">
-      <div class="win95-inset p-1 mb-3">
-       <input type="text" id="wallet-input" placeholder="0x... Enter your ETH wallet address" class="w-full p-2 text-lg bg-white border-none outline-none" style="font-family: 'VT323', monospace;">
+      <div class="win95-inset p-1 mb-3"><input type="text" id="wallet-input" placeholder="0x... Enter your ETH wallet address" class="w-full p-2 text-lg bg-white border-none outline-none" style="font-family: 'VT323', monospace;">
       </div>
       <div class="flex items-center justify-between">
        <p class="text-sm" id="submit-status" style="color: #808080;">Complete all tasks to claim WL</p><button class="win95-btn text-lg" id="submit-btn" onclick="submitWallet()" disabled style="opacity: 0.5;">Claim Whitelist</button>
@@ -246,8 +243,7 @@
      </div>
     </div><!-- Footer Taskbar -->
     <div class="win95-border p-2 flex items-center justify-between fade-in" style="animation-delay: 0.8s;">
-     <div class="flex items-center gap-2">
-      <button class="win95-btn text-sm">🖥️ Start</button> <span class="text-sm" style="color: #808080;">|</span> <span class="text-sm">404 Punks Labs © 2025</span>
+     <div class="flex items-center gap-2"><button class="win95-btn text-sm">🖥️ Start</button> <span class="text-sm" style="color: #808080;">|</span> <span class="text-sm">404 Punks Labs © 2025</span>
      </div>
      <div class="win95-inset px-3 py-1 text-sm" id="clock-display">
       00:00
@@ -268,7 +264,7 @@
 
     // State
     let tasks = { follow: false, like: false, retweet: false };
-    let verificationErrors = { follow: 0, like: 0 };
+    let verificationErrors = { follow: 0, like: 0, retweet: 0 };
     let allData = [];
     let submitted = false;
 
@@ -359,8 +355,8 @@
       const originalText = btn.textContent;
       btn.textContent = 'Verifying...';
       
-      // Simulate 15 second verification with 2 random errors
-      await new Promise(resolve => setTimeout(resolve, 15000));
+      // Simulate 5 second verification with 2 random errors
+      await new Promise(resolve => setTimeout(resolve, 5000));
       
       const errorThreshold = 2;
       const shouldError = verificationErrors[task] < errorThreshold && Math.random() > 0.5;
@@ -467,20 +463,22 @@
     ];
     let progress = 0;
     const loadInterval = setInterval(() => {
-      progress += Math.random() * 15 + 5;
+      progress += Math.random() * 10 + 3;
       if (progress >= 100) {
         progress = 100;
         clearInterval(loadInterval);
         document.getElementById('loading-text').textContent = 'Portal ready!';
+        document.getElementById('loading-bar').style.width = '100%';
         setTimeout(() => {
           document.getElementById('loading-screen').classList.add('hidden');
           document.getElementById('main-portal').classList.remove('hidden');
-        }, 500);
+        }, 800);
+      } else {
+        document.getElementById('loading-bar').style.width = progress + '%';
+        const idx = Math.min(Math.floor(progress / 20), loadingTexts.length - 1);
+        document.getElementById('loading-text').textContent = loadingTexts[idx];
       }
-      document.getElementById('loading-bar').style.width = progress + '%';
-      const idx = Math.min(Math.floor(progress / 20), loadingTexts.length - 1);
-      document.getElementById('loading-text').textContent = loadingTexts[idx];
-    }, 200);
+    }, 300);
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0374d51aaca84ad',t:'MTc4MDA3NjYxMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0375aedba1f1326',t:'MTc4MDA3NzE3MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
